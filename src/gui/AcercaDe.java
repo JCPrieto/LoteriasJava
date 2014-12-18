@@ -3,11 +3,8 @@
  */
 package gui;
 
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,12 +14,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * @author juanky
@@ -34,7 +25,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	final transient private JButton botonOk;
 	final transient private JLabel etq3;
 	final transient private JLabel etq5;
@@ -47,7 +38,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 		panel.setLayout(new GridBagLayout());
 		final GridBagConstraints cns = new GridBagConstraints();
 		final JLabel etq1 = new JLabel(
-				"<html><h1>Loteria de Navidad 1.1</h1></html>", JLabel.CENTER);
+				"<html><h1>Loteria de Navidad 1.1.1</h1></html>", JLabel.CENTER);
 		cns.fill = GridBagConstraints.HORIZONTAL;
 		cns.insets = new Insets(10, 0, 10, 0);
 		cns.gridx = 0;
