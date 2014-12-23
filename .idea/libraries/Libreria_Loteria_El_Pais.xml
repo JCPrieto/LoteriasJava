@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Libreria Loteria El Pais">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../libs/Libreria Loteria El Pais.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Libreria Loteria El Pais/classes/artifacts/Libreria_Loteria_El_Pais_jar/Libreria Loteria El Pais.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

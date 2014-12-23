@@ -3,19 +3,15 @@
  */
 package gui;
 
-import java.awt.BorderLayout;
+import com.jklabs.loteriaselpais.Busqueda;
+import com.jklabs.loteriaselpais.Conexion;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import com.jklabs.loteriaselpais.Busqueda;
-import com.jklabs.loteriaselpais.Conexion;
 
 /**
  * @author juanky
@@ -26,13 +22,14 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
+	final transient private Ventana padre;
 	transient private JButton buscar;
 	transient private JButton limpiar;
 	transient private JTextField numero;
-	final transient private Ventana padre;
 	transient private JTextArea resultado;
 	private String sorteo;
+	private JTextField cantidad;
 
 	public PanelBusqueda(final Ventana ventana, String string) {
 		super();
@@ -43,9 +40,8 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
-		// TODO Auto-generated method stub
 		if (evt.getSource() == buscar && !numero.getText().isEmpty()) {
-			buscarPremio(numero.getText());
+			buscarPremio(numero.getText(), cantidad.getText());
 		}
 		if (evt.getSource() == limpiar) {
 			resultado.setText("");
@@ -54,13 +50,13 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 		}
 	}
 
-	private void buscarPremio(final String text) {
-		// TODO Auto-generated method stub
+	private void buscarPremio(final String text, String cantidadText) {
 		Conexion c;
 		c = new Conexion(sorteo, text);
 		if (c.consulta()) {
 			Busqueda bsc = new Busqueda(c.getResultado());
-			resultado.setText(resultado.getText() + "\n" + bsc.toString());
+			resultado.setText(resultado.getText() + "\n" + text + ": Ha ganado: "
+					+ (Math.round((bsc.getPremio() / Double.parseDouble(cantidadText)) * 100D) / 100D) + "€");
 		} else {
 			resultado.setText(resultado.getText()
 					+ "\nHay un problema con el sevidor");
@@ -69,7 +65,6 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 	}
 
 	private void cargarElementos() {
-		// TODO Auto-generated method stub
 		super.setLayout(new BorderLayout());
 		final JPanel entrada = new JPanel();
 		numero = new JTextField(5);
@@ -77,19 +72,16 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
 			@Override
 			public void keyPressed(final KeyEvent evt) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void keyReleased(final KeyEvent evt) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void keyTyped(final KeyEvent evt) {
-				// TODO Auto-generated method stub
 				final char caracter = evt.getKeyChar();
 				if (((caracter < '0') || (caracter > '9'))
 						&& (caracter != '\b') || numero.getText().length() > 4) {
@@ -97,9 +89,34 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 				}
 			}
 		});
+		cantidad = new JTextField(3);
+		cantidad.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				final char caracter = e.getKeyChar();
+				if (((caracter < '0') || (caracter > '9')) && (caracter != '.')) {
+					e.consume();
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
 		buscar = new JButton("Buscar premio");
 		buscar.addActionListener(this);
+		entrada.add(new JLabel("Número:"));
 		entrada.add(numero);
+		entrada.add(new JLabel("Cantidad Jugada:"));
+		entrada.add(cantidad);
+		entrada.add(new JLabel("€"));
 		entrada.add(buscar);
 		limpiar = new JButton("Limpiar resultados");
 		limpiar.addActionListener(this);

@@ -38,7 +38,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 		panel.setLayout(new GridBagLayout());
 		final GridBagConstraints cns = new GridBagConstraints();
 		final JLabel etq1 = new JLabel(
-				"<html><h1>Loteria de Navidad 1.1.1</h1></html>", JLabel.CENTER);
+				"<html><h1>Loteria de Navidad 1.2</h1></html>", JLabel.CENTER);
 		cns.fill = GridBagConstraints.HORIZONTAL;
 		cns.insets = new Insets(10, 0, 10, 0);
 		cns.gridx = 0;
