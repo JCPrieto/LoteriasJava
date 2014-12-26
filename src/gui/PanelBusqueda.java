@@ -22,14 +22,16 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	final transient private Ventana padre;
 	transient private JButton buscar;
 	transient private JButton limpiar;
 	transient private JTextField numero;
-	transient private JTextArea resultado;
+	transient private JPanel resultado;
 	private String sorteo;
 	private JTextField cantidad;
+	private GridBagConstraints cns;
+	private int contador;
 
 	public PanelBusqueda(final Ventana ventana, String string) {
 		super();
@@ -44,8 +46,11 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 			buscarPremio(numero.getText(), cantidad.getText());
 		}
 		if (evt.getSource() == limpiar) {
-			resultado.setText("");
+			resultado.removeAll();
+			resultado.repaint();
 			numero.setText("");
+			cantidad.setText("");
+			contador = 0;
 			padre.pack();
 		}
 	}
@@ -55,11 +60,11 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 		c = new Conexion(sorteo, text);
 		if (c.consulta()) {
 			Busqueda bsc = new Busqueda(c.getResultado());
-			resultado.setText(resultado.getText() + "\n" + text + ": Ha ganado: "
-					+ (Math.round((bsc.getPremio() / Double.parseDouble(cantidadText)) * 100D) / 100D) + "€");
+			cns.gridy = contador++;
+			resultado.add(new gui.Resultado(text, bsc.getPremio(), cantidadText), cns);
+			contador++;
 		} else {
-			resultado.setText(resultado.getText()
-					+ "\nHay un problema con el sevidor");
+			JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
 		}
 		padre.pack();
 	}
@@ -120,11 +125,18 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 		entrada.add(buscar);
 		limpiar = new JButton("Limpiar resultados");
 		limpiar.addActionListener(this);
-		resultado = new JTextArea();
-		resultado.setEditable(false);
+		resultado = new JPanel();
+		resultado.setLayout(new GridBagLayout());
+		cns = new GridBagConstraints();
+		cns.gridx = 0;
+		cns.gridy = 0;
+		cns.gridwidth = 1;
+		cns.weightx = 1;
+		cns.insets = new Insets(10, 0, 10, 0);
+		JScrollPane scrollPane = new JScrollPane(resultado);
 		super.add(entrada, BorderLayout.NORTH);
 		super.add(limpiar, BorderLayout.SOUTH);
-		super.add(resultado, BorderLayout.CENTER);
+		super.add(scrollPane, BorderLayout.CENTER);
 	}
 
 }
