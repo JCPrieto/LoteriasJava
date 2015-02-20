@@ -1,17 +1,10 @@
 package gui;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JTabbedPane;
-import javax.swing.Timer;
 
 /**
  * 
@@ -27,37 +20,45 @@ public class Ventana extends JFrame implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 2L;
-
-	/**
-	 * 
-	 * @return La fecha del sistema en formato DD-MM-YYYY HH:MM
-	 */
-	private static String getFecha() {
-		// TODO Auto-generated method stub
-		final Calendar date = Calendar.getInstance();
-		date.setTimeInMillis(System.currentTimeMillis());
-		int mes = date.get(Calendar.MONTH) + 1;
-		return date.get(Calendar.DAY_OF_MONTH) + "-" + mes + "-"
-				+ date.get(Calendar.YEAR) + " "
-				+ date.get(Calendar.HOUR_OF_DAY) + ":"
-				+ date.get(Calendar.MINUTE);
-	}
-
-	transient private JMenuItem acerca;
-	transient private JTabbedPane panel;
-	final transient private Timer tiempo;
-
+    final transient private Timer tiempo;
+    transient private JMenuItem acerca;
+    transient private JTabbedPane panel;
 	public Ventana() {
 		super("Loterias de Navidad - " + getFecha());
-		super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
-		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		super.setLayout(new BorderLayout());
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
+        super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        super.setLayout(new BorderLayout());
 		tiempo = new Timer(60000, this);
 		tiempo.start();
 		crearMenu();
 		crearPanel();
 		super.pack();
-	}
+    }
+
+    /**
+     * @return La fecha del sistema en formato DD-MM-YYYY HH:MM
+     */
+    private static String getFecha() {
+        // TODO Auto-generated method stub
+        final Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(System.currentTimeMillis());
+        int mes = date.get(Calendar.MONTH) + 1;
+        return date.get(Calendar.DAY_OF_MONTH) + "-" + mes + "-"
+                + date.get(Calendar.YEAR) + " "
+                + date.get(Calendar.HOUR_OF_DAY) + ":"
+                + date.get(Calendar.MINUTE);
+    }
 
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
