@@ -55,8 +55,5 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         if (e.getSource().equals(btnBuscarPremioNino)) {
             padre.setPanel(new PanelBusqueda(padre, "Nino"));
         }
-        /*padre.validate();
-        padre.repaint();
-        padre.pack();*/
     }
 }
