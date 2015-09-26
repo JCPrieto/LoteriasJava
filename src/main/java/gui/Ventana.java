@@ -1,5 +1,7 @@
 package gui;
 
+import gui.paneles.MenuPrincipal;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +23,7 @@ public class Ventana extends JFrame implements ActionListener {
     private static final long serialVersionUID = 2L;
     final transient private Timer tiempo;
     transient private JMenuItem acerca;
-    transient private JTabbedPane panel;
+    transient private JPanel panel;
 
     public Ventana() {
         super("Loterias de Navidad - " + getFecha());
@@ -50,7 +52,6 @@ public class Ventana extends JFrame implements ActionListener {
      * @return La fecha del sistema en formato DD-MM-YYYY HH:MM
      */
     private static String getFecha() {
-        // TODO Auto-generated method stub
         final Calendar date = Calendar.getInstance();
         date.setTimeInMillis(System.currentTimeMillis());
         int mes = date.get(Calendar.MONTH) + 1;
@@ -61,7 +62,6 @@ public class Ventana extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(final ActionEvent evt) {
-        // TODO Auto-generated method stub
         if (evt.getSource() == acerca) {
             final AcercaDe dialogo = new AcercaDe(this);
             dialogo.setVisible(true);
@@ -71,20 +71,7 @@ public class Ventana extends JFrame implements ActionListener {
         }
     }
 
-    private void crearBusquedaNavidad() {
-        // TODO Auto-generated method stub
-        final PanelBusqueda busqueda = new PanelBusqueda(this, "Navidad");
-        panel.add("<html>Buscar Nº<br>Loteria de Navidad</html>", busqueda);
-    }
-
-    private void crearBusquedaNino() {
-        // TODO Auto-generated method stub
-        final PanelBusqueda busqueda = new PanelBusqueda(this, "Nino");
-        panel.add("<html>Buscar Nº<br>Loteria del Niño</html>", busqueda);
-    }
-
     private void crearMenu() {
-        // TODO Auto-generated method stub
         final JMenuBar barraMenu = new JMenuBar();
         final JMenu ayuda = new JMenu("Ayuda");
         acerca = new JMenuItem("Acerca de...");
@@ -95,25 +82,18 @@ public class Ventana extends JFrame implements ActionListener {
     }
 
     private void crearPanel() {
-        // TODO Auto-generated method stub
-        panel = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-        crearResumenNavidad();
-        crearBusquedaNavidad();
-        crearResumenNino();
-        crearBusquedaNino();
+        panel = new MenuPrincipal(this);
         super.add(panel, BorderLayout.CENTER);
     }
 
-    private void crearResumenNavidad() {
-        // TODO Auto-generated method stub
-        final ResumenNavidad resumen = new ResumenNavidad(this);
-        panel.add("<html>Resumen<br>Sorteo Navidad</html>", resumen);
+    public JPanel getPanel() {
+        return panel;
     }
 
-    private void crearResumenNino() {
-        // TODO Auto-generated method stub
-        final ResumenNino resumen = new ResumenNino(this);
-        panel.add("<html>Resumen<br>Sorteo del Niño</html>", resumen);
+    public void setPanel(JPanel panel) {
+        super.remove(this.panel);
+        this.panel = panel;
+        super.add(panel, BorderLayout.CENTER);
+        super.pack();
     }
-
 }
