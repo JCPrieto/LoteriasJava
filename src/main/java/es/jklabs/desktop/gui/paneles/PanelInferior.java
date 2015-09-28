@@ -1,6 +1,6 @@
-package gui.paneles;
+package es.jklabs.desktop.gui.paneles;
 
-import gui.Ventana;
+import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
 import java.awt.*;

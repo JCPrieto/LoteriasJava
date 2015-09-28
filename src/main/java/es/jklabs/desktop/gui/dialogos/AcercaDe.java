@@ -1,9 +1,10 @@
 /**
  *
  */
-package gui;
+package es.jklabs.desktop.gui.dialogos;
 
 import es.jklabs.desktop.constant.Constant;
+import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
 import java.awt.*;

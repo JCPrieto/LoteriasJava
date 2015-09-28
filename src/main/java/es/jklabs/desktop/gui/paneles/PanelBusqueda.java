@@ -1,10 +1,11 @@
 /**
  *
  */
-package gui;
+package es.jklabs.desktop.gui.paneles;
 
 import com.jklabs.lib.loteria.conexion.Conexion;
 import com.jklabs.lib.loteria.service.Busqueda;
+import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +61,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         if (c.consulta()) {
             Busqueda bsc = new Busqueda(c.getResultado());
             cns.gridy = contador++;
-            resultado.add(new gui.Resultado(text, bsc.getPremio(), cantidadText), cns);
+            resultado.add(new Resultado(text, bsc.getPremio(), cantidadText), cns);
             contador++;
         } else {
             JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);

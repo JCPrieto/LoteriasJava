@@ -1,9 +1,6 @@
-package gui.paneles;
+package es.jklabs.desktop.gui.paneles;
 
-import gui.PanelBusqueda;
-import gui.ResumenNavidad;
-import gui.ResumenNino;
-import gui.Ventana;
+import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
 import java.awt.*;

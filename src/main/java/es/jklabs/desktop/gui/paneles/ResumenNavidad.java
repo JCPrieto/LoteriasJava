@@ -1,10 +1,11 @@
 /**
  *
  */
-package gui;
+package es.jklabs.desktop.gui.paneles;
 
 import com.jklabs.lib.loteria.conexion.Conexion;
 import com.jklabs.lib.loteria.model.ResultadosNavidad;
+import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

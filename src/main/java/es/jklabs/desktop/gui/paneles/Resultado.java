@@ -1,4 +1,4 @@
-package gui;
+package es.jklabs.desktop.gui.paneles;
 
 import javax.swing.*;
 

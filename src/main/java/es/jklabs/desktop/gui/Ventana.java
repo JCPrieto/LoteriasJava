@@ -1,7 +1,8 @@
-package gui;
+package es.jklabs.desktop.gui;
 
-import gui.paneles.MenuPrincipal;
-import gui.paneles.PanelInferior;
+import es.jklabs.desktop.gui.dialogos.AcercaDe;
+import es.jklabs.desktop.gui.paneles.MenuPrincipal;
+import es.jklabs.desktop.gui.paneles.PanelInferior;
 
 import javax.swing.*;
 import java.awt.*;
