@@ -45,15 +45,23 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnResumenNavidad)) {
             padre.setPanel(new ResumenNavidad(padre));
+            padre.setPanelInferior(new PanelInferior(padre));
+            padre.pack();
         }
         if (e.getSource().equals(btnBuscarPremioNavidad)) {
             padre.setPanel(new PanelBusqueda(padre, "Navidad"));
+            padre.setPanelInferior(new PanelInferior(padre));
+            padre.pack();
         }
         if (e.getSource().equals(btnResumenNino)) {
             padre.setPanel(new ResumenNino(padre));
+            padre.setPanelInferior(new PanelInferior(padre));
+            padre.pack();
         }
         if (e.getSource().equals(btnBuscarPremioNino)) {
             padre.setPanel(new PanelBusqueda(padre, "Nino"));
+            padre.setPanelInferior(new PanelInferior(padre));
+            padre.pack();
         }
     }
 }

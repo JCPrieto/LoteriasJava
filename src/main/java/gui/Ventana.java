@@ -1,6 +1,7 @@
 package gui;
 
 import gui.paneles.MenuPrincipal;
+import gui.paneles.PanelInferior;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class Ventana extends JFrame implements ActionListener {
     final transient private Timer tiempo;
     transient private JMenuItem acerca;
     transient private JPanel panel;
+    private PanelInferior panelInferior;
 
     public Ventana() {
         super("Loterias de Navidad - " + getFecha());
@@ -94,6 +96,18 @@ public class Ventana extends JFrame implements ActionListener {
         super.remove(this.panel);
         this.panel = panel;
         super.add(panel, BorderLayout.CENTER);
-        super.pack();
+    }
+
+    public void eliminarPanelInferior() {
+        super.remove(this.panelInferior);
+    }
+
+    public PanelInferior getPanelInferior() {
+        return panelInferior;
+    }
+
+    public void setPanelInferior(PanelInferior panelInferior) {
+        this.panelInferior = panelInferior;
+        super.add(panelInferior, BorderLayout.SOUTH);
     }
 }
