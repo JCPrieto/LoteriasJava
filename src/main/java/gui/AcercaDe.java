@@ -3,6 +3,8 @@
  */
 package gui;
 
+import es.jklabs.desktop.constant.Constant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,57 +26,62 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
     /**
      *
      */
-    private static final long serialVersionUID = 3L;
-    final transient private JButton botonOk;
-    final transient private JLabel etq3;
-    final transient private JLabel etq5;
+    private static final long serialVersionUID = 4L;
+    transient private JButton botonOk;
+    transient private JLabel etq3;
+    transient private JLabel etq5;
+    private String version;
 
     public AcercaDe(final Ventana ventana) {
-        // TODO Auto-generated constructor stub
         super(ventana, "Loterias de Navidad - Acerca de...");
-        super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
-        final JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        final GridBagConstraints cns = new GridBagConstraints();
-        final JLabel etq1 = new JLabel(
-                "<html><h1>Loteria de Navidad 1.3</h1></html>", JLabel.CENTER);
-        cns.fill = GridBagConstraints.HORIZONTAL;
-        cns.insets = new Insets(10, 0, 10, 0);
-        cns.gridx = 0;
-        cns.gridy = 0;
-        cns.gridwidth = 3;
-        panel.add(etq1, cns);
-        final JLabel etq2 = new JLabel("Creado por: Juan Carlos Prieto Silos",
-                JLabel.CENTER);
-        cns.gridy = 1;
-        panel.add(etq2, cns);
-        etq3 = new JLabel("JuanC.Prieto.Silos@gmail.com", JLabel.CENTER);
-        etq3.setAlignmentX(CENTER_ALIGNMENT);
-        etq3.setForeground(Color.blue);
-        etq3.addMouseListener(this);
-        cns.gridy = 2;
-        panel.add(etq3, cns);
-        final JLabel etq4 = new JLabel("Este programa hace uso de la API de ");
-        cns.gridy = 3;
-        cns.gridwidth = 1;
-        panel.add(etq4, cns);
-        etq5 = new JLabel("El Pais");
-        etq5.setForeground(Color.blue);
-        etq5.addMouseListener(this);
-        cns.gridx = 1;
-        panel.add(etq5, cns);
-        final JLabel etq6 = new JLabel(
-                " para la comprobacion de los numero premiados.");
-        cns.gridx = 2;
-        panel.add(etq6, cns);
-        botonOk = new JButton("Aceptar");
-        botonOk.addActionListener(this);
-        cns.gridx = 0;
-        cns.gridy = 4;
-        cns.gridwidth = 3;
-        panel.add(botonOk, cns);
-        super.add(panel);
-        super.pack();
+        try {
+            this.version = Constant.getValor("version");
+            super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
+            final JPanel panel = new JPanel();
+            panel.setLayout(new GridBagLayout());
+            final GridBagConstraints cns = new GridBagConstraints();
+            final JLabel etq1 = new JLabel(
+                    "<html><h1>Loteria de Navidad " + version + "</h1></html>", JLabel.CENTER);
+            cns.fill = GridBagConstraints.HORIZONTAL;
+            cns.insets = new Insets(10, 0, 10, 0);
+            cns.gridx = 0;
+            cns.gridy = 0;
+            cns.gridwidth = 3;
+            panel.add(etq1, cns);
+            final JLabel etq2 = new JLabel("Creado por: Juan Carlos Prieto Silos",
+                    JLabel.CENTER);
+            cns.gridy = 1;
+            panel.add(etq2, cns);
+            etq3 = new JLabel("JuanC.Prieto.Silos@gmail.com", JLabel.CENTER);
+            etq3.setAlignmentX(CENTER_ALIGNMENT);
+            etq3.setForeground(Color.blue);
+            etq3.addMouseListener(this);
+            cns.gridy = 2;
+            panel.add(etq3, cns);
+            final JLabel etq4 = new JLabel("Este programa hace uso de la API de ");
+            cns.gridy = 3;
+            cns.gridwidth = 1;
+            panel.add(etq4, cns);
+            etq5 = new JLabel("El Pais");
+            etq5.setForeground(Color.blue);
+            etq5.addMouseListener(this);
+            cns.gridx = 1;
+            panel.add(etq5, cns);
+            final JLabel etq6 = new JLabel(
+                    " para la comprobacion de los numero premiados.");
+            cns.gridx = 2;
+            panel.add(etq6, cns);
+            botonOk = new JButton("Aceptar");
+            botonOk.addActionListener(this);
+            cns.gridx = 0;
+            cns.gridy = 4;
+            cns.gridwidth = 3;
+            panel.add(botonOk, cns);
+            super.add(panel);
+            super.pack();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
