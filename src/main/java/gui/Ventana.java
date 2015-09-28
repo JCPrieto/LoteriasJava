@@ -40,7 +40,7 @@ public class Ventana extends JFrame implements ActionListener {
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
+        super.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("img/icon/line-globe.png")).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
         tiempo = new Timer(60000, this);
