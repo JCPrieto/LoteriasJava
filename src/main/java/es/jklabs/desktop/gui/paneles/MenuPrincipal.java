@@ -1,5 +1,6 @@
 package es.jklabs.desktop.gui.paneles;
 
+import com.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
@@ -38,12 +39,16 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         super.add(btnBuscarPremioNino);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnResumenNavidad)) {
-            padre.setPanel(new ResumenNavidad(padre));
-            padre.setPanelInferior(new PanelInferior(padre));
-            padre.pack();
+            Conexion con = new Conexion("Navidad", "resumen");
+            if (con.consulta()) {
+                padre.setPanel(new ResumenNavidad(padre, con.getResultado()));
+                padre.setPanelInferior(new PanelInferior(padre));
+                padre.pack();
+            } else {
+                JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+            }
         }
         if (e.getSource().equals(btnBuscarPremioNavidad)) {
             padre.setPanel(new PanelBusqueda(padre, "Navidad"));
@@ -51,9 +56,14 @@ public class MenuPrincipal extends JPanel implements ActionListener {
             padre.pack();
         }
         if (e.getSource().equals(btnResumenNino)) {
-            padre.setPanel(new ResumenNino(padre));
-            padre.setPanelInferior(new PanelInferior(padre));
-            padre.pack();
+            Conexion con = new Conexion("Nino", "resumen");
+            if (con.consulta()) {
+                padre.setPanel(new ResumenNino(padre, con.getResultado()));
+                padre.setPanelInferior(new PanelInferior(padre));
+                padre.pack();
+            } else {
+                JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+            }
         }
         if (e.getSource().equals(btnBuscarPremioNino)) {
             padre.setPanel(new PanelBusqueda(padre, "Nino"));

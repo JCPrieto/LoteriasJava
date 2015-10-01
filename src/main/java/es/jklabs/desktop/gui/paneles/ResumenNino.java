@@ -45,15 +45,15 @@ public class ResumenNino extends JPanel implements ActionListener,
     private JLabel tercero;
     private JPanel panelExt4;
 
-    public ResumenNino(final Ventana ventana) {
+    public ResumenNino(final Ventana ventana, String resultado) {
         super();
         padre = ventana;
-        cargarDatos();
+        res = new ResultadosNino(resultado);
+        cargarElementos();
         tiempo = new Timer(30000, this);
         tiempo.start();
     }
 
-    @Override
     public void actionPerformed(final ActionEvent evt) {
         if (evt.getSource() == tiempo) {
             actualizarResumen();
@@ -84,14 +84,6 @@ public class ResumenNino extends JPanel implements ActionListener,
         panelExt4.removeAll();
         for (String extraccionDo : extraccionCuatro) {
             panelExt4.add(new JLabel(extraccionDo, JLabel.CENTER));
-        }
-    }
-
-    private void cargarDatos() {
-        final Conexion con = new Conexion("Nino", "resumen");
-        if (con.consulta()) {
-            res = new ResultadosNino(con.getResultado());
-            cargarElementos();
         }
     }
 
@@ -165,7 +157,6 @@ public class ResumenNino extends JPanel implements ActionListener,
         super.add(pdf, cns);
     }
 
-    @Override
     public void mouseClicked(final MouseEvent evt) {
         if (evt.getSource() == pdf) {
             try {
@@ -179,22 +170,18 @@ public class ResumenNino extends JPanel implements ActionListener,
         }
     }
 
-    @Override
     public void mouseEntered(final MouseEvent evt) {
 
     }
 
-    @Override
     public void mouseExited(final MouseEvent evt) {
 
     }
 
-    @Override
     public void mousePressed(final MouseEvent evt) {
 
     }
 
-    @Override
     public void mouseReleased(final MouseEvent evt) {
 
     }

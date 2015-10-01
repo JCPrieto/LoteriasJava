@@ -51,11 +51,11 @@ public class ResumenNavidad extends JPanel implements ActionListener,
     private JLabel segundo;
     private JLabel tercero;
 
-    public ResumenNavidad(final Ventana ventana) {
-        // TODO Auto-generated constructor stub
+    public ResumenNavidad(final Ventana ventana, String resultado) {
         super();
         padre = ventana;
-        cargarDatos();
+        res = new ResultadosNavidad(resultado);
+        cargarElementos();
         tiempo = new Timer(30000, this);
         tiempo.start();
     }
@@ -90,15 +90,6 @@ public class ResumenNavidad extends JPanel implements ActionListener,
             pdf.setText(res.getPDF());
             padre.pack();
         }
-    }
-
-    private void cargarDatos() {
-        // TODO Auto-generated method stub
-        final Conexion con = new Conexion("Navidad", "resumen");
-        while (!con.consulta())
-            ;
-        res = new ResultadosNavidad(con.getResultado());
-        cargarElementos();
     }
 
     private void cargarElementos() {
