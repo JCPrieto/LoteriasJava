@@ -77,7 +77,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
             super.add(panel);
             super.pack();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger("Cargar dialogo").log(Level.SEVERE, CRITICO, e);
         }
     }
 

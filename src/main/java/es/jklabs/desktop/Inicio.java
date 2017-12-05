@@ -7,14 +7,8 @@ import es.jklabs.desktop.gui.Ventana;
  */
 public final class Inicio {
 
-    private static Inicio instance = new Inicio();
-
     private Inicio() {
 
-    }
-
-    public static Inicio getInstance() {
-        return instance;
     }
 
     /**

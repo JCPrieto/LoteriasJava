@@ -1,32 +1,21 @@
-/**
- *
- */
 package es.jklabs.desktop.gui.paneles;
 
 import com.jklabs.lib.loteria.conexion.Conexion;
 import com.jklabs.lib.loteria.model.ResultadosNavidad;
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.desktop.gui.listener.ResumenMouseListener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author juanky
  */
-public class ResumenNavidad extends JPanel implements ActionListener,
-        MouseListener {
+public class ResumenNavidad extends JPanel implements ActionListener {
 
-    private static final String CRITICO = "Error Critico";
     /**
      *
      */
@@ -161,37 +150,11 @@ public class ResumenNavidad extends JPanel implements ActionListener,
         super.add(actualizacion, cns);
         pdf = new JLabel(res.getPDF(), JLabel.CENTER);
         pdf.setForeground(Color.blue);
-        pdf.addMouseListener(this);
+        ResumenMouseListener resumenMouseListener = new ResumenMouseListener(pdf);
+        pdf.addMouseListener(resumenMouseListener);
         cns.gridx = 0;
         cns.gridy = 6;
         super.add(pdf, cns);
-    }
-
-    public void mouseClicked(final MouseEvent evt) {
-        if (evt.getSource() == pdf) {
-            try {
-                Desktop.getDesktop().browse(new URI(pdf.getText()));
-                pdf.setForeground(Color.red);
-            } catch (IOException | URISyntaxException e1) {
-                Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
-            }
-        }
-    }
-
-    public void mouseEntered(final MouseEvent evt) {
-
-    }
-
-    public void mouseExited(final MouseEvent evt) {
-
-    }
-
-    public void mousePressed(final MouseEvent evt) {
-
-    }
-
-    public void mouseReleased(final MouseEvent evt) {
-
     }
 
 }
