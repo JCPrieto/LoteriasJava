@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.jklabs.desktop.gui.paneles;
 
 import com.jklabs.lib.loteria.conexion.Conexion;
@@ -23,17 +20,17 @@ public class PanelBusqueda extends JPanel implements ActionListener {
      *
      */
     private static final long serialVersionUID = 3L;
-    final transient private Ventana padre;
-    transient private JButton buscar;
-    transient private JButton limpiar;
-    transient private JTextField numero;
-    transient private JPanel resultado;
+    private final transient Ventana padre;
+    private transient JButton buscar;
+    private transient JButton limpiar;
+    private transient JTextField numero;
+    private transient JPanel resultado;
     private String sorteo;
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
 
-    public PanelBusqueda(final Ventana ventana, String string) {
+    PanelBusqueda(final Ventana ventana, String string) {
         super();
         padre = ventana;
         sorteo = string;

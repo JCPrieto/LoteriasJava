@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.jklabs.desktop;
 
 import es.jklabs.desktop.gui.Ventana;

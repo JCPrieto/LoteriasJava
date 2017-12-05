@@ -9,10 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
-
-/**
- *
- */
+import java.util.Objects;
 
 /**
  * @author juanky
@@ -23,25 +20,19 @@ public class Ventana extends JFrame implements ActionListener {
      *
      */
     private static final long serialVersionUID = 2L;
-    final transient private Timer tiempo;
-    transient private JMenuItem acerca;
-    transient private JPanel panel;
+    private final transient Timer tiempo;
+    private transient JMenuItem acerca;
+    private transient JPanel panel;
     private PanelInferior panelInferior;
 
     public Ventana() {
         super("Loterias de Navidad - " + getFecha());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        super.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("img/icon/line-globe.png")).getImage());
+        super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icon/line-globe.png"))).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
         tiempo = new Timer(60000, this);
@@ -89,10 +80,6 @@ public class Ventana extends JFrame implements ActionListener {
         super.add(panel, BorderLayout.CENTER);
     }
 
-    public JPanel getPanel() {
-        return panel;
-    }
-
     public void setPanel(JPanel panel) {
         super.remove(this.panel);
         this.panel = panel;
@@ -101,10 +88,6 @@ public class Ventana extends JFrame implements ActionListener {
 
     public void eliminarPanelInferior() {
         super.remove(this.panelInferior);
-    }
-
-    public PanelInferior getPanelInferior() {
-        return panelInferior;
     }
 
     public void setPanelInferior(PanelInferior panelInferior) {

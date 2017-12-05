@@ -5,12 +5,12 @@ import javax.swing.*;
 /**
  * Created by juanky on 26/12/14.
  */
-public class Resultado extends JPanel {
-    private final double ganado;
+class Resultado extends JPanel {
+    private static final long serialVersionUID = -3631961411117909743L;
 
-    public Resultado(String numero, Double premio, String cantidad) {
+    Resultado(String numero, Double premio, String cantidad) {
         super();
-        this.ganado = Math.round((premio / Double.parseDouble(cantidad)) * 100D) / 100D;
+        double ganado = Math.round((premio / Double.parseDouble(cantidad)) * 100D) / 100D;
         super.add(new JLabel(numero + ":"));
         super.add(new JLabel("Ha ganado: " + ganado + "€"));
     }

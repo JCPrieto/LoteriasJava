@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.jklabs.desktop.gui.dialogos;
 
 import es.jklabs.desktop.constant.Constant;
@@ -28,15 +25,14 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
      *
      */
     private static final long serialVersionUID = 4L;
-    transient private JButton botonOk;
-    transient private JLabel etq3;
-    transient private JLabel etq5;
-    private String version;
+    private transient JButton botonOk;
+    private transient JLabel etq3;
+    private transient JLabel etq5;
 
     public AcercaDe(final Ventana ventana) {
         super(ventana, "Loterias de Navidad - Acerca de...");
         try {
-            this.version = Constant.getValor("version");
+            String version = Constant.getValor("version");
             super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
             final JPanel panel = new JPanel();
             panel.setLayout(new GridBagLayout());
@@ -87,7 +83,6 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 
     @Override
     public void actionPerformed(final ActionEvent evt) {
-        // TODO Auto-generated method stub
         if (evt.getSource() == botonOk) {
             this.dispose();
         }
@@ -95,18 +90,13 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 
     @Override
     public void mouseClicked(final MouseEvent evt) {
-        // TODO Auto-generated method stub
         if (evt.getSource() == etq3) {
             try {
                 Desktop.getDesktop()
                         .browse(new URI(
                                 "mailto:JuanC.Prieto.Silos@gmail.com?subject=Loteria_Navidad_Java"));
                 etq3.setForeground(Color.red);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                Logger.getLogger("Correo").log(Level.SEVERE, CRITICO, e1);
-            } catch (URISyntaxException e1) {
-                // TODO Auto-generated catch block
+            } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("Correo").log(Level.SEVERE, CRITICO, e1);
             }
         }
@@ -115,11 +105,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
                 Desktop.getDesktop().browse(
                         new URI("http://servicios.elpais.com"));
                 etq5.setForeground(Color.red);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                Logger.getLogger("Link").log(Level.SEVERE, CRITICO, e1);
-            } catch (URISyntaxException e1) {
-                // TODO Auto-generated catch block
+            } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("Link").log(Level.SEVERE, CRITICO, e1);
             }
         }
@@ -127,25 +113,21 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
 
     @Override
     public void mouseEntered(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void mouseExited(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void mousePressed(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void mouseReleased(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 

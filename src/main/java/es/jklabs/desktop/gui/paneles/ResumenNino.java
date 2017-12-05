@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.jklabs.desktop.gui.paneles;
 
 import com.jklabs.lib.loteria.conexion.Conexion;
@@ -31,21 +28,20 @@ public class ResumenNino extends JPanel implements ActionListener,
      *
      */
     private static final long serialVersionUID = 2L;
-    final transient private Ventana padre;
-    final private Timer tiempo;
-    transient private JLabel actualizacion;
-    transient private JLabel estado;
-    transient private JPanel panelExt2;
-    transient private JPanel panelExt3;
-    transient private JPanel panelReintegros;
-    transient private JLabel pdf;
-    private JLabel primero;
-    transient private ResultadosNino res;
+    private final transient Ventana padre;
+    private final Timer tiempo;
+    private transient JLabel actualizacion;
+    private transient JLabel estado;
+    private transient JPanel panelExt2;
+    private transient JPanel panelExt3;
+    private transient JPanel panelReintegros;
+    private transient JLabel pdf;
+    private transient ResultadosNino res;
     private JLabel segundo;
     private JLabel tercero;
     private JPanel panelExt4;
 
-    public ResumenNino(final Ventana ventana, String resultado) {
+    ResumenNino(final Ventana ventana, String resultado) {
         super();
         padre = ventana;
         res = new ResultadosNino(resultado);
@@ -95,7 +91,7 @@ public class ResumenNino extends JPanel implements ActionListener,
         final GridBagConstraints cns = new GridBagConstraints();
         JPanel panelPrimero = new JPanel();
         panelPrimero.setBorder(new TitledBorder("Primer Premio"));
-        primero = new JLabel(res.getPrimero(), JLabel.CENTER);
+        JLabel primero = new JLabel(res.getPrimero(), JLabel.CENTER);
         panelPrimero.add(primero);
         cns.fill = GridBagConstraints.HORIZONTAL;
         cns.gridx = 0;
@@ -162,9 +158,7 @@ public class ResumenNino extends JPanel implements ActionListener,
             try {
                 Desktop.getDesktop().browse(new URI(pdf.getText()));
                 pdf.setForeground(Color.red);
-            } catch (IOException e1) {
-                Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
-            } catch (URISyntaxException e1) {
+            } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
             }
         }

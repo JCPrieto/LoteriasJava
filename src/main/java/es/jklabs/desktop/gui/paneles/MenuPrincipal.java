@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
  * Created by juanky on 26/09/15.
  */
 public class MenuPrincipal extends JPanel implements ActionListener {
+
+    private static final long serialVersionUID = -5513004495828699993L;
     private final Ventana padre;
     private JButton btnResumenNavidad;
     private JButton btnBuscarPremioNavidad;

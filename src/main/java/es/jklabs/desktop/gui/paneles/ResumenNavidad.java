@@ -31,27 +31,27 @@ public class ResumenNavidad extends JPanel implements ActionListener,
      *
      */
     private static final long serialVersionUID = 1L;
-    transient final private Ventana padre;
-    final private Timer tiempo;
-    transient private JLabel actualizacion;
-    transient private JLabel cuarto1;
-    transient private JLabel cuarto2;
-    transient private JLabel estado;
-    transient private JLabel gordo;
-    transient private JLabel pdf;
-    transient private JLabel quinto1;
-    transient private JLabel quinto2;
-    transient private JLabel quinto3;
-    transient private JLabel quinto4;
-    transient private JLabel quinto5;
-    transient private JLabel quinto6;
-    transient private JLabel quinto7;
-    transient private JLabel quinto8;
+    private final transient Ventana padre;
+    private final Timer tiempo;
+    private transient JLabel actualizacion;
+    private transient JLabel cuarto1;
+    private transient JLabel cuarto2;
+    private transient JLabel estado;
+    private transient JLabel gordo;
+    private transient JLabel pdf;
+    private transient JLabel quinto1;
+    private transient JLabel quinto2;
+    private transient JLabel quinto3;
+    private transient JLabel quinto4;
+    private transient JLabel quinto5;
+    private transient JLabel quinto6;
+    private transient JLabel quinto7;
+    private transient JLabel quinto8;
     private ResultadosNavidad res;
     private JLabel segundo;
     private JLabel tercero;
 
-    public ResumenNavidad(final Ventana ventana, String resultado) {
+    ResumenNavidad(final Ventana ventana, String resultado) {
         super();
         padre = ventana;
         res = new ResultadosNavidad(resultado);
@@ -61,14 +61,12 @@ public class ResumenNavidad extends JPanel implements ActionListener,
     }
 
     public void actionPerformed(final ActionEvent evt) {
-        // TODO Auto-generated method stub
         if (evt.getSource() == tiempo) {
             actualizarResumen();
         }
     }
 
     private void actualizarResumen() {
-        // TODO Auto-generated method stub
         final Conexion con = new Conexion("Navidad", "resumen");
         if (con.consulta()) {
             res = new ResultadosNavidad(con.getResultado());
@@ -93,7 +91,6 @@ public class ResumenNavidad extends JPanel implements ActionListener,
     }
 
     private void cargarElementos() {
-        // TODO Auto-generated method stub
         super.setLayout(new GridBagLayout());
         final GridBagConstraints cns = new GridBagConstraints();
         final JPanel panelGordo = new JPanel();
@@ -171,38 +168,29 @@ public class ResumenNavidad extends JPanel implements ActionListener,
     }
 
     public void mouseClicked(final MouseEvent evt) {
-        // TODO Auto-generated method stub
         if (evt.getSource() == pdf) {
             try {
                 Desktop.getDesktop().browse(new URI(pdf.getText()));
                 pdf.setForeground(Color.red);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
-            } catch (URISyntaxException e1) {
-                // TODO Auto-generated catch block
+            } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
             }
         }
     }
 
     public void mouseEntered(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     public void mouseExited(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     public void mousePressed(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 
     public void mouseReleased(final MouseEvent evt) {
-        // TODO Auto-generated method stub
 
     }
 

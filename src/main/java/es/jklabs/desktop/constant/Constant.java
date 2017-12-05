@@ -11,6 +11,10 @@ public class Constant {
 
     private static final String CONSTANTES = "constant.properties";
 
+    private Constant() {
+
+    }
+
     public static String getValor(String key) throws IOException {
         Properties properties = new Properties();
         InputStream inputStream = Constant.class.getClassLoader().getResourceAsStream(CONSTANTES);

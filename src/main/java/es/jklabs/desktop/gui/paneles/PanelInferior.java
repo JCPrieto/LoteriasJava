@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
  */
 public class PanelInferior extends JPanel implements ActionListener {
 
+    private static final long serialVersionUID = 6132315657313753236L;
     private final JButton btnBack;
     private final Ventana padre;
 
-    public PanelInferior(Ventana padre) {
+    PanelInferior(Ventana padre) {
         super();
         this.padre = padre;
         super.setLayout(new BorderLayout(10, 10));
