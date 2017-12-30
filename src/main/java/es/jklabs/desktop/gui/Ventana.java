@@ -1,13 +1,17 @@
 package es.jklabs.desktop.gui;
 
+import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.dialogos.AcercaDe;
 import es.jklabs.desktop.gui.paneles.MenuPrincipal;
 import es.jklabs.desktop.gui.paneles.PanelInferior;
+import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.UtilidadesFirebase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -20,26 +24,45 @@ public class Ventana extends JFrame implements ActionListener {
      *
      */
     private static final long serialVersionUID = 2L;
+    private static final Logger LOG = Logger.getLogger();
     private final transient Timer tiempo;
     private transient JMenuItem acerca;
     private transient JPanel panel;
     private PanelInferior panelInferior;
+    private transient TrayIcon trayIcon;
 
     public Ventana() {
         super("Loterias de Navidad - " + getFecha());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+            LOG.error("Cargar look and field del S.O.", e);
         }
-        super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icon/line-globe.png"))).getImage());
+        super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icons/line-globe.png"))).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
         tiempo = new Timer(60000, this);
         tiempo.start();
         crearMenu();
         crearPanel();
+        cargarNotificaciones();
         super.pack();
+    }
+
+    private void cargarNotificaciones() {
+        SystemTray tray = SystemTray.getSystemTray();
+        //Alternative (if the icon is on the classpath):
+        try {
+            trayIcon = new TrayIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource
+                    ("img/icons/line-globe.png"))).getImage(), Constant.getValor("nombre.app"));
+            //Let the system resizes the image if needed
+            trayIcon.setImageAutoSize(true);
+            //Set tooltip text for the tray icon
+            trayIcon.setToolTip("BeyondDataBaseTransfer");
+            tray.add(trayIcon);
+        } catch (AWTException | IOException e) {
+            LOG.error("Establecer icono del systray", e);
+        }
     }
 
     /**
@@ -72,7 +95,14 @@ public class Ventana extends JFrame implements ActionListener {
         acerca.addActionListener(this);
         ayuda.add(acerca);
         barraMenu.add(ayuda);
-        super.add(barraMenu, BorderLayout.NORTH);
+        if (UtilidadesFirebase.existeNuevaVersion()) {
+            barraMenu.add(Box.createHorizontalGlue());
+            JMenuItem jmActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
+                    (getClass().getClassLoader().getResource("img/icons/update.png"))));
+            jmActualizacion.addActionListener(al -> UtilidadesFirebase.descargaNuevaVersion(this));
+            barraMenu.add(jmActualizacion);
+        }
+        super.setJMenuBar(barraMenu);
     }
 
     private void crearPanel() {
@@ -94,4 +124,9 @@ public class Ventana extends JFrame implements ActionListener {
         this.panelInferior = panelInferior;
         super.add(panelInferior, BorderLayout.SOUTH);
     }
+
+    public TrayIcon getTrayIcon() {
+        return trayIcon;
+    }
+
 }
