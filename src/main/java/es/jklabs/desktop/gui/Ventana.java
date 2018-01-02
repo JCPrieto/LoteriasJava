@@ -58,7 +58,7 @@ public class Ventana extends JFrame implements ActionListener {
             //Let the system resizes the image if needed
             trayIcon.setImageAutoSize(true);
             //Set tooltip text for the tray icon
-            trayIcon.setToolTip("BeyondDataBaseTransfer");
+            trayIcon.setToolTip(Constant.getValor("nombre.app"));
             tray.add(trayIcon);
         } catch (AWTException | IOException e) {
             LOG.error("Establecer icono del systray", e);
