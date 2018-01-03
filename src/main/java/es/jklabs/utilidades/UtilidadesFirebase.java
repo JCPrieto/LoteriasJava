@@ -116,7 +116,7 @@ public class UtilidadesFirebase {
     }
 
     private static String getNombreApp(Aplicacion app) throws IOException {
-        return Constant.getValor("nombre.app") + "-" + app.getUltimaVersion() + ".zip";
+        return Constant.getValor("nombre.app.dowload") + "-" + app.getUltimaVersion() + ".zip";
     }
 
     private static Aplicacion getAplicacion() {
