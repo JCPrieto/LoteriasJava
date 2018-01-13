@@ -11,6 +11,7 @@ import com.google.firebase.cloud.StorageClient;
 import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.json.firebase.Aplicacion;
+import es.jklabs.lib.loteria.constant.HttpResponseCode;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;

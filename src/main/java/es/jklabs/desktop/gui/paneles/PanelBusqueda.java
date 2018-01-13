@@ -1,15 +1,18 @@
 package es.jklabs.desktop.gui.paneles;
 
-import com.jklabs.lib.loteria.conexion.Conexion;
-import com.jklabs.lib.loteria.service.Busqueda;
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.lib.loteria.conexion.Conexion;
+import es.jklabs.lib.loteria.enumeradores.Sorteo;
+import es.jklabs.utilidades.Logger;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 /**
  * @author juanky
@@ -20,20 +23,21 @@ public class PanelBusqueda extends JPanel implements ActionListener {
      *
      */
     private static final long serialVersionUID = 3L;
+    private static final Logger LOGGER = Logger.getLogger();
     private final transient Ventana padre;
     private transient JButton buscar;
     private transient JButton limpiar;
     private transient JTextField numero;
     private transient JPanel resultado;
-    private String sorteo;
+    private Sorteo sorteo;
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
 
-    PanelBusqueda(final Ventana ventana, String string) {
+    PanelBusqueda(final Ventana ventana, Sorteo sorteo) {
         super();
         padre = ventana;
-        sorteo = string;
+        this.sorteo = sorteo;
         cargarElementos();
     }
 
@@ -54,19 +58,21 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     private void buscarPremio(final String text, String cantidadText) {
         Conexion c;
-        c = new Conexion(sorteo, text);
-        if (c.consulta()) {
-            Busqueda bsc = new Busqueda(c.getResultado());
-            cns.gridy = contador++;
-            resultado.add(new Resultado(text, bsc.getPremio(), cantidadText), cns);
+        c = new Conexion();
+        cns.gridy = contador++;
+        try {
+            resultado.add(new Resultado(text, c.getPremio(sorteo, text).getCantidad(), cantidadText), cns);
             contador++;
-        } else {
+            padre.pack();
+        } catch (IOException e) {
+            contador--;
+            LOGGER.error("Buscar premio", e);
             JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
         }
-        padre.pack();
     }
 
     private void cargarElementos() {
+        super.setBorder(new EmptyBorder(10, 10, 10, 10));
         super.setLayout(new BorderLayout());
         final JPanel entrada = new JPanel();
         numero = new JTextField(5);
@@ -136,4 +142,11 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         super.add(scrollPane, BorderLayout.CENTER);
     }
 
+    public Sorteo getSorteo() {
+        return sorteo;
+    }
+
+    public void setSorteo(Sorteo sorteo) {
+        this.sorteo = sorteo;
+    }
 }

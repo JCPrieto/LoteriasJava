@@ -10,7 +10,7 @@ class Resultado extends JPanel {
 
     Resultado(String numero, Double premio, String cantidad) {
         super();
-        double ganado = Math.round((premio / 20D) * Double.parseDouble(cantidad));
+        double ganado = Math.round(premio * Double.parseDouble(cantidad));
         super.add(new JLabel(numero + ":"));
         super.add(new JLabel("Ha ganado: " + ganado + "€"));
     }

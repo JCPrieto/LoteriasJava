@@ -3,6 +3,7 @@ package es.jklabs.desktop.gui.paneles;
 import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class PanelInferior extends JPanel implements ActionListener {
 
     PanelInferior(Ventana padre) {
         super();
+        super.setBorder(new EmptyBorder(10, 10, 10, 10));
         this.padre = padre;
         super.setLayout(new BorderLayout(10, 10));
         btnBack = new JButton("Volver");

@@ -2,6 +2,7 @@ package es.jklabs.desktop.constant;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -15,10 +16,14 @@ public class Constant {
 
     }
 
-    public static String getValor(String key) throws IOException {
+    public static String getValor(String key) {
         Properties properties = new Properties();
         InputStream inputStream = Constant.class.getClassLoader().getResourceAsStream(CONSTANTES);
-        properties.load(inputStream);
-        return properties.getProperty(key);
+        try {
+            properties.load(new InputStreamReader(inputStream, "UTF-8"));
+            return properties.getProperty(key);
+        } catch (IOException e) {
+            return key;
+        }
     }
 }

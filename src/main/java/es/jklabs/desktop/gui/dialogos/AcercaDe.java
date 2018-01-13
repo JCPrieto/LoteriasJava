@@ -4,6 +4,7 @@ import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.Ventana;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,55 +32,55 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
     private transient JLabel etq5;
 
     public AcercaDe(final Ventana ventana) {
-        super(ventana, "Loterias de Navidad - Acerca de...");
-        try {
-            String version = Constant.getValor("version");
-            super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
-            final JPanel panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
-            final GridBagConstraints cns = new GridBagConstraints();
-            final JLabel etq1 = new JLabel(
-                    "<html><h1>Loteria de Navidad " + version + "</h1></html>", JLabel.CENTER);
-            cns.fill = GridBagConstraints.HORIZONTAL;
-            cns.insets = new Insets(10, 0, 10, 0);
-            cns.gridx = 0;
-            cns.gridy = 0;
-            cns.gridwidth = 3;
-            panel.add(etq1, cns);
-            final JLabel etq2 = new JLabel("Creado por: Juan Carlos Prieto Silos",
-                    JLabel.CENTER);
-            cns.gridy = 1;
-            panel.add(etq2, cns);
-            etq3 = new JLabel("JuanC.Prieto.Silos@gmail.com", JLabel.CENTER);
-            etq3.setAlignmentX(CENTER_ALIGNMENT);
-            etq3.setForeground(Color.blue);
-            etq3.addMouseListener(this);
-            cns.gridy = 2;
-            panel.add(etq3, cns);
-            final JLabel etq4 = new JLabel("Este programa hace uso de la API de ");
-            cns.gridy = 3;
-            cns.gridwidth = 1;
-            panel.add(etq4, cns);
-            etq5 = new JLabel("El Pais");
-            etq5.setForeground(Color.blue);
-            etq5.addMouseListener(this);
-            cns.gridx = 1;
-            panel.add(etq5, cns);
-            final JLabel etq6 = new JLabel(
-                    " para la comprobacion de los numero premiados.");
-            cns.gridx = 2;
-            panel.add(etq6, cns);
-            botonOk = new JButton("Aceptar");
-            botonOk.addActionListener(this);
-            cns.gridx = 0;
-            cns.gridy = 4;
-            cns.gridwidth = 3;
-            panel.add(botonOk, cns);
-            super.add(panel);
-            super.pack();
-        } catch (IOException e) {
-            Logger.getLogger("Cargar dialogo").log(Level.SEVERE, CRITICO, e);
-        }
+        super(ventana, Constant.getValor("nombre.app") + " - Acerca de...");
+        String version = Constant.getValor("version");
+        super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
+        final JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setLayout(new GridBagLayout());
+        final GridBagConstraints cns = new GridBagConstraints();
+        final JLabel etq1 = new JLabel(
+                "<html><h1>" + Constant.getValor("nombre.app") + " " + version + "</h1></html>", new ImageIcon
+                (Objects.requireNonNull(getClass()
+                        .getClassLoader().getResource
+                                ("img/icons/line-globe.png"))), JLabel.CENTER);
+        cns.fill = GridBagConstraints.HORIZONTAL;
+        cns.insets = new Insets(10, 0, 10, 0);
+        cns.gridx = 0;
+        cns.gridy = 0;
+        cns.gridwidth = 3;
+        panel.add(etq1, cns);
+        final JLabel etq2 = new JLabel("Creado por: Juan Carlos Prieto Silos",
+                JLabel.CENTER);
+        cns.gridy = 1;
+        panel.add(etq2, cns);
+        etq3 = new JLabel("JuanC.Prieto.Silos@gmail.com", JLabel.CENTER);
+        etq3.setAlignmentX(CENTER_ALIGNMENT);
+        etq3.setForeground(Color.blue);
+        etq3.addMouseListener(this);
+        cns.gridy = 2;
+        panel.add(etq3, cns);
+        final JLabel etq4 = new JLabel("Este programa hace uso de la API de ");
+        cns.gridy = 3;
+        cns.gridwidth = 1;
+        panel.add(etq4, cns);
+        etq5 = new JLabel("El Pais");
+        etq5.setForeground(Color.blue);
+        etq5.addMouseListener(this);
+        cns.gridx = 1;
+        panel.add(etq5, cns);
+        final JLabel etq6 = new JLabel(
+                " para la comprobacion de los numero premiados.");
+        cns.gridx = 2;
+        panel.add(etq6, cns);
+        botonOk = new JButton("Aceptar");
+        botonOk.addActionListener(this);
+        cns.gridx = 0;
+        cns.gridy = 4;
+        cns.gridwidth = 3;
+        panel.add(botonOk, cns);
+        super.add(panel);
+        super.pack();
     }
 
     @Override
@@ -103,7 +105,7 @@ public class AcercaDe extends JDialog implements MouseListener, ActionListener {
         if (evt.getSource() == etq5) {
             try {
                 Desktop.getDesktop().browse(
-                        new URI("http://servicios.elpais.com"));
+                        new URI(Constant.getValor("url.api")));
                 etq5.setForeground(Color.red);
             } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("Link").log(Level.SEVERE, CRITICO, e1);
