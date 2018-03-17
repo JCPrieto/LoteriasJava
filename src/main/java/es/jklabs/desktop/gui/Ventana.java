@@ -4,6 +4,7 @@ import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.dialogos.AcercaDe;
 import es.jklabs.desktop.gui.paneles.MenuPrincipal;
 import es.jklabs.desktop.gui.paneles.PanelInferior;
+import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.UtilidadesFirebase;
 
@@ -12,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -32,11 +34,6 @@ public class Ventana extends JFrame implements ActionListener {
 
     public Ventana() {
         super(Constant.getValor(NOMBRE_APP));
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            LOG.error("Cargar look and field del S.O.", e);
-        }
         super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icons/line-globe.png"))).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
@@ -72,19 +69,33 @@ public class Ventana extends JFrame implements ActionListener {
     private void crearMenu() {
         final JMenuBar barraMenu = new JMenuBar();
         final JMenu ayuda = new JMenu("Ayuda");
+        ayuda.setMargin(new Insets(5, 5, 5, 5));
         acerca = new JMenuItem("Acerca de...", new ImageIcon(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("img/icons/info.png"))));
         acerca.addActionListener(this);
         ayuda.add(acerca);
         barraMenu.add(ayuda);
-        if (UtilidadesFirebase.existeNuevaVersion()) {
-            barraMenu.add(Box.createHorizontalGlue());
-            JMenuItem jmActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
-                    (getClass().getClassLoader().getResource("img/icons/update.png"))));
-            jmActualizacion.addActionListener(al -> UtilidadesFirebase.descargaNuevaVersion(this));
-            barraMenu.add(jmActualizacion);
+        try {
+            if (UtilidadesFirebase.existeNuevaVersion()) {
+                barraMenu.add(Box.createHorizontalGlue());
+                JMenuItem jmActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
+                        (getClass().getClassLoader().getResource("img/icons/update.png"))));
+                jmActualizacion.addActionListener(al -> descargarNuevaVersion());
+                barraMenu.add(jmActualizacion);
+            }
+        } catch (IOException | InterruptedException e) {
+            LOG.error("consultar.nueva.version", e);
         }
         super.setJMenuBar(barraMenu);
+    }
+
+    private void descargarNuevaVersion() {
+        try {
+            UtilidadesFirebase.descargaNuevaVersion(this);
+        } catch (InterruptedException e) {
+            Growls.mostrarError(this, "descargar.nueva.version", e);
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void crearPanel() {

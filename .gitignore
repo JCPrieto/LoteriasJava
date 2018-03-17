@@ -93,3 +93,5 @@ LoteriasJava.iml
 LoteriaDeNavidad.iml
 src/main/resources/json/
 .idea/.name
+.idea/encodings.xml
+/.idea/compiler.xml
