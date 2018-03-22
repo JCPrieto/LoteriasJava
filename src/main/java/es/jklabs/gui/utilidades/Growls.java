@@ -22,7 +22,7 @@ public class Growls {
         mostrarError(parent, null, cuerpo, e);
     }
 
-    private static void mostrarError(Ventana parent, String titulo, String cuerpo, Exception e) {
+    public static void mostrarError(Ventana parent, String titulo, String cuerpo, Exception e) {
         parent.getTrayIcon().displayMessage(titulo != null ? mensajes.getString(titulo) : null, errores.getString
                 (cuerpo), TrayIcon.MessageType.ERROR);
         LOG.error(cuerpo, e);
