@@ -8,11 +8,11 @@ import javax.swing.*;
 /**
  * @author juanky
  */
-public final class Inicio {
+public final class LoteriaNavidad {
 
     private static final Logger LOG = Logger.getLogger();
 
-    private Inicio() {
+    private LoteriaNavidad() {
 
     }
 
