@@ -13,7 +13,7 @@
         <dependency>
             <groupId>es.jklabs.lib.loteria</groupId>
             <artifactId>Libreria_Loterias_Navidad</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
