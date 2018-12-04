@@ -76,7 +76,8 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         if (e.getSource().equals(btnBuscarPremioNino)) {
             padre.setPanel(new PanelBusqueda(padre, Sorteo.NINO));
             padre.setPanelInferior(new PanelInferior(padre));
-            padre.pack();
+            SwingUtilities.updateComponentTreeUI(padre.getPanel());
+            SwingUtilities.updateComponentTreeUI(padre.getPanelInferior());
         }
     }
 }

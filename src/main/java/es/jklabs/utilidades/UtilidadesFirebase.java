@@ -8,13 +8,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import com.google.firebase.database.*;
-import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.json.firebase.Aplicacion;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -36,7 +34,7 @@ public class UtilidadesFirebase {
         instanciarFirebase();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REFERENCE);
         Aplicacion app = getAplicacion(ref);
-        return diferenteVersion(app.getUltimaVersion(), Constant.getValor("version"));
+        return diferenteVersion(app.getUltimaVersion());
     }
 
     private static void instanciarFirebase() throws IOException {
@@ -45,15 +43,15 @@ public class UtilidadesFirebase {
                     .setCredentials(GoogleCredentials.fromStream(UtilidadesFirebase.class.getClassLoader()
                             .getResourceAsStream
                                     ("json/curriculum-a2a80-firebase-adminsdk-17wyo-de15a29f7c.json")))
-                    .setStorageBucket(Constant.getValor("storage.bucket")).setDatabaseUrl
+                    .setStorageBucket(Constantes.STORAGE_BUCKET).setDatabaseUrl
                             ("https://curriculum-a2a80.firebaseio.com").build();
             FirebaseApp.initializeApp(options);
         }
     }
 
-    private static boolean diferenteVersion(String serverVersion, String appVersion) {
+    private static boolean diferenteVersion(String serverVersion) {
         String[] sv = serverVersion.split("\\.");
-        String[] av = appVersion.split("\\.");
+        String[] av = Constantes.VERSION.split("\\.");
         return Integer.parseInt(sv[0]) > Integer.parseInt(av[0]) || Integer.parseInt(sv[0]) == Integer.parseInt(av[0]) && (Integer.parseInt(sv[1]) > Integer.parseInt(av[1]) || Integer.parseInt(sv[1]) == Integer.parseInt(av[1]) && Integer.parseInt(sv[2]) > Integer.parseInt(av[2]));
     }
 
@@ -69,17 +67,16 @@ public class UtilidadesFirebase {
                 Storage storage = bucket.getStorage();
                 Aplicacion app = getAplicacion(FirebaseDatabase.getInstance().getReference(REFERENCE));
                 if (app.getUltimaVersion() != null) {
-                    Blob blob = storage.get(Constant.getValor("storage.bucket"), getNombreApp(app), Storage
+                    Blob blob = storage.get(Constantes.STORAGE_BUCKET, getNombreApp(app), Storage
                             .BlobGetOption.fields(Storage.BlobField.SIZE));
                     blob.downloadTo(Paths.get(directorio.getPath() + System.getProperty("file.separator") + getNombreApp(app)));
                     actualizarNumDescargas();
-                    Growls.mostrarInfo(ventana, null, "nueva.version.descargada");
+                    Growls.mostrarInfo(null, "nueva.version.descargada");
                 } else {
                     LOG.info("Error de lectura de la BBDD");
                 }
             } catch (AccessDeniedException e) {
-                ventana.getTrayIcon().displayMessage(null, "No tiene permisos para descargar para escribir la ruta " +
-                        "indicada", TrayIcon.MessageType.ERROR);
+                Growls.mostrarError("path.sin.permiso.escritura", e);
                 descargaNuevaVersion(ventana);
             } catch (IOException e) {
                 LOG.error("Descargar nueva version", e);
@@ -97,7 +94,7 @@ public class UtilidadesFirebase {
     }
 
     private static String getNombreApp(Aplicacion app) {
-        return Constant.getValor("nombre.app.dowload") + "-" + app.getUltimaVersion() + ".zip";
+        return Constantes.NOMBRE_APP_DOWNLOAD + "-" + app.getUltimaVersion() + ".zip";
     }
 
     private static Aplicacion getAplicacion(DatabaseReference ref) throws InterruptedException {

@@ -13,6 +13,14 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
     * Sshj https://github.com/hierynomus/sshj
     * Jackson https://github.com/FasterXML/jackson-core/wiki
     * Firebase https://firebase.google.com
+    * ControlsFX http://fxexperience.com/controlsfx
+    
+### Changelog ###
+
+2.4.0:
+
+* Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las 
+notificaciones.
 
 ### Licencia ### 
 

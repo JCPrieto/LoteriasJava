@@ -1,30 +1,38 @@
 package es.jklabs.gui.utilidades;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
-
-import java.awt.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import es.jklabs.utilidades.Mensajes;
+import javafx.application.Platform;
+import org.controlsfx.control.Notifications;
 
 public class Growls {
 
     private static final Logger LOG = Logger.getLogger();
-    private static ResourceBundle mensajes = ResourceBundle.getBundle("i18n/mensajes", Locale.getDefault());
-    private static ResourceBundle errores = ResourceBundle.getBundle("i18n/errores", Locale.getDefault());
 
-    public static void mostrarInfo(Ventana parent, String titulo, String cuerpo) {
-        parent.getTrayIcon().displayMessage(titulo != null ? mensajes.getString(titulo) : null, mensajes.getString
-                (cuerpo), TrayIcon.MessageType.INFO);
+    private Growls() {
+
     }
 
-    public static void mostrarError(Ventana parent, String cuerpo, Exception e) {
-        mostrarError(parent, null, cuerpo, e);
+    public static void mostrarInfo(String titulo, String cuerpo) {
+        Platform.runLater(() -> getGrowl(titulo, Mensajes.getMensaje(cuerpo))
+                .showInformation());
     }
 
-    public static void mostrarError(Ventana parent, String titulo, String cuerpo, Exception e) {
-        parent.getTrayIcon().displayMessage(titulo != null ? mensajes.getString(titulo) : null, errores.getString
-                (cuerpo), TrayIcon.MessageType.ERROR);
+    private static Notifications getGrowl(String titulo, String cuerpo) {
+        return Notifications.create()
+                .darkStyle()
+                .title(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP)
+                .text(cuerpo);
+    }
+
+    public static void mostrarError(String cuerpo, Exception e) {
+        mostrarError(null, cuerpo, e);
+    }
+
+    public static void mostrarError(String titulo, String cuerpo, Exception e) {
+        Platform.runLater(() -> getGrowl(titulo, Mensajes.getError(cuerpo))
+                .showError());
         LOG.error(cuerpo, e);
     }
 }

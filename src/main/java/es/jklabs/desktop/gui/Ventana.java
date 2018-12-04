@@ -1,12 +1,13 @@
 package es.jklabs.desktop.gui;
 
-import es.jklabs.desktop.constant.Constant;
 import es.jklabs.desktop.gui.dialogos.AcercaDe;
 import es.jklabs.desktop.gui.paneles.MenuPrincipal;
 import es.jklabs.desktop.gui.paneles.PanelInferior;
 import es.jklabs.gui.utilidades.Growls;
+import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.UtilidadesFirebase;
+import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,37 +27,20 @@ public class Ventana extends JFrame implements ActionListener {
      */
     private static final long serialVersionUID = 2L;
     private static final Logger LOG = Logger.getLogger();
-    private static final String NOMBRE_APP = "nombre.app";
     private transient JMenuItem acerca;
     private transient JPanel panel;
-    private PanelInferior panelInferior;
-    private transient TrayIcon trayIcon;
 
-    public Ventana() {
-        super(Constant.getValor(NOMBRE_APP));
+    private PanelInferior panelInferior;
+
+    public Ventana(JFXPanel fxPanel) {
+        super(Constantes.NOMBRE_APP);
+        add(fxPanel);
         super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icons/line-globe.png"))).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
         crearMenu();
         crearPanel();
-        cargarNotificaciones();
         super.pack();
-    }
-
-    private void cargarNotificaciones() {
-        SystemTray tray = SystemTray.getSystemTray();
-        //Alternative (if the icon is on the classpath):
-        try {
-            trayIcon = new TrayIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource
-                    ("img/icons/line-globe.png"))).getImage(), Constant.getValor(NOMBRE_APP));
-            //Let the system resizes the image if needed
-            trayIcon.setImageAutoSize(true);
-            //Set tooltip text for the tray icon
-            trayIcon.setToolTip(Constant.getValor(NOMBRE_APP));
-            tray.add(trayIcon);
-        } catch (AWTException e) {
-            LOG.error("Establecer icono del systray", e);
-        }
     }
 
     public void actionPerformed(final ActionEvent evt) {
@@ -93,7 +77,7 @@ public class Ventana extends JFrame implements ActionListener {
         try {
             UtilidadesFirebase.descargaNuevaVersion(this);
         } catch (InterruptedException e) {
-            Growls.mostrarError(this, "descargar.nueva.version", e);
+            Growls.mostrarError("descargar.nueva.version", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -120,8 +104,12 @@ public class Ventana extends JFrame implements ActionListener {
         super.add(panelInferior, BorderLayout.SOUTH);
     }
 
-    public TrayIcon getTrayIcon() {
-        return trayIcon;
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public PanelInferior getPanelInferior() {
+        return panelInferior;
     }
 
 }
