@@ -7,7 +7,6 @@ import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.UtilidadesFirebase;
-import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,15 +25,13 @@ public class Ventana extends JFrame implements ActionListener {
      *
      */
     private static final long serialVersionUID = 2L;
-    private static final Logger LOG = Logger.getLogger();
     private transient JMenuItem acerca;
     private transient JPanel panel;
 
     private PanelInferior panelInferior;
 
-    public Ventana(JFXPanel fxPanel) {
+    public Ventana() {
         super(Constantes.NOMBRE_APP);
-        add(fxPanel);
         super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/icons/line-globe.png"))).getImage());
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setLayout(new BorderLayout());
@@ -68,7 +65,7 @@ public class Ventana extends JFrame implements ActionListener {
                 barraMenu.add(jmActualizacion);
             }
         } catch (IOException | InterruptedException e) {
-            LOG.error("consultar.nueva.version", e);
+            Logger.error("consultar.nueva.version", e);
         }
         super.setJMenuBar(barraMenu);
     }

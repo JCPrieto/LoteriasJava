@@ -3,6 +3,11 @@ LoteriasJava
 
 Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño
 
+### Requisitos ###
+
+* Java 11
+* LibNotify (Para las notificaciones en Linux)
+
 ### Tecnologías utilizadas ###
 
 * Iconos: 
@@ -10,17 +15,21 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 * Api:
     * El País http://servicios.elpais.com
 * Librerias:
-    * Sshj https://github.com/hierynomus/sshj
     * Jackson https://github.com/FasterXML/jackson-core/wiki
     * Firebase https://firebase.google.com
-    * ControlsFX http://fxexperience.com/controlsfx
     
 ### Changelog ###
 
-2.4.0:
+* 2.5.0
 
-* Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las 
-notificaciones.
+    * Migracion a Java 11.
+    * Eliminamos ControlFX por problemas de compatibilidad con OpenJDK 11 y en su lugar utilizamos Systray en S.O Windows
+    y LibNotofy en S.O Linux. 
+
+* 2.4.0:
+
+    * Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las 
+    notificaciones.
 
 ### Licencia ### 
 

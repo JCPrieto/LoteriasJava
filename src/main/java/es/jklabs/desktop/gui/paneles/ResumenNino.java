@@ -24,7 +24,6 @@ public class ResumenNino extends JPanel implements ActionListener {
      *
      */
     private static final long serialVersionUID = 2L;
-    private static final Logger LOGGER = Logger.getLogger();
     private final transient Ventana padre;
     private final Timer tiempo;
     private es.jklabs.lib.loteria.model.nino.ResumenNino res;
@@ -52,7 +51,7 @@ public class ResumenNino extends JPanel implements ActionListener {
             try {
                 actualizarResumen();
             } catch (IOException e) {
-                LOGGER.error("Actualizar datos de la pantalla", e);
+                Logger.error("Actualizar datos de la pantalla", e);
             }
         }
     }

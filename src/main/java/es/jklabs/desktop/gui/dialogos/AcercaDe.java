@@ -4,6 +4,7 @@ import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.gui.utilidades.listener.UrlMouseListener;
 import es.jklabs.utilidades.Constantes;
+import es.jklabs.utilidades.Mensajes;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,9 +16,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * @author juanky
@@ -28,7 +27,6 @@ public class AcercaDe extends JDialog implements ActionListener {
      *
      */
     private static final long serialVersionUID = 4L;
-    private static ResourceBundle mensajes = ResourceBundle.getBundle("i18n/mensajes", Locale.getDefault());
     private transient JButton botonOk;
 
     public AcercaDe(final Ventana ventana) {
@@ -50,7 +48,7 @@ public class AcercaDe extends JDialog implements ActionListener {
         cns.gridy = yPosition++;
         cns.gridwidth = 3;
         panel.add(jLabelTitle, cns);
-        final JLabel jLabelCreadoPor = new JLabel(mensajes.getString("creado.por"), JLabel.LEFT);
+        final JLabel jLabelCreadoPor = new JLabel(Mensajes.getMensaje("creado.por"), JLabel.LEFT);
         cns.insets = new Insets(10, 10, 3, 10);
         cns.gridy = yPosition++;
         cns.gridwidth = 1;
@@ -98,7 +96,7 @@ public class AcercaDe extends JDialog implements ActionListener {
         });
         cns.gridx = 2;
         panel.add(jLabelMyMail, cns);
-        final JLabel jLabelPoweredBy = new JLabel(mensajes.getString("powered.by"), JLabel.LEFT);
+        final JLabel jLabelPoweredBy = new JLabel(Mensajes.getMensaje("powered.by"), JLabel.LEFT);
         cns.insets = new Insets(10, 10, 3, 10);
         cns.gridx = 0;
         yPosition++;
@@ -108,7 +106,6 @@ public class AcercaDe extends JDialog implements ActionListener {
         addPowered(panel, cns, yPosition++, "El País", "http://servicios.elpais.com");
         addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
         addPowered(panel, cns, yPosition++, "Firebase", "https://firebase.google.com");
-        addPowered(panel, cns, yPosition++, "ControlsFX", "http://fxexperience.com/controlsfx");
         JLabel jLabelLicense = new JLabel
                 ("<html><i>Esta obra está bajo una licencia de Creative Commons " +
                         "Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</i><html>", new ImageIcon(Objects

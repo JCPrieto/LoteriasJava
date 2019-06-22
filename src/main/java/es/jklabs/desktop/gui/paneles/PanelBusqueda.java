@@ -23,7 +23,6 @@ public class PanelBusqueda extends JPanel implements ActionListener {
      *
      */
     private static final long serialVersionUID = 3L;
-    private static final Logger LOGGER = Logger.getLogger();
     private final transient Ventana padre;
     private transient JButton buscar;
     private transient JButton limpiar;
@@ -66,7 +65,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
             padre.pack();
         } catch (IOException e) {
             contador--;
-            LOGGER.error("Buscar premio", e);
+            Logger.error("Buscar premio", e);
             JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -142,11 +141,4 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         super.add(scrollPane, BorderLayout.CENTER);
     }
 
-    public Sorteo getSorteo() {
-        return sorteo;
-    }
-
-    public void setSorteo(Sorteo sorteo) {
-        this.sorteo = sorteo;
-    }
 }

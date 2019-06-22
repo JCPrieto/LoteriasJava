@@ -17,7 +17,6 @@ import java.io.IOException;
 public class MenuPrincipal extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = -5513004495828699993L;
-    private static final Logger LOGGER = Logger.getLogger();
     private final Ventana padre;
     private JButton btnResumenNavidad;
     private JButton btnBuscarPremioNavidad;
@@ -53,7 +52,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 padre.setPanelInferior(new PanelInferior(padre));
                 padre.pack();
             } catch (IOException e1) {
-                LOGGER.error("Cargar resumen Navidad", e1);
+                Logger.error("Cargar resumen Navidad", e1);
                 JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -69,7 +68,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 padre.setPanelInferior(new PanelInferior(padre));
                 padre.pack();
             } catch (IOException e1) {
-                LOGGER.error("Cargar resumen Niño", e1);
+                Logger.error("Cargar resumen Niño", e1);
                 JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
             }
         }

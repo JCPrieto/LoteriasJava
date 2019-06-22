@@ -23,7 +23,6 @@ import java.util.concurrent.CountDownLatch;
 
 public class UtilidadesFirebase {
 
-    private static final Logger LOG = Logger.getLogger();
     private static final String REFERENCE = "aplicaciones/Loteria de Navidad";
 
     private UtilidadesFirebase() {
@@ -73,13 +72,13 @@ public class UtilidadesFirebase {
                     actualizarNumDescargas();
                     Growls.mostrarInfo(null, "nueva.version.descargada");
                 } else {
-                    LOG.info("Error de lectura de la BBDD");
+                    Logger.info("Error de lectura de la BBDD");
                 }
             } catch (AccessDeniedException e) {
                 Growls.mostrarError("path.sin.permiso.escritura", e);
                 descargaNuevaVersion(ventana);
             } catch (IOException e) {
-                LOG.error("Descargar nueva version", e);
+                Logger.error("Descargar nueva version", e);
             }
         }
     }
@@ -111,7 +110,7 @@ public class UtilidadesFirebase {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                LOG.info(error.getMessage());
+                Logger.info(error.getMessage());
                 latch.countDown();
             }
         });

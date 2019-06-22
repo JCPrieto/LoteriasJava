@@ -24,7 +24,6 @@ public class ResumenNavidad extends JPanel implements ActionListener {
      *
      */
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger();
     private final transient Ventana padre;
     private final Timer tiempo;
     private transient JLabel actualizacion;
@@ -51,7 +50,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
             try {
                 actualizarResumen();
             } catch (IOException e) {
-                LOGGER.error("Actualizar datos de la pantalla", e);
+                Logger.error("Actualizar datos de la pantalla", e);
             }
         }
     }
