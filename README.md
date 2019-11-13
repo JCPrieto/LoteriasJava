@@ -20,6 +20,9 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
     
 ### Changelog ###
 
+* 2.5.1
+    * Actualización de seguridad de la librería de Jackson
+
 * 2.5.0
 
     * Migracion a Java 11.
