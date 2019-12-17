@@ -1,1 +1,1 @@
-java -jar LoteriaDeNavidad-2.5.1.jar
+java -jar LoteriaDeNavidad-2.6.0.jar
