@@ -1,6 +1,6 @@
-package es.jklabs.desktop;
+package es.jklabs;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Logger;
 

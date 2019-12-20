@@ -1,9 +1,10 @@
-package es.jklabs.desktop.gui.paneles;
+package es.jklabs.gui.paneles;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.Ventana;
 import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.lib.loteria.enumeradores.Sorteo;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,12 +25,14 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     private JButton btnBuscarPremioNino;
 
     public MenuPrincipal(Ventana ventana) {
-        super(new GridLayout(4, 1, 10, 10));
+        super(new GridLayout(5, 1, 10, 10));
         padre = ventana;
         cargarBotonera();
     }
 
     private void cargarBotonera() {
+        JButton btnMisNumeros = new JButton(Mensajes.getMensaje("mis.numeros"));
+        btnMisNumeros.addActionListener(l -> goToMisNumeros());
         btnResumenNavidad = new JButton("Resumen de la Lotería de Navidad");
         btnResumenNavidad.addActionListener(this);
         btnBuscarPremioNavidad = new JButton("Buscar premios de la Lotería de Navidad");
@@ -38,10 +41,17 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         btnResumenNino.addActionListener(this);
         btnBuscarPremioNino = new JButton("Buscar premios de la Lotería del Niño");
         btnBuscarPremioNino.addActionListener(this);
+        super.add(btnMisNumeros);
         super.add(btnResumenNavidad);
         super.add(btnBuscarPremioNavidad);
         super.add(btnResumenNino);
         super.add(btnBuscarPremioNino);
+    }
+
+    private void goToMisNumeros() {
+        padre.setPanel(new MisNumeros(padre));
+        padre.setPanelInferior(new PanelInferior(padre));
+        padre.pack();
     }
 
     public void actionPerformed(ActionEvent e) {

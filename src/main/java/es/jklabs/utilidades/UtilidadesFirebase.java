@@ -8,7 +8,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import com.google.firebase.database.*;
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.json.firebase.Aplicacion;
 
@@ -19,6 +19,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class UtilidadesFirebase {
@@ -39,9 +40,9 @@ public class UtilidadesFirebase {
     private static void instanciarFirebase() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(UtilidadesFirebase.class.getClassLoader()
+                    .setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(UtilidadesFirebase.class.getClassLoader()
                             .getResourceAsStream
-                                    ("json/curriculum-a2a80-firebase-adminsdk-17wyo-de15a29f7c.json")))
+                                    ("json/curriculum-a2a80-firebase-adminsdk-17wyo-de15a29f7c.json"))))
                     .setStorageBucket(Constantes.STORAGE_BUCKET).setDatabaseUrl
                             ("https://curriculum-a2a80.firebaseio.com").build();
             FirebaseApp.initializeApp(options);

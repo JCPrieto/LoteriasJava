@@ -1,11 +1,11 @@
-package es.jklabs.desktop.gui.paneles;
+package es.jklabs.gui.paneles;
 
 import javax.swing.*;
 
 /**
  * Created by juanky on 26/12/14.
  */
-class Resultado extends JPanel {
+public class Resultado extends JPanel {
     private static final long serialVersionUID = -3631961411117909743L;
 
     Resultado(String numero, Double premio, String cantidad) {

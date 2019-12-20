@@ -1,8 +1,8 @@
-package es.jklabs.desktop.gui;
+package es.jklabs.gui;
 
-import es.jklabs.desktop.gui.dialogos.AcercaDe;
-import es.jklabs.desktop.gui.paneles.MenuPrincipal;
-import es.jklabs.desktop.gui.paneles.PanelInferior;
+import es.jklabs.gui.dialogos.AcercaDe;
+import es.jklabs.gui.paneles.MenuPrincipal;
+import es.jklabs.gui.paneles.PanelInferior;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
@@ -64,8 +64,11 @@ public class Ventana extends JFrame implements ActionListener {
                 jmActualizacion.addActionListener(al -> descargarNuevaVersion());
                 barraMenu.add(jmActualizacion);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             Logger.error("consultar.nueva.version", e);
+        } catch (InterruptedException e) {
+            Logger.error("consultar.nueva.version", e);
+            Thread.currentThread().interrupt();
         }
         super.setJMenuBar(barraMenu);
     }

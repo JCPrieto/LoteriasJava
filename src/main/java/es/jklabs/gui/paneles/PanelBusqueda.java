@@ -1,6 +1,6 @@
-package es.jklabs.desktop.gui.paneles;
+package es.jklabs.gui.paneles;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.Ventana;
 import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.lib.loteria.enumeradores.Sorteo;
 import es.jklabs.utilidades.Logger;
@@ -33,7 +33,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     private GridBagConstraints cns;
     private int contador;
 
-    PanelBusqueda(final Ventana ventana, Sorteo sorteo) {
+    public PanelBusqueda(final Ventana ventana, Sorteo sorteo) {
         super();
         padre = ventana;
         this.sorteo = sorteo;

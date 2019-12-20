@@ -1,6 +1,6 @@
-package es.jklabs.desktop.gui.paneles;
+package es.jklabs.gui.paneles;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.Ventana;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +17,7 @@ public class PanelInferior extends JPanel implements ActionListener {
     private final JButton btnBack;
     private final Ventana padre;
 
-    PanelInferior(Ventana padre) {
+    public PanelInferior(Ventana padre) {
         super();
         super.setBorder(new EmptyBorder(10, 10, 10, 10));
         this.padre = padre;
