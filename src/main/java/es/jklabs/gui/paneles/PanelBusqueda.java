@@ -1,6 +1,7 @@
 package es.jklabs.gui.paneles;
 
 import es.jklabs.gui.Ventana;
+import es.jklabs.gui.utilidades.listener.IntegerKeyListener;
 import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.lib.loteria.enumeradores.Sorteo;
 import es.jklabs.utilidades.Logger;
@@ -75,27 +76,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         super.setLayout(new BorderLayout());
         final JPanel entrada = new JPanel();
         numero = new JTextField(5);
-        numero.addKeyListener(new KeyListener() {
-
-
-            public void keyPressed(final KeyEvent evt) {
-
-            }
-
-
-            public void keyReleased(final KeyEvent evt) {
-
-            }
-
-
-            public void keyTyped(final KeyEvent evt) {
-                final char caracter = evt.getKeyChar();
-                if (((caracter < '0') || (caracter > '9'))
-                        && (caracter != '\b') || numero.getText().length() > 4) {
-                    evt.consume();
-                }
-            }
-        });
+        numero.addKeyListener(new IntegerKeyListener(numero));
         cantidad = new JTextField(3);
         cantidad.addKeyListener(new KeyListener() {
 
