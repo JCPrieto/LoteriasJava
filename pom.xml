@@ -13,7 +13,7 @@
         <dependency>
             <groupId>es.jklabs.lib.loteria</groupId>
             <artifactId>Libreria_Loterias_Navidad</artifactId>
-            <version>3.3.1</version>
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
-            <version>6.11.0</version>
+            <version>6.12.0</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>
