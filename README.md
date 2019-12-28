@@ -20,7 +20,12 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
     
 ### Changelog ###
 
+* 3.5.2
+
+    * Actualización de seguridad de despendencias.
+
 * 2.5.1
+
     * Actualización de seguridad de la librería de Jackson
 
 * 2.5.0
