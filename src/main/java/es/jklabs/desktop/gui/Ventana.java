@@ -64,8 +64,11 @@ public class Ventana extends JFrame implements ActionListener {
                 jmActualizacion.addActionListener(al -> descargarNuevaVersion());
                 barraMenu.add(jmActualizacion);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             Logger.error("consultar.nueva.version", e);
+        } catch (InterruptedException e) {
+            Logger.error("consultar.nueva.version", e);
+            Thread.currentThread().interrupt();
         }
         super.setJMenuBar(barraMenu);
     }
