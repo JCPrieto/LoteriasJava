@@ -79,12 +79,12 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
 
             public void keyPressed(final KeyEvent evt) {
-
+                //
             }
 
 
             public void keyReleased(final KeyEvent evt) {
-
+                //
             }
 
 
@@ -109,12 +109,12 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
 
             public void keyPressed(KeyEvent e) {
-
+                //
             }
 
 
             public void keyReleased(KeyEvent e) {
-
+                //
             }
         });
         buscar = new JButton("Buscar premio");
