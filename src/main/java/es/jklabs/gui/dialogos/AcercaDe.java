@@ -76,12 +76,12 @@ public class AcercaDe extends JDialog implements ActionListener {
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                //
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-
+                //
             }
 
             @Override
