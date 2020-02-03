@@ -72,12 +72,12 @@ public class ResumenNavidad extends JPanel implements ActionListener {
 
     private void setPanelQuinto(java.util.List<String> quinto) {
         panelQuinto.removeAll();
-        quinto.forEach(q -> panelQuinto.add(new JLabel(q, JLabel.CENTER)));
+        quinto.forEach(q -> panelQuinto.add(new JLabel(q, SwingConstants.CENTER)));
     }
 
     private void setPanelCuarto(java.util.List<String> cuarto) {
         panelCuarto.removeAll();
-        cuarto.forEach(c -> panelCuarto.add(new JLabel(c, JLabel.CENTER)));
+        cuarto.forEach(c -> panelCuarto.add(new JLabel(c, SwingConstants.CENTER)));
     }
 
     private void cargarElementos() {
@@ -86,7 +86,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         final GridBagConstraints cns = new GridBagConstraints();
         final JPanel panelGordo = new JPanel();
         panelGordo.setBorder(new TitledBorder("Premio Gordo"));
-        gordo = new JLabel(res.getGordo(), JLabel.CENTER);
+        gordo = new JLabel(res.getGordo(), SwingConstants.CENTER);
         panelGordo.add(gordo);
         cns.fill = GridBagConstraints.HORIZONTAL;
         cns.gridx = 0;
@@ -96,7 +96,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         super.add(panelGordo, cns);
         final JPanel panelSegundo = new JPanel();
         panelSegundo.setBorder(new TitledBorder("Segundo premio"));
-        segundo = new JLabel(res.getSegundo(), JLabel.CENTER);
+        segundo = new JLabel(res.getSegundo(), SwingConstants.CENTER);
         panelSegundo.add(segundo);
         cns.gridx = 0;
         cns.gridy = 1;
@@ -105,7 +105,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         super.add(panelSegundo, cns);
         final JPanel panelTercero = new JPanel();
         panelTercero.setBorder(new TitledBorder("Tercer premio"));
-        tercero = new JLabel(res.getTercero(), JLabel.CENTER);
+        tercero = new JLabel(res.getTercero(), SwingConstants.CENTER);
         panelTercero.add(tercero);
         cns.gridx = 1;
         cns.gridy = 1;
@@ -123,16 +123,16 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         cns.gridy = 3;
         super.add(panelQuinto, cns);
         estado = new JLabel("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
-                JLabel.CENTER);
+                SwingConstants.CENTER);
         cns.gridx = 0;
         cns.gridy = 4;
         super.add(estado, cns);
         actualizacion = new JLabel("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
-                .getFechaActualizacion()), JLabel.CENTER);
+                .getFechaActualizacion()), SwingConstants.CENTER);
         cns.gridx = 0;
         cns.gridy = 5;
         super.add(actualizacion, cns);
-        pdf = new JLabel(res.getUrlPDF(), JLabel.CENTER);
+        pdf = new JLabel(res.getUrlPDF(), SwingConstants.CENTER);
         pdf.setForeground(Color.blue);
         ResumenMouseListener resumenMouseListener = new ResumenMouseListener(pdf);
         pdf.addMouseListener(resumenMouseListener);
