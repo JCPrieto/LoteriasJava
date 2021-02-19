@@ -10,38 +10,46 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Tecnologías utilizadas ###
 
-* Iconos: 
-    * Papirus https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
+* Iconos:
+  * Papirus https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
 * Api:
-    * El País http://servicios.elpais.com
+  * El País http://servicios.elpais.com
 * Librerias:
-    * Jackson https://github.com/FasterXML/jackson-core/wiki
-    * Firebase https://firebase.google.com
-    
+  * Jackson https://github.com/FasterXML/jackson-core/wiki
+  * Firebase https://firebase.google.com
+
 ### Changelog ###
 
 * 2.6.0
 
-    * Guardar numeros para poder buscar si han sido premiados en otro momento.
-    * Lanzar notificación si alguno de los premios almacenados ha sido premiado.
+  * Guardar numeros para poder buscar si han sido premiados en otro momento.
+  * Lanzar notificación si alguno de los premios almacenados ha sido premiado.
+
+* 2.5.4
+
+  * Correciones de seguridad y estabilidad
+
+* 2.5.3
+
+  * Correciones de seguridad y estabilidad
 
 * 2.5.2
 
-    * Actualización de seguridad de despendencias.
+  * Actualización de seguridad de despendencias.
 
 * 2.5.1
 
-    * Actualización de seguridad de la librería de Jackson
+  * Actualización de seguridad de la librería de Jackson
 
 * 2.5.0
 
-    * Migracion a Java 11.
-    * Eliminamos ControlFX por problemas de compatibilidad con OpenJDK 11 y en su lugar utilizamos Systray en S.O Windows
-    y LibNotofy en S.O Linux. 
+  * Migracion a Java 11.
+  * Eliminamos ControlFX por problemas de compatibilidad con OpenJDK 11 y en su lugar utilizamos Systray en S.O Windows
+    y LibNotofy en S.O Linux.
 
 * 2.4.0:
 
-    * Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las 
+  * Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las
     notificaciones.
 
 ### Licencia ### 
