@@ -95,3 +95,5 @@ src/main/resources/json/
 .idea/.name
 .idea/encodings.xml
 /.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/modules.xml
