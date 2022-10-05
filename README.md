@@ -25,6 +25,10 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
   * Guardar numeros para poder buscar si han sido premiados en otro momento.
   * Lanzar notificación si alguno de los premios almacenados ha sido premiado.
 
+* 2.5.5
+
+  * Correciones de seguridad y estabilidad
+
 * 2.5.4
 
   * Correciones de seguridad y estabilidad

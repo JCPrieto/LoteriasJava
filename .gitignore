@@ -97,4 +97,5 @@ src/main/resources/json/
 /.idea/compiler.xml
 /.idea/jarRepositories.xml
 /.idea/modules.xml
+/.idea/
 /.idea/misc.xml
