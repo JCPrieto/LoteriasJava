@@ -20,6 +20,10 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.5
+
+  * Correciones de seguridad y estabilidad
+
 * 2.5.4
 
   * Correciones de seguridad y estabilidad
