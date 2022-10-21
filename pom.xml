@@ -6,7 +6,7 @@
 
     <groupId>es.jklabs.desktop</groupId>
     <artifactId>LoteriaDeNavidad</artifactId>
-    <version>2.5.5</version>
+    <version>2.5.6</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>es.jklabs.lib.loteria</groupId>
             <artifactId>Libreria_Loterias_Navidad</artifactId>
-            <version>3.3.6</version>
+            <version>3.3.7</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
-            <version>9.0.0</version>
+            <version>9.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
