@@ -67,7 +67,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 padre.setPanel(new ResumenNino(padre, con.getResumenNino()));
                 padre.setPanelInferior(new PanelInferior(padre));
                 padre.pack();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 Logger.error("Cargar resumen Niño", e1);
                 JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
             }

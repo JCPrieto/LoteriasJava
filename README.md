@@ -5,7 +5,7 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Requisitos ###
 
-* Java 11
+* Java 21
 * LibNotify (Para las notificaciones en Linux)
 
 ### Tecnologías utilizadas ###
@@ -13,12 +13,17 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 * Iconos:
   * Papirus https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
 * Api:
-  * El País http://servicios.elpais.com
+  * Loterías y apuestas del estado https://www.loteriasyapuestas.es
 * Librerias:
   * Jackson https://github.com/FasterXML/jackson-core/wiki
   * Firebase https://firebase.google.com
 
 ### Changelog ###
+
+* 2.5.7
+
+  * Correciones de seguridad y estabilidad
+  * Actualización de la API para la obtención de los numeros premiados.
 
 * 2.5.6
 
