@@ -3,6 +3,7 @@ package es.jklabs.desktop.gui.paneles;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.lib.loteria.enumeradores.Sorteo;
+import es.jklabs.lib.loteria.excepciones.PremioDecimoNoDisponibleException;
 import es.jklabs.utilidades.Logger;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * @author juanky
@@ -22,13 +24,14 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3L;
     private final transient Ventana padre;
     private transient JButton buscar;
     private transient JButton limpiar;
     private transient JTextField numero;
     private transient JPanel resultado;
-    private Sorteo sorteo;
+    private final Sorteo sorteo;
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
@@ -57,17 +60,28 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     private void buscarPremio(final String text, String cantidadText) {
         Conexion c;
-        c = new Conexion();
+        c = createConexion();
         cns.gridy = contador++;
         try {
             resultado.add(new Resultado(text, c.getPremio(sorteo, text).getCantidad(), cantidadText), cns);
             contador++;
             padre.pack();
+        } catch (PremioDecimoNoDisponibleException e) {
+            contador--;
+            showWarning(e.getMessage());
         } catch (IOException e) {
             contador--;
             Logger.error("Buscar premio", e);
-            JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+            showWarning("Hay un problema con el servidor, intentelo en unos minutos");
         }
+    }
+
+    protected Conexion createConexion() {
+        return new Conexion();
+    }
+
+    protected void showWarning(String message) {
+        JOptionPane.showMessageDialog(padre, message, "Atención!", JOptionPane.WARNING_MESSAGE);
     }
 
     private void cargarElementos() {
