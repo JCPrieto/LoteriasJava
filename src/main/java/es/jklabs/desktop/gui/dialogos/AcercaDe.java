@@ -57,8 +57,8 @@ public class AcercaDe extends JDialog implements ActionListener {
         cns.insets = new Insets(3, 10, 3, 10);
         cns.gridy = yPosition++;
         panel.add(jLabelMyName, cns);
-        final JLabel jLabelMyWeb = new JLabel("JCPrieto.tk", SwingConstants.LEFT);
-        jLabelMyWeb.addMouseListener(new UrlMouseListener(jLabelMyWeb, "https://jcprieto.tk"));
+        final JLabel jLabelMyWeb = new JLabel("JCPrieto.es", SwingConstants.LEFT);
+        jLabelMyWeb.addMouseListener(new UrlMouseListener(jLabelMyWeb, "https://jcprieto.es"));
         cns.gridx = 1;
         panel.add(jLabelMyWeb, cns);
         JLabel jLabelMyMail = new JLabel("JuanC.Prieto.Silos@gmail.com", SwingConstants.LEFT);
@@ -103,7 +103,7 @@ public class AcercaDe extends JDialog implements ActionListener {
         cns.gridy = yPosition++;
         panel.add(jLabelPoweredBy, cns);
         addPowered(panel, cns, yPosition++, "Papirus", "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme");
-        addPowered(panel, cns, yPosition++, "El País", "http://servicios.elpais.com");
+        addPowered(panel, cns, yPosition++, "Loterías y apuestas del estado", "https://www.loteriasyapuestas.es");
         addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
         addPowered(panel, cns, yPosition++, "Firebase", "https://firebase.google.com");
         JLabel jLabelLicense = new JLabel
