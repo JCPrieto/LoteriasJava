@@ -30,8 +30,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>es.jklabs.lib.loteria</groupId>
-            <artifactId>Libreria_Loterias_Navidad</artifactId>
+            <groupId>io.github.jcprieto</groupId>
+            <artifactId>loteria-navidad</artifactId>
             <version>4.0.0</version>
         </dependency>
         <dependency>

@@ -1,21 +1,23 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
-import es.jklabs.lib.loteria.conexion.Conexion;
-import es.jklabs.lib.loteria.enumeradores.Sorteo;
 import es.jklabs.utilidades.Logger;
+import io.github.jcprieto.lib.loteria.conexion.Conexion;
+import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * Created by juanky on 26/09/15.
  */
 public class MenuPrincipal extends JPanel implements ActionListener {
 
+    @Serial
     private static final long serialVersionUID = -5513004495828699993L;
     private final Ventana padre;
     private JButton btnResumenNavidad;

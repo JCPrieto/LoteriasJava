@@ -2,10 +2,10 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.desktop.gui.listener.ResumenMouseListener;
-import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.UtilidadesEstadoSorteo;
 import es.jklabs.utilidades.UtilidadesFecha;
+import io.github.jcprieto.lib.loteria.conexion.Conexion;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * @author juanky
@@ -23,6 +24,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 1L;
     private final transient Ventana padre;
     private final Timer tiempo;
@@ -32,11 +34,11 @@ public class ResumenNavidad extends JPanel implements ActionListener {
     private transient JLabel pdf;
     private JLabel segundo;
     private JLabel tercero;
-    private es.jklabs.lib.loteria.model.navidad.ResumenNavidad res;
+    private io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad res;
     private JPanel panelCuarto;
     private JPanel panelQuinto;
 
-    ResumenNavidad(final Ventana ventana, es.jklabs.lib.loteria.model.navidad.ResumenNavidad resultado) {
+    ResumenNavidad(final Ventana ventana, io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resultado) {
         super();
         padre = ventana;
         res = resultado;

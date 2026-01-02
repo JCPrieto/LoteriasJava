@@ -1,10 +1,10 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
-import es.jklabs.lib.loteria.conexion.Conexion;
-import es.jklabs.lib.loteria.enumeradores.Sorteo;
-import es.jklabs.lib.loteria.excepciones.PremioDecimoNoDisponibleException;
 import es.jklabs.utilidades.Logger;
+import io.github.jcprieto.lib.loteria.conexion.Conexion;
+import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
+import io.github.jcprieto.lib.loteria.excepciones.PremioDecimoNoDisponibleException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

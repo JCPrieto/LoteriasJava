@@ -2,10 +2,10 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.desktop.gui.listener.ResumenMouseListener;
-import es.jklabs.lib.loteria.conexion.Conexion;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.UtilidadesEstadoSorteo;
 import es.jklabs.utilidades.UtilidadesFecha;
+import io.github.jcprieto.lib.loteria.conexion.Conexion;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * @author juanky
@@ -23,10 +24,11 @@ public class ResumenNino extends JPanel implements ActionListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 2L;
     private final transient Ventana padre;
     private final Timer tiempo;
-    private es.jklabs.lib.loteria.model.nino.ResumenNino res;
+    private io.github.jcprieto.lib.loteria.model.nino.ResumenNino res;
     private transient JLabel actualizacion;
     private transient JLabel estado;
     private transient JPanel panelExt2;
@@ -37,7 +39,7 @@ public class ResumenNino extends JPanel implements ActionListener {
     private JLabel tercero;
     private JPanel panelExt4;
 
-    ResumenNino(final Ventana ventana, es.jklabs.lib.loteria.model.nino.ResumenNino resultado) {
+    ResumenNino(final Ventana ventana, io.github.jcprieto.lib.loteria.model.nino.ResumenNino resultado) {
         super();
         padre = ventana;
         res = resultado;
