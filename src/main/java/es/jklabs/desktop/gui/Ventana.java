@@ -13,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.Serial;
 import java.util.Objects;
 
@@ -29,6 +28,8 @@ public class Ventana extends JFrame implements ActionListener {
     private static final long serialVersionUID = 2L;
     private transient JMenuItem acerca;
     private transient JPanel panel;
+    private transient JMenuBar barraMenu;
+    private transient JMenuItem itemActualizacion;
 
     private PanelInferior panelInferior;
 
@@ -50,7 +51,7 @@ public class Ventana extends JFrame implements ActionListener {
     }
 
     private void crearMenu() {
-        final JMenuBar barraMenu = new JMenuBar();
+        barraMenu = new JMenuBar();
         final JMenu ayuda = new JMenu("Ayuda");
         ayuda.setMargin(new Insets(5, 5, 5, 5));
         acerca = new JMenuItem("Acerca de...", new ImageIcon(Objects.requireNonNull(getClass().getClassLoader()
@@ -58,18 +59,45 @@ public class Ventana extends JFrame implements ActionListener {
         acerca.addActionListener(this);
         ayuda.add(acerca);
         barraMenu.add(ayuda);
-        try {
-            if (UtilidadesGitHubReleases.existeNuevaVersion()) {
-                barraMenu.add(Box.createHorizontalGlue());
-                JMenuItem jmActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
-                        (getClass().getClassLoader().getResource("img/icons/update.png"))));
-                jmActualizacion.addActionListener(al -> descargarNuevaVersion());
-                barraMenu.add(jmActualizacion);
-            }
-        } catch (IOException e) {
-            Logger.error("consultar.nueva.version", e);
-        }
         super.setJMenuBar(barraMenu);
+        consultarNuevaVersionAsync();
+    }
+
+    private void consultarNuevaVersionAsync() {
+        SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                return UtilidadesGitHubReleases.existeNuevaVersion();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    if (get()) {
+                        agregarItemActualizacion();
+                    }
+                } catch (InterruptedException e) {
+                    Logger.error("consultar.nueva.version", e);
+                    Thread.currentThread().interrupt();
+                } catch (Exception e) {
+                    Logger.error("consultar.nueva.version", e);
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    private void agregarItemActualizacion() {
+        if (itemActualizacion != null) {
+            return;
+        }
+        barraMenu.add(Box.createHorizontalGlue());
+        itemActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
+                (getClass().getClassLoader().getResource("img/icons/update.png"))));
+        itemActualizacion.addActionListener(al -> descargarNuevaVersion());
+        barraMenu.add(itemActualizacion);
+        barraMenu.revalidate();
+        barraMenu.repaint();
     }
 
     private void descargarNuevaVersion() {
