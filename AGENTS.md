@@ -10,7 +10,7 @@ packaged JAR.
 
 ## Build, Test, and Development Commands
 
-- `mvn clean package`: compiles Java 11 sources, copies dependencies into `target/libs`, builds
+- `mvn clean package`: compiles Java 21 sources, copies dependencies into `target/libs`, builds
   `target/LoteriaDeNavidad-<version>.jar`, and produces a distributable ZIP via the assembly plugin.
 - `mvn test`: runs tests if present (none are configured today).
 - `java -jar target/LoteriaDeNavidad-<version>.jar`: runs the app locally after a build.
@@ -36,5 +36,5 @@ screenshots when UI changes are involved.
 
 ## Configuration & Runtime Notes
 
-Java 11 is required. On Linux, LibNotify is needed for notifications. External API usage is defined in the README; keep
+Java 21 is required. On Linux, LibNotify is needed for notifications. External API usage is defined in the README; keep
 any new integrations documented there.
