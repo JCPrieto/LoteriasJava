@@ -51,5 +51,5 @@ jobs:
           name: LoteriaDeNavidad ${{ steps.version.outputs.version }}
           generate_release_notes: true
           files: |
-            target/LoteriaDeNavidad-${{ steps.version.outputs.version }}.jar
+            target/LoteriaDeNavidad.jar
             target/LoteriaDeNavidad-${{ steps.version.outputs.version }}.zip

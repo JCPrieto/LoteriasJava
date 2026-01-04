@@ -72,6 +72,7 @@
     </reporting>
 
     <build>
+        <finalName>LoteriaDeNavidad</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -121,6 +122,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/cfg.xml</descriptor>
                     </descriptors>
