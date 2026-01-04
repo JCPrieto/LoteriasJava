@@ -6,7 +6,7 @@ import es.jklabs.desktop.gui.paneles.PanelInferior;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
-import es.jklabs.utilidades.UtilidadesFirebase;
+import es.jklabs.utilidades.UtilidadesGitHubReleases;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Objects;
 
 /**
@@ -24,6 +25,7 @@ public class Ventana extends JFrame implements ActionListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 2L;
     private transient JMenuItem acerca;
     private transient JPanel panel;
@@ -57,7 +59,7 @@ public class Ventana extends JFrame implements ActionListener {
         ayuda.add(acerca);
         barraMenu.add(ayuda);
         try {
-            if (UtilidadesFirebase.existeNuevaVersion()) {
+            if (UtilidadesGitHubReleases.existeNuevaVersion()) {
                 barraMenu.add(Box.createHorizontalGlue());
                 JMenuItem jmActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
                         (getClass().getClassLoader().getResource("img/icons/update.png"))));
@@ -66,16 +68,13 @@ public class Ventana extends JFrame implements ActionListener {
             }
         } catch (IOException e) {
             Logger.error("consultar.nueva.version", e);
-        } catch (InterruptedException e) {
-            Logger.error("consultar.nueva.version", e);
-            Thread.currentThread().interrupt();
         }
         super.setJMenuBar(barraMenu);
     }
 
     private void descargarNuevaVersion() {
         try {
-            UtilidadesFirebase.descargaNuevaVersion(this);
+            UtilidadesGitHubReleases.descargaNuevaVersion(this);
         } catch (InterruptedException e) {
             Growls.mostrarError("descargar.nueva.version", e);
             Thread.currentThread().interrupt();

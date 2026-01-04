@@ -5,6 +5,7 @@ import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.gui.utilidades.listener.UrlMouseListener;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Mensajes;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -26,8 +28,9 @@ public class AcercaDe extends JDialog implements ActionListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 4L;
-    private transient JButton botonOk;
+    private final transient JButton botonOk;
 
     public AcercaDe(final Ventana ventana) {
         super(ventana, Constantes.NOMBRE_APP + " - Acerca de...");
@@ -61,6 +64,41 @@ public class AcercaDe extends JDialog implements ActionListener {
         jLabelMyWeb.addMouseListener(new UrlMouseListener(jLabelMyWeb, "https://jcprieto.es"));
         cns.gridx = 1;
         panel.add(jLabelMyWeb, cns);
+        JLabel jLabelMyMail = getInfo();
+        cns.gridx = 2;
+        panel.add(jLabelMyMail, cns);
+        final JLabel jLabelPoweredBy = new JLabel(Mensajes.getMensaje("powered.by"), SwingConstants.LEFT);
+        cns.insets = new Insets(10, 10, 3, 10);
+        cns.gridx = 0;
+        yPosition++;
+        cns.gridy = yPosition++;
+        panel.add(jLabelPoweredBy, cns);
+        addPowered(panel, cns, yPosition++, "Papirus", "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme");
+        addPowered(panel, cns, yPosition++, "Loterías y apuestas del estado", "https://www.loteriasyapuestas.es");
+        addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
+        addPowered(panel, cns, yPosition++, "GitHub Releases", "https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases");
+        JLabel jLabelLicense = new JLabel
+                ("<html><i>Esta obra está bajo una licencia de Creative Commons " +
+                        "Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</i><html>", new ImageIcon(Objects
+                        .requireNonNull(getClass().getClassLoader().getResource
+                                ("img/icons/creative_commons.png"))), SwingConstants.TRAILING);
+        jLabelLicense.addMouseListener(new UrlMouseListener(jLabelLicense, "http://creativecommons" +
+                ".org/licenses/by-nc-sa/4.0/"));
+        cns.insets = new Insets(10, 10, 10, 10);
+        cns.gridx = 0;
+        cns.gridy = yPosition++;
+        cns.gridwidth = 3;
+        panel.add(jLabelLicense, cns);
+        botonOk = new JButton("Aceptar");
+        botonOk.addActionListener(this);
+        cns.gridy = yPosition;
+        panel.add(botonOk, cns);
+        super.add(panel);
+        super.pack();
+    }
+
+    @NotNull
+    private static JLabel getInfo() {
         JLabel jLabelMyMail = new JLabel("JuanC.Prieto.Silos@gmail.com", SwingConstants.LEFT);
         jLabelMyMail.setAlignmentX(CENTER_ALIGNMENT);
         jLabelMyMail.addMouseListener(new MouseListener() {
@@ -94,36 +132,7 @@ public class AcercaDe extends JDialog implements ActionListener {
                 jLabelMyMail.setCursor(null);
             }
         });
-        cns.gridx = 2;
-        panel.add(jLabelMyMail, cns);
-        final JLabel jLabelPoweredBy = new JLabel(Mensajes.getMensaje("powered.by"), SwingConstants.LEFT);
-        cns.insets = new Insets(10, 10, 3, 10);
-        cns.gridx = 0;
-        yPosition++;
-        cns.gridy = yPosition++;
-        panel.add(jLabelPoweredBy, cns);
-        addPowered(panel, cns, yPosition++, "Papirus", "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme");
-        addPowered(panel, cns, yPosition++, "Loterías y apuestas del estado", "https://www.loteriasyapuestas.es");
-        addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
-        addPowered(panel, cns, yPosition++, "Firebase", "https://firebase.google.com");
-        JLabel jLabelLicense = new JLabel
-                ("<html><i>Esta obra está bajo una licencia de Creative Commons " +
-                        "Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</i><html>", new ImageIcon(Objects
-                        .requireNonNull(getClass().getClassLoader().getResource
-                                ("img/icons/creative_commons.png"))), SwingConstants.TRAILING);
-        jLabelLicense.addMouseListener(new UrlMouseListener(jLabelLicense, "http://creativecommons" +
-                ".org/licenses/by-nc-sa/4.0/"));
-        cns.insets = new Insets(10, 10, 10, 10);
-        cns.gridx = 0;
-        cns.gridy = yPosition++;
-        cns.gridwidth = 3;
-        panel.add(jLabelLicense, cns);
-        botonOk = new JButton("Aceptar");
-        botonOk.addActionListener(this);
-        cns.gridy = yPosition;
-        panel.add(botonOk, cns);
-        super.add(panel);
-        super.pack();
+        return jLabelMyMail;
     }
 
     private void addPowered(JPanel panel, GridBagConstraints cns, int y, String titulo, String url) {

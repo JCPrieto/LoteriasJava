@@ -16,7 +16,7 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
   * Loterías y apuestas del estado https://www.loteriasyapuestas.es
 * Librerias:
   * Jackson https://github.com/FasterXML/jackson-core/wiki
-  * Firebase https://firebase.google.com
+  * GitHub Releases https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases
 
 ### Changelog ###
 

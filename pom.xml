@@ -45,12 +45,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.7.0</version>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
