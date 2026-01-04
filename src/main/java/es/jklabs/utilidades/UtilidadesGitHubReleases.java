@@ -1,5 +1,7 @@
 package es.jklabs.utilidades;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 
@@ -9,14 +11,14 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UtilidadesGitHubReleases {
 
     private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/" + Constantes.GITHUB_REPO
             + "/releases/latest";
     private static final String USER_AGENT = "LoteriaDeNavidad/" + Constantes.VERSION;
+    private static final int TIMEOUT_MILLIS = 15000;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private UtilidadesGitHubReleases() {
 
@@ -60,12 +62,16 @@ public class UtilidadesGitHubReleases {
         if (json.isEmpty()) {
             return null;
         }
-        String tag = extraerCampo(json, "\"tag_name\"\\s*:\\s*\"([^\"]+)\"");
+        JsonNode root = parsearJson(json);
+        if (root == null) {
+            return null;
+        }
+        String tag = obtenerTexto(root, "tag_name");
         if (tag == null) {
             return null;
         }
         String version = normalizarVersion(tag);
-        ReleaseAsset asset = seleccionarAsset(json, version);
+        ReleaseAsset asset = seleccionarAsset(root.path("assets"), version);
         if (asset == null) {
             return new ReleaseInfo(version, null, null);
         }
@@ -82,19 +88,18 @@ public class UtilidadesGitHubReleases {
         return tag;
     }
 
-    private static ReleaseAsset seleccionarAsset(String json, String version) {
-        String assetsBlock = extraerCampo(json, "\"assets\"\\s*:\\s*\\[(.*?)]");
-        if (assetsBlock == null) {
+    private static ReleaseAsset seleccionarAsset(JsonNode assets, String version) {
+        if (assets == null || !assets.isArray()) {
             return null;
         }
-        Pattern assetPattern = Pattern.compile("\"name\"\\s*:\\s*\"([^\"]+)\".*?\"browser_download_url\"\\s*:"
-                + "\\s*\"([^\"]+)\"", Pattern.DOTALL);
-        Matcher assetMatcher = assetPattern.matcher(assetsBlock);
         ReleaseAsset fallback = null;
         String preferido = Constantes.NOMBRE_APP_DOWNLOAD + "-" + version + ".zip";
-        while (assetMatcher.find()) {
-            String name = assetMatcher.group(1);
-            String url = assetMatcher.group(2);
+        for (JsonNode asset : assets) {
+            String name = obtenerTexto(asset, "name");
+            String url = obtenerTexto(asset, "browser_download_url");
+            if (name == null || url == null) {
+                continue;
+            }
             if (preferido.equals(name)) {
                 return new ReleaseAsset(name, url);
             }
@@ -105,20 +110,18 @@ public class UtilidadesGitHubReleases {
         return fallback;
     }
 
-    private static String extraerCampo(String json, String patron) {
-        Pattern pattern = Pattern.compile(patron, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(json);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
-
     private static void descargarArchivo(String url, Path destino) throws IOException {
         URI uri = URI.create(url);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestProperty("User-Agent", USER_AGENT);
         connection.setInstanceFollowRedirects(true);
+        connection.setConnectTimeout(TIMEOUT_MILLIS);
+        connection.setReadTimeout(TIMEOUT_MILLIS);
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            String errorBody = leerStream(connection.getErrorStream());
+            throw new IOException("HTTP " + status + ": " + errorBody);
+        }
         try (InputStream in = connection.getInputStream()) {
             Files.copy(in, destino, StandardCopyOption.REPLACE_EXISTING);
         } finally {
@@ -131,18 +134,55 @@ public class UtilidadesGitHubReleases {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestProperty("Accept", "application/vnd.github+json");
         connection.setRequestProperty("User-Agent", USER_AGENT);
-        try (InputStream in = connection.getInputStream();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+        connection.setConnectTimeout(TIMEOUT_MILLIS);
+        connection.setReadTimeout(TIMEOUT_MILLIS);
+        int status = connection.getResponseCode();
+        String body;
+        if (status >= 200 && status < 300) {
+            body = leerStream(connection.getInputStream());
+        } else {
+            body = leerStream(connection.getErrorStream());
+            throw new IOException("HTTP " + status + ": " + body);
+        }
+        connection.disconnect();
+        return body;
+    }
+
+    private static String leerStream(InputStream in) throws IOException {
+        if (in == null) {
+            return "";
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
             return sb.toString();
-        } finally {
-            connection.disconnect();
         }
     }
+
+    private static JsonNode parsearJson(String json) {
+        try {
+            return OBJECT_MAPPER.readTree(json);
+        } catch (IOException e) {
+            Logger.error("parsear.github.release", e);
+            return null;
+        }
+    }
+
+    private static String obtenerTexto(JsonNode node, String field) {
+        if (node == null || field == null) {
+            return null;
+        }
+        JsonNode value = node.get(field);
+        if (value == null || value.isNull()) {
+            return null;
+        }
+        String text = value.asText();
+        return text == null || text.isEmpty() ? null : text;
+    }
+
 
     private static boolean diferenteVersion(String serverVersion) {
         String[] sv = serverVersion.split("\\.");
