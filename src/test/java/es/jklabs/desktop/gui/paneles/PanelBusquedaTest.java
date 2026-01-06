@@ -24,16 +24,38 @@ public class PanelBusquedaTest {
         System.setProperty("java.awt.headless", "true");
     }
 
-    private static void invokeBuscarPremio(PanelBusqueda panel, String numero, String cantidad) throws Exception {
-        Method method = PanelBusqueda.class.getDeclaredMethod("buscarPremio", String.class, String.class);
+    private static void invokeBuscarPremioAsync(PanelBusqueda panel, String numero, String cantidad) throws Exception {
+        Method method = PanelBusqueda.class.getDeclaredMethod("buscarPremioAsync", String.class, String.class);
         method.setAccessible(true);
-        method.invoke(panel, numero, cantidad);
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                method.invoke(panel, numero, cantidad);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private static JPanel getResultadoPanel(PanelBusqueda panel) throws Exception {
         Field field = PanelBusqueda.class.getDeclaredField("resultado");
         field.setAccessible(true);
         return (JPanel) field.get(panel);
+    }
+
+    private static boolean isBuscando(PanelBusqueda panel) throws Exception {
+        Field field = PanelBusqueda.class.getDeclaredField("buscando");
+        field.setAccessible(true);
+        return (boolean) field.get(panel);
+    }
+
+    private static void waitForBusqueda(PanelBusqueda panel) throws Exception {
+        long deadline = System.currentTimeMillis() + 2000;
+        while (System.currentTimeMillis() < deadline && isBuscando(panel)) {
+            Thread.sleep(20);
+        }
+        SwingUtilities.invokeAndWait(() -> {
+            // Drena la cola del EDT para asegurar el done del SwingWorker
+        });
     }
 
     @Test
@@ -49,7 +71,8 @@ public class PanelBusquedaTest {
             }
         });
 
-        invokeBuscarPremio(panel, "12345", "1");
+        invokeBuscarPremioAsync(panel, "12345", "1");
+        waitForBusqueda(panel);
 
         JPanel resultado = getResultadoPanel(panel);
         assertEquals(1, resultado.getComponentCount());
@@ -67,7 +90,8 @@ public class PanelBusquedaTest {
             }
         });
 
-        invokeBuscarPremio(panel, "12345", "1");
+        invokeBuscarPremioAsync(panel, "12345", "1");
+        waitForBusqueda(panel);
 
         JPanel resultado = getResultadoPanel(panel);
         assertEquals(0, resultado.getComponentCount());

@@ -27,6 +27,8 @@ configured, so match surrounding style in modified files.
 There is no `src/test/java` or test framework dependency. If you add tests, create `src/test/java`, use `*Test.java`
 naming, and consider adding JUnit 5 to `pom.xml`. Keep tests focused on utility classes and non-GUI logic where
 possible.
+After introducing code changes, review and run the unit tests for the modified classes. If tests fail, fix them before
+proceeding. Whenever a new public class or public method is added, implement its corresponding unit test.
 
 ## Commit & Pull Request Guidelines
 
