@@ -20,6 +20,12 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.8
+
+  * Evita bloqueos de la UI moviendo las llamadas de red a segundo plano y gestiona el ciclo de vida de los refrescos.
+  * Obtiene la versión desde `pom.xml` cuando se ejecuta desde IDE.
+  * Añade tests unitarios básicos para el menú principal.
+
 * 2.5.7
 
   * Correciones de seguridad y estabilidad

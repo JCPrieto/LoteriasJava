@@ -24,6 +24,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     private JButton btnBuscarPremioNavidad;
     private JButton btnResumenNino;
     private JButton btnBuscarPremioNino;
+    private boolean cargando;
 
     public MenuPrincipal(Ventana ventana) {
         super(new GridLayout(4, 1, 10, 10));
@@ -48,15 +49,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnResumenNavidad)) {
-            Conexion con = new Conexion();
-            try {
-                padre.setPanel(new ResumenNavidad(padre, con.getResumenNavidad()));
-                padre.setPanelInferior(new PanelInferior(padre));
-                padre.pack();
-            } catch (IOException e1) {
-                Logger.error("Cargar resumen Navidad", e1);
-                JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
-            }
+            cargarResumenNavidad();
         }
         if (e.getSource().equals(btnBuscarPremioNavidad)) {
             padre.setPanel(new PanelBusqueda(padre, Sorteo.NAVIDAD));
@@ -64,21 +57,79 @@ public class MenuPrincipal extends JPanel implements ActionListener {
             padre.pack();
         }
         if (e.getSource().equals(btnResumenNino)) {
-            Conexion con = new Conexion();
-            try {
-                padre.setPanel(new ResumenNino(padre, con.getResumenNino()));
-                padre.setPanelInferior(new PanelInferior(padre));
-                padre.pack();
-            } catch (Exception e1) {
-                Logger.error("Cargar resumen Niño", e1);
-                JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
-            }
+            cargarResumenNino();
         }
         if (e.getSource().equals(btnBuscarPremioNino)) {
             padre.setPanel(new PanelBusqueda(padre, Sorteo.NINO));
             padre.setPanelInferior(new PanelInferior(padre));
-            SwingUtilities.updateComponentTreeUI(padre.getPanel());
-            SwingUtilities.updateComponentTreeUI(padre.getPanelInferior());
+            padre.pack();
         }
+    }
+
+    private void cargarResumenNavidad() {
+        if (cargando) {
+            return;
+        }
+        setCargando(true);
+        SwingWorker<io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad, Void> worker = new SwingWorker<>() {
+            @Override
+            protected io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad doInBackground() throws IOException {
+                Conexion con = new Conexion();
+                return con.getResumenNavidad();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    padre.setPanel(new ResumenNavidad(padre, get()));
+                    padre.setPanelInferior(new PanelInferior(padre));
+                    padre.pack();
+                } catch (Exception e) {
+                    Logger.error("Cargar resumen Navidad", e);
+                    JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                } finally {
+                    setCargando(false);
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    private void cargarResumenNino() {
+        if (cargando) {
+            return;
+        }
+        setCargando(true);
+        SwingWorker<io.github.jcprieto.lib.loteria.model.nino.ResumenNino, Void> worker = new SwingWorker<>() {
+            @Override
+            protected io.github.jcprieto.lib.loteria.model.nino.ResumenNino doInBackground() throws IOException {
+                Conexion con = new Conexion();
+                return con.getResumenNino();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    padre.setPanel(new ResumenNino(padre, get()));
+                    padre.setPanelInferior(new PanelInferior(padre));
+                    padre.pack();
+                } catch (Exception e) {
+                    Logger.error("Cargar resumen Niño", e);
+                    JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                } finally {
+                    setCargando(false);
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    private void setCargando(boolean activo) {
+        cargando = activo;
+        btnResumenNavidad.setEnabled(!activo);
+        btnBuscarPremioNavidad.setEnabled(!activo);
+        btnResumenNino.setEnabled(!activo);
+        btnBuscarPremioNino.setEnabled(!activo);
+        setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
     }
 }

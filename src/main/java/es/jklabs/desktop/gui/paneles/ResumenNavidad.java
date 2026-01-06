@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serial;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author juanky
@@ -37,6 +38,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
     private io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad res;
     private JPanel panelCuarto;
     private JPanel panelQuinto;
+    private boolean actualizando;
 
     ResumenNavidad(final Ventana ventana, io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resultado) {
         super();
@@ -49,27 +51,62 @@ public class ResumenNavidad extends JPanel implements ActionListener {
 
     public void actionPerformed(final ActionEvent evt) {
         if (evt.getSource() == tiempo) {
-            try {
-                actualizarResumen();
-            } catch (IOException e) {
-                Logger.error("Actualizar datos de la pantalla", e);
-            }
+            actualizarResumenAsync();
         }
     }
 
-    private void actualizarResumen() throws IOException {
-        final Conexion con = new Conexion();
-        res = con.getResumenNavidad();
-            gordo.setText(res.getGordo());
-            segundo.setText(res.getSegundo());
-            tercero.setText(res.getTercero());
-        setPanelCuarto(res.getCuarto());
-        setPanelQuinto(res.getQuinto());
-        estado.setText("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
-        actualizacion.setText("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
-                .getFechaActualizacion()));
-        pdf.setText(res.getUrlPDF());
-            padre.pack();
+    private void actualizarResumenAsync() {
+        if (actualizando) {
+            return;
+        }
+        actualizando = true;
+        SwingWorker<io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad, Void> worker = new SwingWorker<>() {
+            @Override
+            protected io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad doInBackground() throws IOException {
+                final Conexion con = new Conexion();
+                return con.getResumenNavidad();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    res = get();
+                    gordo.setText(res.getGordo());
+                    segundo.setText(res.getSegundo());
+                    tercero.setText(res.getTercero());
+                    setPanelCuarto(res.getCuarto());
+                    setPanelQuinto(res.getQuinto());
+                    estado.setText("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
+                    actualizacion.setText("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
+                            .getFechaActualizacion()));
+                    pdf.setText(res.getUrlPDF());
+                    padre.pack();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    Logger.error("Actualizar datos de la pantalla", e);
+                } finally {
+                    actualizando = false;
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        if (!tiempo.isRunning()) {
+            tiempo.start();
+        }
+    }
+
+    @Override
+    public void removeNotify() {
+        if (tiempo.isRunning()) {
+            tiempo.stop();
+        }
+        super.removeNotify();
     }
 
     private void setPanelQuinto(java.util.List<String> quinto) {

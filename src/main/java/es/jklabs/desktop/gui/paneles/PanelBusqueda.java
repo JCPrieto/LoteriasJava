@@ -13,8 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.io.Serial;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author juanky
@@ -35,6 +35,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
+    private boolean buscando;
 
     PanelBusqueda(final Ventana ventana, Sorteo sorteo) {
         super();
@@ -46,7 +47,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     public void actionPerformed(final ActionEvent evt) {
         if (evt.getSource() == buscar && !numero.getText().isEmpty()) {
-            buscarPremio(numero.getText(), cantidad.getText());
+            buscarPremioAsync(numero.getText(), cantidad.getText());
         }
         if (evt.getSource() == limpiar) {
             resultado.removeAll();
@@ -58,22 +59,45 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         }
     }
 
-    private void buscarPremio(final String text, String cantidadText) {
-        Conexion c;
-        c = createConexion();
-        cns.gridy = contador++;
-        try {
-            resultado.add(new Resultado(text, c.getPremio(sorteo, text).getCantidad(), cantidadText), cns);
-            contador++;
-            padre.pack();
-        } catch (PremioDecimoNoDisponibleException e) {
-            contador--;
-            showWarning(e.getMessage());
-        } catch (IOException e) {
-            contador--;
-            Logger.error("Buscar premio", e);
-            showWarning("Hay un problema con el servidor, intentelo en unos minutos");
+    private void buscarPremioAsync(final String text, String cantidadText) {
+        if (buscando) {
+            return;
         }
+        setBuscando(true);
+        SwingWorker<Double, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Double doInBackground() throws Exception {
+                Conexion c = createConexion();
+                return c.getPremio(sorteo, text).getCantidad();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    double premio = get();
+                    cns.gridy = contador++;
+                    resultado.add(new Resultado(text, premio, cantidadText), cns);
+                    contador++;
+                    padre.pack();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    if (cause instanceof PremioDecimoNoDisponibleException) {
+                        showWarning(cause.getMessage());
+                    } else {
+                        Logger.error("Buscar premio", e);
+                        showWarning("Hay un problema con el servidor, intentelo en unos minutos");
+                    }
+                } catch (Exception e) {
+                    Logger.error("Buscar premio", e);
+                    showWarning("Hay un problema con el servidor, intentelo en unos minutos");
+                } finally {
+                    setBuscando(false);
+                }
+            }
+        };
+        worker.execute();
     }
 
     protected Conexion createConexion() {
@@ -82,6 +106,13 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     protected void showWarning(String message) {
         JOptionPane.showMessageDialog(padre, message, "Atención!", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void setBuscando(boolean activo) {
+        buscando = activo;
+        buscar.setEnabled(!activo);
+        limpiar.setEnabled(!activo);
+        setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
     }
 
     private void cargarElementos() {
