@@ -27,13 +27,6 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/</outputDirectory>
-            <unpack>false</unpack>
-            <includes>
-                <include>${artifact}</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
             <outputDirectory>/libs</outputDirectory>
             <unpack>false</unpack>
             <excludes>

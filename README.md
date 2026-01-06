@@ -20,6 +20,9 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.9
+  * Corrección en el empaquetado de la aplicación.
+
 * 2.5.8
 
   * Evita bloqueos de la UI moviendo las llamadas de red a segundo plano y gestiona el ciclo de vida de los refrescos.
