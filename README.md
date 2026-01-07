@@ -20,6 +20,9 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.10
+  * Configura Mockito como agente para evitar la carga dinámica en tests.
+
 * 2.5.9
   * Corrección en el empaquetado de la aplicación.
 
