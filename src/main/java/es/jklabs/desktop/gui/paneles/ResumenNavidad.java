@@ -71,6 +71,9 @@ public class ResumenNavidad extends JPanel implements ActionListener {
             protected void done() {
                 try {
                     res = get();
+                    if (res == null) {
+                        return;
+                    }
                     gordo.setText(res.getGordo());
                     segundo.setText(res.getSegundo());
                     tercero.setText(res.getTercero());

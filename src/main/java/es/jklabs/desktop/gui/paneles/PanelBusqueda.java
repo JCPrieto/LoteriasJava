@@ -3,8 +3,10 @@ package es.jklabs.desktop.gui.paneles;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.utilidades.Logger;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
+import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
 import io.github.jcprieto.lib.loteria.excepciones.PremioDecimoNoDisponibleException;
+import io.github.jcprieto.lib.loteria.model.Premio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -63,22 +65,31 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         if (buscando) {
             return;
         }
+        java.math.BigDecimal cantidadValor = parseCantidad(cantidadText);
+        if (cantidadValor == null) {
+            showWarning("Introduce una cantidad jugada valida");
+            return;
+        }
         setBuscando(true);
-        SwingWorker<Double, Void> worker = new SwingWorker<>() {
+        SwingWorker<Premio, Void> worker = new SwingWorker<>() {
             @Override
-            protected Double doInBackground() throws Exception {
+            protected Premio doInBackground() throws Exception {
                 Conexion c = createConexion();
-                return c.getPremio(sorteo, text).getCantidad();
+                return c.getPremio(sorteo, text);
             }
 
             @Override
             protected void done() {
                 try {
-                    double premio = get();
-                    cns.gridy = contador++;
-                    resultado.add(new Resultado(text, premio, cantidadText), cns);
-                    contador++;
-                    padre.pack();
+                    Premio premio = get();
+                    if (premio == null || premio.getEstado() == EstadoSorteo.NO_INICIADO) {
+                        showWarning("No hay datos del sorteo, intentelo en unos minutos");
+                    } else {
+                        cns.gridy = contador++;
+                        resultado.add(new Resultado(text, premio.getCantidad(), cantidadValor), cns);
+                        contador++;
+                        padre.pack();
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
@@ -113,6 +124,22 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         buscar.setEnabled(!activo);
         limpiar.setEnabled(!activo);
         setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+    }
+
+    private java.math.BigDecimal parseCantidad(String cantidadText) {
+        if (cantidadText == null) {
+            return null;
+        }
+        String normalized = cantidadText.trim();
+        if (normalized.isEmpty()) {
+            return null;
+        }
+        try {
+            java.math.BigDecimal cantidad = new java.math.BigDecimal(normalized);
+            return cantidad.compareTo(java.math.BigDecimal.ZERO) > 0 ? cantidad : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private void cargarElementos() {

@@ -81,7 +81,12 @@ public class MenuPrincipal extends JPanel implements ActionListener {
             @Override
             protected void done() {
                 try {
-                    padre.setPanel(new ResumenNavidad(padre, get()));
+                    io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resumen = get();
+                    if (resumen == null) {
+                        JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    padre.setPanel(new ResumenNavidad(padre, resumen));
                     padre.setPanelInferior(new PanelInferior(padre));
                     padre.pack();
                 } catch (Exception e) {
@@ -110,7 +115,12 @@ public class MenuPrincipal extends JPanel implements ActionListener {
             @Override
             protected void done() {
                 try {
-                    padre.setPanel(new ResumenNino(padre, get()));
+                    io.github.jcprieto.lib.loteria.model.nino.ResumenNino resumen = get();
+                    if (resumen == null) {
+                        JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    padre.setPanel(new ResumenNino(padre, resumen));
                     padre.setPanelInferior(new PanelInferior(padre));
                     padre.pack();
                 } catch (Exception e) {

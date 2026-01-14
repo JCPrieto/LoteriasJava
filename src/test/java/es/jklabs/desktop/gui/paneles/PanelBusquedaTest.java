@@ -2,8 +2,8 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
+import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
-import io.github.jcprieto.lib.loteria.excepciones.PremioDecimoNoDisponibleException;
 import io.github.jcprieto.lib.loteria.model.Premio;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -80,13 +80,16 @@ public class PanelBusquedaTest {
     }
 
     @Test
-    void buscarPremioMuestraAvisoCuandoNoDisponible() throws Exception {
+    void buscarPremioMuestraAvisoCuandoNoHayDatos() throws Exception {
         Ventana ventana = Mockito.mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD);
         panel.setConexion(new Conexion() {
             @Override
             public Premio getPremio(Sorteo sorteo, String numero) throws IOException {
-                throw new PremioDecimoNoDisponibleException("No disponible");
+                Premio premio = new Premio();
+                premio.setCantidad(0);
+                premio.setEstado(EstadoSorteo.NO_INICIADO);
+                return premio;
             }
         });
 
@@ -95,7 +98,7 @@ public class PanelBusquedaTest {
 
         JPanel resultado = getResultadoPanel(panel);
         assertEquals(0, resultado.getComponentCount());
-        assertEquals("No disponible", panel.getLastWarning());
+        assertEquals("No hay datos del sorteo, intentelo en unos minutos", panel.getLastWarning());
     }
 
     private static class TestPanelBusqueda extends PanelBusqueda {

@@ -20,6 +20,10 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.11
+  * Valida la cantidad jugada antes de buscar premios para evitar errores de formato.
+  * Calcula importes con BigDecimal y formatea la salida como moneda.
+
 * 2.5.10
   * Configura Mockito como agente para evitar la carga dinámica en tests.
 
