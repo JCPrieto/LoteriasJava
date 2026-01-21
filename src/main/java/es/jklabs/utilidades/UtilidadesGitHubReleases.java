@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.function.Supplier;
 
 public class UtilidadesGitHubReleases {
 
@@ -19,6 +20,9 @@ public class UtilidadesGitHubReleases {
     private static final String USER_AGENT = "LoteriaDeNavidad/" + Constantes.VERSION;
     private static final int TIMEOUT_MILLIS = 15000;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static Supplier<JFileChooser> FILE_CHOOSER_SUPPLIER = JFileChooser::new;
+    private static ReleaseProvider RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
+    private static Downloader DOWNLOADER = UtilidadesGitHubReleases::descargarArchivo;
 
     private UtilidadesGitHubReleases() {
 
@@ -33,28 +37,46 @@ public class UtilidadesGitHubReleases {
     }
 
     public static void descargaNuevaVersion(Ventana ventana) throws InterruptedException {
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = FILE_CHOOSER_SUPPLIER.get();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int retorno = fc.showSaveDialog(ventana);
         if (retorno == JFileChooser.APPROVE_OPTION) {
             File directorio = fc.getSelectedFile();
             try {
-                ReleaseInfo release = obtenerUltimaRelease();
+                ReleaseInfo release = RELEASE_PROVIDER.obtener();
                 if (release == null || release.downloadUrl() == null) {
                     Logger.info("Error de lectura de la release");
                     return;
                 }
                 Path destino = Paths.get(directorio.getPath() + FileSystems.getDefault().getSeparator()
                         + release.assetName());
-                descargarArchivo(release.downloadUrl(), destino);
+                DOWNLOADER.descargar(release.downloadUrl(), destino);
                 Growls.mostrarInfo(null, "nueva.version.descargada");
             } catch (AccessDeniedException e) {
                 Growls.mostrarError("path.sin.permiso.escritura", e);
-                descargaNuevaVersion(ventana);
             } catch (IOException e) {
                 Logger.error("Descargar nueva version", e);
+                Growls.mostrarError("descargar.nueva.version", e);
             }
         }
+    }
+
+    static void setFileChooserSupplierForTests(Supplier<JFileChooser> supplier) {
+        FILE_CHOOSER_SUPPLIER = supplier == null ? JFileChooser::new : supplier;
+    }
+
+    static void setReleaseProviderForTests(ReleaseProvider provider) {
+        RELEASE_PROVIDER = provider == null ? UtilidadesGitHubReleases::obtenerUltimaRelease : provider;
+    }
+
+    static void setDownloaderForTests(Downloader downloader) {
+        DOWNLOADER = downloader == null ? UtilidadesGitHubReleases::descargarArchivo : downloader;
+    }
+
+    static void resetTestHooks() {
+        FILE_CHOOSER_SUPPLIER = JFileChooser::new;
+        RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
+        DOWNLOADER = UtilidadesGitHubReleases::descargarArchivo;
     }
 
     private static ReleaseInfo obtenerUltimaRelease() throws IOException {
@@ -108,6 +130,32 @@ public class UtilidadesGitHubReleases {
             }
         }
         return fallback;
+    }
+
+    private static boolean diferenteVersion(String serverVersion) {
+        if (serverVersion == null) {
+            return false;
+        }
+        int[] server = parseVersion(serverVersion);
+        int[] actual = parseVersion(Constantes.VERSION);
+        int max = Math.max(server.length, actual.length);
+        for (int i = 0; i < max; i++) {
+            int sv = i < server.length ? server[i] : 0;
+            int av = i < actual.length ? actual[i] : 0;
+            if (sv != av) {
+                return sv > av;
+            }
+        }
+        return false;
+    }
+
+    private static int[] parseVersion(String version) {
+        String[] parts = version.split("\\.");
+        int[] numbers = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            numbers[i] = parseLeadingNumber(parts[i]);
+        }
+        return numbers;
     }
 
     private static void descargarArchivo(String url, Path destino) throws IOException {
@@ -183,16 +231,35 @@ public class UtilidadesGitHubReleases {
         return text == null || text.isEmpty() ? null : text;
     }
 
-
-    private static boolean diferenteVersion(String serverVersion) {
-        String[] sv = serverVersion.split("\\.");
-        String[] av = Constantes.VERSION.split("\\.");
-        return Integer.parseInt(sv[0]) > Integer.parseInt(av[0]) || Integer.parseInt(sv[0]) == Integer.parseInt(av[0])
-                && (Integer.parseInt(sv[1]) > Integer.parseInt(av[1]) || Integer.parseInt(sv[1]) == Integer
-                .parseInt(av[1]) && Integer.parseInt(sv[2]) > Integer.parseInt(av[2]));
+    private static int parseLeadingNumber(String part) {
+        if (part == null || part.isEmpty()) {
+            return 0;
+        }
+        int end = 0;
+        while (end < part.length() && Character.isDigit(part.charAt(end))) {
+            end++;
+        }
+        if (end == 0) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(part.substring(0, end));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
-    private record ReleaseInfo(String version, String assetName, String downloadUrl) {
+    @FunctionalInterface
+    interface ReleaseProvider {
+        ReleaseInfo obtener() throws IOException;
+    }
+
+    @FunctionalInterface
+    interface Downloader {
+        void descargar(String url, Path destino) throws IOException;
+    }
+
+    record ReleaseInfo(String version, String assetName, String downloadUrl) {
     }
 
     private record ReleaseAsset(String name, String downloadUrl) {

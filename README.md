@@ -20,6 +20,10 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.12
+  * Comparacion de versiones mas tolerante con sufijos en tags.
+  * Gestiona errores de descarga sin reintentos recursivos y notifica al usuario.
+
 * 2.5.11
   * Valida la cantidad jugada antes de buscar premios para evitar errores de formato.
   * Calcula importes con BigDecimal y formatea la salida como moneda.
