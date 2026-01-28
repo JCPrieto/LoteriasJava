@@ -1,6 +1,7 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.utilidades.Mensajes;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
 import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
@@ -98,7 +99,7 @@ public class PanelBusquedaTest {
 
         JPanel resultado = getResultadoPanel(panel);
         assertEquals(0, resultado.getComponentCount());
-        assertEquals("No hay datos del sorteo, intentelo en unos minutos", panel.getLastWarning());
+        assertEquals(Mensajes.getMensaje("warning.no.datos"), panel.getLastWarning());
     }
 
     private static class TestPanelBusqueda extends PanelBusqueda {

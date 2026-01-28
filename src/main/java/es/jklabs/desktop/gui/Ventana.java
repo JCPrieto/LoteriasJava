@@ -6,6 +6,7 @@ import es.jklabs.desktop.gui.paneles.PanelInferior;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 import es.jklabs.utilidades.UtilidadesGitHubReleases;
 
 import javax.swing.*;
@@ -52,9 +53,9 @@ public class Ventana extends JFrame implements ActionListener {
 
     private void crearMenu() {
         barraMenu = new JMenuBar();
-        final JMenu ayuda = new JMenu("Ayuda");
+        final JMenu ayuda = new JMenu(Mensajes.getMensaje("menu.ayuda"));
         ayuda.setMargin(new Insets(5, 5, 5, 5));
-        acerca = new JMenuItem("Acerca de...", new ImageIcon(Objects.requireNonNull(getClass().getClassLoader()
+        acerca = new JMenuItem(Mensajes.getMensaje("acerca.de"), new ImageIcon(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("img/icons/info.png"))));
         acerca.addActionListener(this);
         ayuda.add(acerca);
@@ -92,7 +93,7 @@ public class Ventana extends JFrame implements ActionListener {
             return;
         }
         barraMenu.add(Box.createHorizontalGlue());
-        itemActualizacion = new JMenuItem("Existe una nueva versión", new ImageIcon(Objects.requireNonNull
+        itemActualizacion = new JMenuItem(Mensajes.getMensaje("menu.nueva.version"), new ImageIcon(Objects.requireNonNull
                 (getClass().getClassLoader().getResource("img/icons/update.png"))));
         itemActualizacion.addActionListener(al -> descargarNuevaVersion());
         barraMenu.add(itemActualizacion);
@@ -129,14 +130,6 @@ public class Ventana extends JFrame implements ActionListener {
     public void setPanelInferior(PanelInferior panelInferior) {
         this.panelInferior = panelInferior;
         super.add(panelInferior, BorderLayout.SOUTH);
-    }
-
-    public JPanel getPanel() {
-        return panel;
-    }
-
-    public PanelInferior getPanelInferior() {
-        return panelInferior;
     }
 
 }

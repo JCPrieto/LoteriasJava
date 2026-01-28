@@ -3,6 +3,7 @@ package es.jklabs.desktop.gui.paneles;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.desktop.gui.listener.ResumenMouseListener;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 import es.jklabs.utilidades.UtilidadesEstadoSorteo;
 import es.jklabs.utilidades.UtilidadesFecha;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
@@ -79,8 +80,8 @@ public class ResumenNavidad extends JPanel implements ActionListener {
                     tercero.setText(res.getTercero());
                     setPanelCuarto(res.getCuarto());
                     setPanelQuinto(res.getQuinto());
-                    estado.setText("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
-                    actualizacion.setText("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
+                    estado.setText(Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
+                    actualizacion.setText(Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(res
                             .getFechaActualizacion()));
                     pdf.setText(res.getUrlPDF());
                     padre.pack();
@@ -127,7 +128,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         super.setLayout(new GridBagLayout());
         final GridBagConstraints cns = new GridBagConstraints();
         final JPanel panelGordo = new JPanel();
-        panelGordo.setBorder(new TitledBorder("Premio Gordo"));
+        panelGordo.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.navidad.gordo")));
         gordo = new JLabel(res.getGordo(), SwingConstants.CENTER);
         panelGordo.add(gordo);
         cns.fill = GridBagConstraints.HORIZONTAL;
@@ -137,7 +138,7 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         cns.insets = new Insets(10, 0, 10, 0);
         super.add(panelGordo, cns);
         final JPanel panelSegundo = new JPanel();
-        panelSegundo.setBorder(new TitledBorder("Segundo premio"));
+        panelSegundo.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.navidad.segundo")));
         segundo = new JLabel(res.getSegundo(), SwingConstants.CENTER);
         panelSegundo.add(segundo);
         cns.gridx = 0;
@@ -146,30 +147,30 @@ public class ResumenNavidad extends JPanel implements ActionListener {
         cns.gridwidth = 1;
         super.add(panelSegundo, cns);
         final JPanel panelTercero = new JPanel();
-        panelTercero.setBorder(new TitledBorder("Tercer premio"));
+        panelTercero.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.navidad.tercero")));
         tercero = new JLabel(res.getTercero(), SwingConstants.CENTER);
         panelTercero.add(tercero);
         cns.gridx = 1;
         cns.gridy = 1;
         super.add(panelTercero, cns);
         panelCuarto = new JPanel(new GridLayout(0, 2));
-        panelCuarto.setBorder(new TitledBorder("Cuarto premio"));
+        panelCuarto.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.navidad.cuarto")));
         setPanelCuarto(res.getCuarto());
         cns.gridx = 0;
         cns.gridy = 2;
         cns.gridwidth = 2;
         super.add(panelCuarto, cns);
         panelQuinto = new JPanel(new GridLayout(4, 2));
-        panelQuinto.setBorder(new TitledBorder("Quinto premio"));
+        panelQuinto.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.navidad.quinto")));
         setPanelQuinto(res.getQuinto());
         cns.gridy = 3;
         super.add(panelQuinto, cns);
-        estado = new JLabel("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
+        estado = new JLabel(Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
                 SwingConstants.CENTER);
         cns.gridx = 0;
         cns.gridy = 4;
         super.add(estado, cns);
-        actualizacion = new JLabel("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
+        actualizacion = new JLabel(Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(res
                 .getFechaActualizacion()), SwingConstants.CENTER);
         cns.gridx = 0;
         cns.gridy = 5;

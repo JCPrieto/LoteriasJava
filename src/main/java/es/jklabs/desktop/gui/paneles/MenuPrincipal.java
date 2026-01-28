@@ -2,6 +2,7 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
 
@@ -33,13 +34,13 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     }
 
     private void cargarBotonera() {
-        btnResumenNavidad = new JButton("Resumen de la Lotería de Navidad");
+        btnResumenNavidad = new JButton(Mensajes.getMensaje("panel.resumen.navidad"));
         btnResumenNavidad.addActionListener(this);
-        btnBuscarPremioNavidad = new JButton("Buscar premios de la Lotería de Navidad");
+        btnBuscarPremioNavidad = new JButton(Mensajes.getMensaje("panel.buscar.navidad"));
         btnBuscarPremioNavidad.addActionListener(this);
-        btnResumenNino = new JButton("Resumen de la Lotería del Niño");
+        btnResumenNino = new JButton(Mensajes.getMensaje("panel.resumen.nino"));
         btnResumenNino.addActionListener(this);
-        btnBuscarPremioNino = new JButton("Buscar premios de la Lotería del Niño");
+        btnBuscarPremioNino = new JButton(Mensajes.getMensaje("panel.buscar.nino"));
         btnBuscarPremioNino.addActionListener(this);
         super.add(btnResumenNavidad);
         super.add(btnBuscarPremioNavidad);
@@ -83,7 +84,8 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 try {
                     io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resumen = get();
                     if (resumen == null) {
-                        JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
+                                Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                     padre.setPanel(new ResumenNavidad(padre, resumen));
@@ -91,7 +93,8 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                     padre.pack();
                 } catch (Exception e) {
                     Logger.error("Cargar resumen Navidad", e);
-                    JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
+                            Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
                 } finally {
                     setCargando(false);
                 }
@@ -117,7 +120,8 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 try {
                     io.github.jcprieto.lib.loteria.model.nino.ResumenNino resumen = get();
                     if (resumen == null) {
-                        JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
+                                Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                     padre.setPanel(new ResumenNino(padre, resumen));
@@ -125,7 +129,8 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                     padre.pack();
                 } catch (Exception e) {
                     Logger.error("Cargar resumen Niño", e);
-                    JOptionPane.showMessageDialog(padre, "Hay un problema con el servidor, intentelo en unos minutos", "Atención!", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
+                            Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
                 } finally {
                     setCargando(false);
                 }

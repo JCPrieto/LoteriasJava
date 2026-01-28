@@ -20,9 +20,16 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.15
+    * Elimina logs con más de 30 días.
+
+* 2.5.14
+    * Centraliza textos de UI en bundles i18n.
+    * Mueve los logs a ~/.local/share/LoteriaDeNavidad/logs y rota archivos por tamaño.
+
 * 2.5.13
   * Inicializa la UI en el EDT.
-  * Añade fallback a JOptionPane si notify-send no esta disponible.
+  * A\u00F1ade fallback a JOptionPane si notify-send no esta disponible.
   * Carga el icono Acerca de desde classpath.
 
 * 2.5.12

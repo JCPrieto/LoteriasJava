@@ -3,6 +3,7 @@ package es.jklabs.desktop.gui.paneles;
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.desktop.gui.listener.ResumenMouseListener;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 import es.jklabs.utilidades.UtilidadesEstadoSorteo;
 import es.jklabs.utilidades.UtilidadesFecha;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
@@ -84,8 +85,8 @@ public class ResumenNino extends JPanel implements ActionListener {
                     setPanelExt3(res.getTresCifras());
                     setPanelExt2(res.getDosCifras());
                     setPanelReintegros(res.getReintegros());
-                    estado.setText("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
-                    actualizacion.setText("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
+                    estado.setText(Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()));
+                    actualizacion.setText(Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(res
                             .getFechaActualizacion()));
                     pdf.setText(res.getUrlPDF());
                     padre.pack();
@@ -132,7 +133,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         super.setLayout(new GridBagLayout());
         final GridBagConstraints cns = new GridBagConstraints();
         JPanel panelPrimero = new JPanel();
-        panelPrimero.setBorder(new TitledBorder("Primer Premio"));
+        panelPrimero.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.primero")));
         JLabel primero = new JLabel(res.getPrimero(), JLabel.CENTER);
         panelPrimero.add(primero);
         cns.fill = GridBagConstraints.HORIZONTAL;
@@ -143,7 +144,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         cns.insets = new Insets(10, 0, 10, 0);
         super.add(panelPrimero, cns);
         JPanel panelSegundo = new JPanel();
-        panelSegundo.setBorder(new TitledBorder("Segundo Premio"));
+        panelSegundo.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.segundo")));
         segundo = new JLabel(res.getSegundo(), JLabel.CENTER);
         panelSegundo.add(segundo);
         cns.gridwidth = 1;
@@ -151,40 +152,40 @@ public class ResumenNino extends JPanel implements ActionListener {
         cns.gridy = 2;
         super.add(panelSegundo, cns);
         JPanel panelTercero = new JPanel();
-        panelTercero.setBorder(new TitledBorder("Tercer Premio"));
+        panelTercero.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.tercero")));
         tercero = new JLabel(res.getTercero(), JLabel.CENTER);
         panelTercero.add(tercero);
         cns.gridx = 1;
         cns.gridy = 2;
         super.add(panelTercero, cns);
         panelExt4 = new JPanel(new GridLayout(0, 2));
-        panelExt4.setBorder(new TitledBorder("Extracciones de 4 Cifras"));
+        panelExt4.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.cuatro")));
         setPanelExt4(res.getCuatroCifras());
         cns.gridx = 0;
         cns.gridy = 3;
         cns.gridwidth = 2;
         super.add(panelExt4, cns);
         panelExt3 = new JPanel(new GridLayout(7, 2));
-        panelExt3.setBorder(new TitledBorder("Extracciones de 3 Cifras"));
+        panelExt3.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.tres")));
         setPanelExt3(res.getTresCifras());
         cns.gridy = 4;
         super.add(panelExt3, cns);
         panelExt2 = new JPanel(new GridLayout(0, 5));
-        panelExt2.setBorder(new TitledBorder("Extracciones de 2 Cifras"));
+        panelExt2.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.dos")));
         setPanelExt2(res.getDosCifras());
         cns.fill = GridBagConstraints.HORIZONTAL;
         cns.gridy = 5;
         super.add(panelExt2, cns);
         panelReintegros = new JPanel(new GridLayout(0, 3));
-        panelReintegros.setBorder(new TitledBorder("Reintegros"));
+        panelReintegros.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.reintegros")));
         setPanelReintegros(res.getReintegros());
         cns.gridy = 6;
         super.add(panelReintegros, cns);
-        estado = new JLabel("Estado del Sorteo: " + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
+        estado = new JLabel(Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
                 JLabel.CENTER);
         cns.gridy = 7;
         super.add(estado, cns);
-        actualizacion = new JLabel("Ultima Actualización: " + UtilidadesFecha.getHumanReadable(res
+        actualizacion = new JLabel(Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(res
                 .getFechaActualizacion()), JLabel.CENTER);
         cns.gridy = 8;
         super.add(actualizacion, cns);

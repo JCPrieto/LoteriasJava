@@ -1,5 +1,7 @@
 package es.jklabs.desktop.gui.listener;
 
+import es.jklabs.utilidades.Mensajes;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,9 +14,8 @@ import java.util.logging.Logger;
 
 public class ResumenMouseListener implements MouseListener {
 
-    private static final String CRITICO = "Error Critico";
-
     private final JLabel pdf;
+    private static Browser BROWSER = uri -> Desktop.getDesktop().browse(uri);
 
     public ResumenMouseListener(JLabel pdf) {
         this.pdf = pdf;
@@ -64,17 +65,8 @@ public class ResumenMouseListener implements MouseListener {
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getSource() == pdf) {
-            try {
-                URI uri = buildUri(pdf.getText());
-                Desktop.getDesktop().browse(uri);
-                pdf.setForeground(Color.red);
-            } catch (IOException | URISyntaxException e1) {
-                Logger.getLogger("PDF").log(Level.SEVERE, CRITICO, e1);
-            }
-        }
+    static void setBrowserForTests(Browser browser) {
+        BROWSER = browser == null ? uri -> Desktop.getDesktop().browse(uri) : browser;
     }
 
     @Override
@@ -92,8 +84,30 @@ public class ResumenMouseListener implements MouseListener {
         //
     }
 
+    static void resetTestHooks() {
+        BROWSER = uri -> Desktop.getDesktop().browse(uri);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == pdf) {
+            try {
+                URI uri = buildUri(pdf.getText());
+                BROWSER.browse(uri);
+                pdf.setForeground(Color.red);
+            } catch (IOException | URISyntaxException e1) {
+                Logger.getLogger("PDF").log(Level.SEVERE, Mensajes.getError("error.critico"), e1);
+            }
+        }
+    }
+
     @Override
     public void mouseExited(MouseEvent e) {
         //
+    }
+
+    @FunctionalInterface
+    interface Browser {
+        void browse(URI uri) throws IOException;
     }
 }

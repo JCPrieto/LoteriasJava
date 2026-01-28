@@ -33,7 +33,7 @@ public class AcercaDe extends JDialog implements ActionListener {
     private final transient JButton botonOk;
 
     public AcercaDe(final Ventana ventana) {
-        super(ventana, Constantes.NOMBRE_APP + " - Acerca de...");
+        super(ventana, Constantes.NOMBRE_APP + " - " + Mensajes.getMensaje("acerca.titulo"));
         int yPosition = 0;
         super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource(
                 "img/icons/line-globe.png"))).getImage());
@@ -90,7 +90,7 @@ public class AcercaDe extends JDialog implements ActionListener {
         cns.gridy = yPosition++;
         cns.gridwidth = 3;
         panel.add(jLabelLicense, cns);
-        botonOk = new JButton("Aceptar");
+        botonOk = new JButton(Mensajes.getMensaje("acerca.aceptar"));
         botonOk.addActionListener(this);
         cns.gridy = yPosition;
         panel.add(botonOk, cns);

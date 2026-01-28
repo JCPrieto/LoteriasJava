@@ -1,6 +1,7 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.utilidades.Mensajes;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -53,10 +54,10 @@ class MenuPrincipalTest {
         assertNotNull(btnBuscarPremioNavidad);
         assertNotNull(btnResumenNino);
         assertNotNull(btnBuscarPremioNino);
-        assertEquals("Resumen de la Lotería de Navidad", btnResumenNavidad.getText());
-        assertEquals("Buscar premios de la Lotería de Navidad", btnBuscarPremioNavidad.getText());
-        assertEquals("Resumen de la Lotería del Niño", btnResumenNino.getText());
-        assertEquals("Buscar premios de la Lotería del Niño", btnBuscarPremioNino.getText());
+        assertEquals(Mensajes.getMensaje("panel.resumen.navidad"), btnResumenNavidad.getText());
+        assertEquals(Mensajes.getMensaje("panel.buscar.navidad"), btnBuscarPremioNavidad.getText());
+        assertEquals(Mensajes.getMensaje("panel.resumen.nino"), btnResumenNino.getText());
+        assertEquals(Mensajes.getMensaje("panel.buscar.nino"), btnBuscarPremioNino.getText());
         assertEquals(4, panel.getComponentCount());
     }
 

@@ -2,6 +2,7 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.utilidades.Logger;
+import es.jklabs.utilidades.Mensajes;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
 import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
@@ -67,7 +68,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         }
         java.math.BigDecimal cantidadValor = parseCantidad(cantidadText);
         if (cantidadValor == null) {
-            showWarning("Introduce una cantidad jugada valida");
+            showWarning(Mensajes.getMensaje("warning.cantidad.invalida"));
             return;
         }
         setBuscando(true);
@@ -83,7 +84,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
                 try {
                     Premio premio = get();
                     if (premio == null || premio.getEstado() == EstadoSorteo.NO_INICIADO) {
-                        showWarning("No hay datos del sorteo, intentelo en unos minutos");
+                        showWarning(Mensajes.getMensaje("warning.no.datos"));
                     } else {
                         cns.gridy = contador++;
                         resultado.add(new Resultado(text, premio.getCantidad(), cantidadValor), cns);
@@ -98,11 +99,11 @@ public class PanelBusqueda extends JPanel implements ActionListener {
                         showWarning(cause.getMessage());
                     } else {
                         Logger.error("Buscar premio", e);
-                        showWarning("Hay un problema con el servidor, intentelo en unos minutos");
+                        showWarning(Mensajes.getMensaje("warning.problema.servidor"));
                     }
                 } catch (Exception e) {
                     Logger.error("Buscar premio", e);
-                    showWarning("Hay un problema con el servidor, intentelo en unos minutos");
+                    showWarning(Mensajes.getMensaje("warning.problema.servidor"));
                 } finally {
                     setBuscando(false);
                 }
@@ -116,7 +117,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     }
 
     protected void showWarning(String message) {
-        JOptionPane.showMessageDialog(padre, message, "Atención!", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(padre, message, Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
     }
 
     private void setBuscando(boolean activo) {
@@ -189,15 +190,15 @@ public class PanelBusqueda extends JPanel implements ActionListener {
                 //
             }
         });
-        buscar = new JButton("Buscar premio");
+        buscar = new JButton(Mensajes.getMensaje("panel.buscar.premio"));
         buscar.addActionListener(this);
-        entrada.add(new JLabel("Número:"));
+        entrada.add(new JLabel(Mensajes.getMensaje("panel.numero")));
         entrada.add(numero);
-        entrada.add(new JLabel("Cantidad Jugada:"));
+        entrada.add(new JLabel(Mensajes.getMensaje("panel.cantidad.jugada")));
         entrada.add(cantidad);
-        entrada.add(new JLabel("€"));
+        entrada.add(new JLabel(Mensajes.getMensaje("panel.euros")));
         entrada.add(buscar);
-        limpiar = new JButton("Limpiar resultados");
+        limpiar = new JButton(Mensajes.getMensaje("panel.limpiar.resultados"));
         limpiar.addActionListener(this);
         resultado = new JPanel();
         resultado.setLayout(new GridBagLayout());
