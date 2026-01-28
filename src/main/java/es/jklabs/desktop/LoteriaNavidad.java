@@ -20,14 +20,17 @@ public final class LoteriaNavidad {
      */
     public static void main(final String[] args) {
         Logger.init();
-        try {
-            Growls.init();
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            final Ventana vent = new Ventana();
-            vent.setVisible(true);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            Logger.error("Cargar look and field del S.O.", e);
-        }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Growls.init();
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                final Ventana vent = new Ventana();
+                vent.setVisible(true);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                     UnsupportedLookAndFeelException e) {
+                Logger.error("Cargar look and field del S.O.", e);
+            }
+        });
     }
 
 }

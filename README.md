@@ -20,6 +20,11 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.13
+  * Inicializa la UI en el EDT.
+  * Añade fallback a JOptionPane si notify-send no esta disponible.
+  * Carga el icono Acerca de desde classpath.
+
 * 2.5.12
   * Comparacion de versiones mas tolerante con sufijos en tags.
   * Gestiona errores de descarga sin reintentos recursivos y notifica al usuario.

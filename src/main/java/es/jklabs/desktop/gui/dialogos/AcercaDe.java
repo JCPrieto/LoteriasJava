@@ -35,7 +35,8 @@ public class AcercaDe extends JDialog implements ActionListener {
     public AcercaDe(final Ventana ventana) {
         super(ventana, Constantes.NOMBRE_APP + " - Acerca de...");
         int yPosition = 0;
-        super.setIconImage(new ImageIcon("res/line-globe.png").getImage());
+        super.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource(
+                "img/icons/line-globe.png"))).getImage());
         final JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setLayout(new GridBagLayout());
