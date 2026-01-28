@@ -20,8 +20,11 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Changelog ###
 
+* 2.5.16
+  * Extrae servicios de obtención de datos para mejorar testabilidad sin reflexión.
+
 * 2.5.15
-    * Elimina logs con más de 30 días.
+  * Elimina logs con más de 30 días.
 
 * 2.5.14
     * Centraliza textos de UI en bundles i18n.

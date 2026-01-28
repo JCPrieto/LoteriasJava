@@ -35,15 +35,21 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     private transient JTextField numero;
     private transient JPanel resultado;
     private final Sorteo sorteo;
+    private final PremioService premioService;
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
     private boolean buscando;
 
     PanelBusqueda(final Ventana ventana, Sorteo sorteo) {
+        this(ventana, sorteo, new ConexionPremioService());
+    }
+
+    PanelBusqueda(final Ventana ventana, Sorteo sorteo, PremioService premioService) {
         super();
         padre = ventana;
         this.sorteo = sorteo;
+        this.premioService = premioService;
         cargarElementos();
     }
 
@@ -75,8 +81,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         SwingWorker<Premio, Void> worker = new SwingWorker<>() {
             @Override
             protected Premio doInBackground() throws Exception {
-                Conexion c = createConexion();
-                return c.getPremio(sorteo, text);
+                return premioService.getPremio(sorteo, text);
             }
 
             @Override
@@ -110,10 +115,6 @@ public class PanelBusqueda extends JPanel implements ActionListener {
             }
         };
         worker.execute();
-    }
-
-    protected Conexion createConexion() {
-        return new Conexion();
     }
 
     protected void showWarning(String message) {
@@ -214,4 +215,36 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         super.add(scrollPane, BorderLayout.CENTER);
     }
 
+    JButton getBuscarButtonForTests() {
+        return buscar;
+    }
+
+    JTextField getNumeroFieldForTests() {
+        return numero;
+    }
+
+    JTextField getCantidadFieldForTests() {
+        return cantidad;
+    }
+
+    JPanel getResultadoPanelForTests() {
+        return resultado;
+    }
+
+    boolean isBuscandoForTests() {
+        return buscando;
+    }
+
+    @FunctionalInterface
+    interface PremioService {
+        Premio getPremio(Sorteo sorteo, String numero) throws Exception;
+    }
+
+    private static class ConexionPremioService implements PremioService {
+        @Override
+        public Premio getPremio(Sorteo sorteo, String numero) throws Exception {
+            Conexion c = new Conexion();
+            return c.getPremio(sorteo, numero);
+        }
+    }
 }

@@ -2,7 +2,6 @@ package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.utilidades.Mensajes;
-import io.github.jcprieto.lib.loteria.conexion.Conexion;
 import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
 import io.github.jcprieto.lib.loteria.model.Premio;
@@ -11,9 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,33 +21,9 @@ public class PanelBusquedaTest {
         System.setProperty("java.awt.headless", "true");
     }
 
-    private static void invokeBuscarPremioAsync(PanelBusqueda panel, String numero, String cantidad) throws Exception {
-        Method method = PanelBusqueda.class.getDeclaredMethod("buscarPremioAsync", String.class, String.class);
-        method.setAccessible(true);
-        SwingUtilities.invokeAndWait(() -> {
-            try {
-                method.invoke(panel, numero, cantidad);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private static JPanel getResultadoPanel(PanelBusqueda panel) throws Exception {
-        Field field = PanelBusqueda.class.getDeclaredField("resultado");
-        field.setAccessible(true);
-        return (JPanel) field.get(panel);
-    }
-
-    private static boolean isBuscando(PanelBusqueda panel) throws Exception {
-        Field field = PanelBusqueda.class.getDeclaredField("buscando");
-        field.setAccessible(true);
-        return (boolean) field.get(panel);
-    }
-
     private static void waitForBusqueda(PanelBusqueda panel) throws Exception {
         long deadline = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < deadline && isBuscando(panel)) {
+        while (System.currentTimeMillis() < deadline && panel.isBuscandoForTests()) {
             Thread.sleep(20);
         }
         SwingUtilities.invokeAndWait(() -> {
@@ -62,65 +34,53 @@ public class PanelBusquedaTest {
     @Test
     void buscarPremioAgregaResultadoCuandoExiste() throws Exception {
         Ventana ventana = Mockito.mock(Ventana.class);
-        TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD);
-        panel.setConexion(new Conexion() {
-            @Override
-            public Premio getPremio(Sorteo sorteo, String numero) throws IOException {
-                Premio premio = new Premio();
-                premio.setCantidad(123.0);
-                return premio;
-            }
-        });
+        PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
+            Premio premio = new Premio();
+            premio.setCantidad(123.0);
+            return premio;
+        };
+        TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, premioService);
 
-        invokeBuscarPremioAsync(panel, "12345", "1");
+        panel.getNumeroFieldForTests().setText("12345");
+        panel.getCantidadFieldForTests().setText("1");
+        panel.getBuscarButtonForTests().doClick();
         waitForBusqueda(panel);
 
-        JPanel resultado = getResultadoPanel(panel);
+        JPanel resultado = panel.getResultadoPanelForTests();
         assertEquals(1, resultado.getComponentCount());
-        assertNull(panel.getLastWarning());
+        assertNull(panel.getLastWarningForTests());
     }
 
     @Test
     void buscarPremioMuestraAvisoCuandoNoHayDatos() throws Exception {
         Ventana ventana = Mockito.mock(Ventana.class);
-        TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD);
-        panel.setConexion(new Conexion() {
-            @Override
-            public Premio getPremio(Sorteo sorteo, String numero) throws IOException {
-                Premio premio = new Premio();
-                premio.setCantidad(0);
-                premio.setEstado(EstadoSorteo.NO_INICIADO);
-                return premio;
-            }
-        });
+        PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
+            Premio premio = new Premio();
+            premio.setCantidad(0);
+            premio.setEstado(EstadoSorteo.NO_INICIADO);
+            return premio;
+        };
+        TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, premioService);
 
-        invokeBuscarPremioAsync(panel, "12345", "1");
+        panel.getNumeroFieldForTests().setText("12345");
+        panel.getCantidadFieldForTests().setText("1");
+        panel.getBuscarButtonForTests().doClick();
         waitForBusqueda(panel);
 
-        JPanel resultado = getResultadoPanel(panel);
+        JPanel resultado = panel.getResultadoPanelForTests();
         assertEquals(0, resultado.getComponentCount());
-        assertEquals(Mensajes.getMensaje("warning.no.datos"), panel.getLastWarning());
+        assertEquals(Mensajes.getMensaje("warning.no.datos"), panel.getLastWarningForTests());
     }
 
     private static class TestPanelBusqueda extends PanelBusqueda {
-        private Conexion conexion;
         private String lastWarning;
 
-        TestPanelBusqueda(Ventana ventana, Sorteo sorteo) {
-            super(ventana, sorteo);
+        TestPanelBusqueda(Ventana ventana, Sorteo sorteo, PremioService premioService) {
+            super(ventana, sorteo, premioService);
         }
 
-        void setConexion(Conexion conexion) {
-            this.conexion = conexion;
-        }
-
-        String getLastWarning() {
+        String getLastWarningForTests() {
             return lastWarning;
-        }
-
-        @Override
-        protected Conexion createConexion() {
-            return conexion;
         }
 
         @Override

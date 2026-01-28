@@ -25,11 +25,17 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     private JButton btnBuscarPremioNavidad;
     private JButton btnResumenNino;
     private JButton btnBuscarPremioNino;
+    private final ResumenService resumenService;
     private boolean cargando;
 
     public MenuPrincipal(Ventana ventana) {
+        this(ventana, new ConexionResumenService());
+    }
+
+    MenuPrincipal(Ventana ventana, ResumenService resumenService) {
         super(new GridLayout(4, 1, 10, 10));
         padre = ventana;
+        this.resumenService = resumenService;
         cargarBotonera();
     }
 
@@ -75,8 +81,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         SwingWorker<io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad, Void> worker = new SwingWorker<>() {
             @Override
             protected io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad doInBackground() throws IOException {
-                Conexion con = new Conexion();
-                return con.getResumenNavidad();
+                return resumenService.getResumenNavidad();
             }
 
             @Override
@@ -111,8 +116,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         SwingWorker<io.github.jcprieto.lib.loteria.model.nino.ResumenNino, Void> worker = new SwingWorker<>() {
             @Override
             protected io.github.jcprieto.lib.loteria.model.nino.ResumenNino doInBackground() throws IOException {
-                Conexion con = new Conexion();
-                return con.getResumenNino();
+                return resumenService.getResumenNino();
             }
 
             @Override
@@ -139,12 +143,48 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         worker.execute();
     }
 
-    private void setCargando(boolean activo) {
+    void setCargando(boolean activo) {
         cargando = activo;
         btnResumenNavidad.setEnabled(!activo);
         btnBuscarPremioNavidad.setEnabled(!activo);
         btnResumenNino.setEnabled(!activo);
         btnBuscarPremioNino.setEnabled(!activo);
         setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+    }
+
+    JButton getBtnResumenNavidadForTests() {
+        return btnResumenNavidad;
+    }
+
+    JButton getBtnBuscarPremioNavidadForTests() {
+        return btnBuscarPremioNavidad;
+    }
+
+    JButton getBtnResumenNinoForTests() {
+        return btnResumenNino;
+    }
+
+    JButton getBtnBuscarPremioNinoForTests() {
+        return btnBuscarPremioNino;
+    }
+
+    interface ResumenService {
+        io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad getResumenNavidad() throws IOException;
+
+        io.github.jcprieto.lib.loteria.model.nino.ResumenNino getResumenNino() throws IOException;
+    }
+
+    private static class ConexionResumenService implements ResumenService {
+        @Override
+        public io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad getResumenNavidad() throws IOException {
+            Conexion con = new Conexion();
+            return con.getResumenNavidad();
+        }
+
+        @Override
+        public io.github.jcprieto.lib.loteria.model.nino.ResumenNino getResumenNino() throws IOException {
+            Conexion con = new Conexion();
+            return con.getResumenNino();
+        }
     }
 }

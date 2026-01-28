@@ -7,28 +7,24 @@ import org.mockito.Mockito;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuPrincipalTest {
 
     private static JButton obtenerBoton(MenuPrincipal panel, String fieldName) throws Exception {
-        Field field = MenuPrincipal.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (JButton) field.get(panel);
+        return switch (fieldName) {
+            case "btnResumenNavidad" -> panel.getBtnResumenNavidadForTests();
+            case "btnBuscarPremioNavidad" -> panel.getBtnBuscarPremioNavidadForTests();
+            case "btnResumenNino" -> panel.getBtnResumenNinoForTests();
+            case "btnBuscarPremioNino" -> panel.getBtnBuscarPremioNinoForTests();
+            default -> throw new IllegalArgumentException("Campo no soportado");
+        };
     }
 
     private static void invocarSetCargando(MenuPrincipal panel, boolean activo) throws Exception {
-        Method method = MenuPrincipal.class.getDeclaredMethod("setCargando", boolean.class);
-        method.setAccessible(true);
         SwingUtilities.invokeAndWait(() -> {
-            try {
-                method.invoke(panel, activo);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            panel.setCargando(activo);
         });
     }
 
