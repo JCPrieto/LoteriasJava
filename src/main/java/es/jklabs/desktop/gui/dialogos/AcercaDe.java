@@ -1,6 +1,7 @@
 package es.jklabs.desktop.gui.dialogos;
 
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.desktop.gui.utilidades.IconUtils;
 import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.gui.utilidades.listener.UrlMouseListener;
 import es.jklabs.utilidades.Constantes;
@@ -78,13 +79,10 @@ public class AcercaDe extends JDialog implements ActionListener {
         addPowered(panel, cns, yPosition++, "Loterías y apuestas del estado", "https://www.loteriasyapuestas.es");
         addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
         addPowered(panel, cns, yPosition++, "GitHub Releases", "https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases");
-        JLabel jLabelLicense = new JLabel
-                ("<html><i>Esta obra está bajo una licencia de Creative Commons " +
-                        "Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</i><html>", new ImageIcon(Objects
-                        .requireNonNull(getClass().getClassLoader().getResource
-                                ("img/icons/creative_commons.png"))), SwingConstants.TRAILING);
-        jLabelLicense.addMouseListener(new UrlMouseListener(jLabelLicense, "http://creativecommons" +
-                ".org/licenses/by-nc-sa/4.0/"));
+        JLabel jLabelLicense = new JLabel(
+                Mensajes.getMensaje("licencia.app"),
+                IconUtils.loadIcon("gplv3-with-text-136x68.png"), SwingConstants.CENTER);
+        jLabelLicense.addMouseListener(new UrlMouseListener(jLabelLicense, Mensajes.getMensaje("licencia.app.url")));
         cns.insets = new Insets(10, 10, 10, 10);
         cns.gridx = 0;
         cns.gridy = yPosition++;

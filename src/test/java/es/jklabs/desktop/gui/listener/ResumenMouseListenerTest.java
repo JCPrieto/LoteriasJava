@@ -1,5 +1,6 @@
 package es.jklabs.desktop.gui.listener;
 
+import es.jklabs.utilidades.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -8,7 +9,7 @@ import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ResumenMouseListenerTest {
+class ResumenMouseListenerTest extends BaseTest {
 
     private static URI invokeBuildUri(String url) throws Exception {
         Method method = ResumenMouseListener.class.getDeclaredMethod("buildUri", String.class);

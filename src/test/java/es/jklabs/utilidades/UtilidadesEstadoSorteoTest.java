@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UtilidadesEstadoSorteoTest {
+class UtilidadesEstadoSorteoTest extends BaseTest {
 
     @Test
     void getHumanReadableDevuelveTextosI18n() {

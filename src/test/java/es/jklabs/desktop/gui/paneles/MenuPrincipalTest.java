@@ -1,6 +1,7 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.utilidades.BaseTest;
 import es.jklabs.utilidades.Mensajes;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,7 +11,7 @@ import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MenuPrincipalTest {
+class MenuPrincipalTest extends BaseTest {
 
     private static JButton obtenerBoton(MenuPrincipal panel, String fieldName) throws Exception {
         return switch (fieldName) {

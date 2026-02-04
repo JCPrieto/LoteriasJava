@@ -1,4 +1,4 @@
-LoteriasJava
+![LoteriasJava](src/main/resources/img/icons/line-globe.png) LoteriasJava
 ============
 
 Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño
@@ -95,7 +95,9 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
   * Se elimina el icono de Systray, por la incompatibilidad con Gnome3 y utilizamos ControlsFX para monstrar las
     notificaciones.
 
-### Licencia ### 
+### Licencia ###
+
+![Licencia GPL v3](src/main/resources/img/icons/gplv3-with-text-136x68.png)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,4 +110,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses

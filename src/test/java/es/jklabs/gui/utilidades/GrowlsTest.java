@@ -1,9 +1,9 @@
 package es.jklabs.gui.utilidades;
 
+import es.jklabs.utilidades.BaseTest;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Mensajes;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -12,12 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class GrowlsTest {
-
-    @BeforeAll
-    static void setHeadless() {
-        System.setProperty("java.awt.headless", "true");
-    }
+class GrowlsTest extends BaseTest {
 
     @AfterEach
     void resetHooks() {

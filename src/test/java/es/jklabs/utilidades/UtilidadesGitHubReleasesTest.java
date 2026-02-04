@@ -1,7 +1,6 @@
 package es.jklabs.utilidades;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -10,12 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UtilidadesGitHubReleasesTest {
-
-    @BeforeAll
-    static void setHeadless() {
-        System.setProperty("java.awt.headless", "true");
-    }
+class UtilidadesGitHubReleasesTest extends BaseTest {
 
     @AfterEach
     void resetHooks() {

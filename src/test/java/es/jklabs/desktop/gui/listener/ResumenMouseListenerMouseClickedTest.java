@@ -1,7 +1,7 @@
 package es.jklabs.desktop.gui.listener;
 
+import es.jklabs.utilidades.BaseTest;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -13,12 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ResumenMouseListenerMouseClickedTest {
-
-    @BeforeAll
-    static void setHeadless() {
-        System.setProperty("java.awt.headless", "true");
-    }
+class ResumenMouseListenerMouseClickedTest extends BaseTest {
 
     @AfterEach
     void resetHooks() {

@@ -1,11 +1,11 @@
 package es.jklabs.desktop.gui.paneles;
 
 import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.utilidades.BaseTest;
 import es.jklabs.utilidades.Mensajes;
 import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import io.github.jcprieto.lib.loteria.enumeradores.Sorteo;
 import io.github.jcprieto.lib.loteria.model.Premio;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,12 +14,7 @@ import javax.swing.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PanelBusquedaTest {
-
-    @BeforeAll
-    static void setHeadless() {
-        System.setProperty("java.awt.headless", "true");
-    }
+public class PanelBusquedaTest extends BaseTest {
 
     private static void waitForBusqueda(PanelBusqueda panel) throws Exception {
         long deadline = System.currentTimeMillis() + 2000;
