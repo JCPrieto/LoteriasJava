@@ -2,16 +2,16 @@ package es.jklabs.utilidades;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.jklabs.desktop.gui.Ventana;
 import es.jklabs.gui.utilidades.Growls;
 
-import javax.swing.*;
-import java.io.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.function.Supplier;
 
 public class UtilidadesGitHubReleases {
 
@@ -20,9 +20,8 @@ public class UtilidadesGitHubReleases {
     private static final String USER_AGENT = "LoteriaDeNavidad/" + Constantes.VERSION;
     private static final int TIMEOUT_MILLIS = 15000;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static Supplier<JFileChooser> FILE_CHOOSER_SUPPLIER = JFileChooser::new;
     private static ReleaseProvider RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
-    private static Downloader DOWNLOADER = UtilidadesGitHubReleases::descargarArchivo;
+    private static BrowserOpener BROWSER_OPENER = new DesktopBrowserOpener();
 
     private UtilidadesGitHubReleases() {
 
@@ -36,47 +35,41 @@ public class UtilidadesGitHubReleases {
         return diferenteVersion(release.version());
     }
 
-    public static void descargaNuevaVersion(Ventana ventana) throws InterruptedException {
-        JFileChooser fc = FILE_CHOOSER_SUPPLIER.get();
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int retorno = fc.showSaveDialog(ventana);
-        if (retorno == JFileChooser.APPROVE_OPTION) {
-            File directorio = fc.getSelectedFile();
-            try {
-                ReleaseInfo release = RELEASE_PROVIDER.obtener();
-                if (release == null || release.downloadUrl() == null) {
-                    Logger.info("Error de lectura de la release");
-                    return;
-                }
-                Path destino = Paths.get(directorio.getPath() + FileSystems.getDefault().getSeparator()
-                        + release.assetName());
-                DOWNLOADER.descargar(release.downloadUrl(), destino);
-                Growls.mostrarInfo(null, "nueva.version.descargada");
-            } catch (AccessDeniedException e) {
-                Growls.mostrarError("path.sin.permiso.escritura", e);
-            } catch (IOException e) {
-                Logger.error("Descargar nueva version", e);
-                Growls.mostrarError("descargar.nueva.version", e);
+    public static void abrirNuevaVersionEnNavegador() {
+        try {
+            ReleaseInfo release = RELEASE_PROVIDER.obtener();
+            if (release == null) {
+                Logger.info("Error de lectura de la release");
+                return;
             }
+            String url = release.releaseUrl() != null ? release.releaseUrl() : release.downloadUrl();
+            if (url == null) {
+                Logger.info("Error de lectura de la release");
+                return;
+            }
+            if (!BROWSER_OPENER.isSupported()) {
+                Growls.mostrarError("abrir.nueva.version", new UnsupportedOperationException("Desktop browse not supported"));
+                return;
+            }
+            Growls.mostrarInfo(null, "nueva.version.abrir");
+            BROWSER_OPENER.open(URI.create(url));
+        } catch (IOException e) {
+            Logger.error("Abrir nueva version", e);
+            Growls.mostrarError("abrir.nueva.version", e);
         }
-    }
-
-    static void setFileChooserSupplierForTests(Supplier<JFileChooser> supplier) {
-        FILE_CHOOSER_SUPPLIER = supplier == null ? JFileChooser::new : supplier;
     }
 
     static void setReleaseProviderForTests(ReleaseProvider provider) {
         RELEASE_PROVIDER = provider == null ? UtilidadesGitHubReleases::obtenerUltimaRelease : provider;
     }
 
-    static void setDownloaderForTests(Downloader downloader) {
-        DOWNLOADER = downloader == null ? UtilidadesGitHubReleases::descargarArchivo : downloader;
+    static void setBrowserOpenerForTests(BrowserOpener opener) {
+        BROWSER_OPENER = opener == null ? new DesktopBrowserOpener() : opener;
     }
 
     static void resetTestHooks() {
-        FILE_CHOOSER_SUPPLIER = JFileChooser::new;
         RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
-        DOWNLOADER = UtilidadesGitHubReleases::descargarArchivo;
+        BROWSER_OPENER = new DesktopBrowserOpener();
     }
 
     private static ReleaseInfo obtenerUltimaRelease() throws IOException {
@@ -92,12 +85,13 @@ public class UtilidadesGitHubReleases {
         if (tag == null) {
             return null;
         }
+        String releaseUrl = obtenerTexto(root, "html_url");
         String version = normalizarVersion(tag);
         ReleaseAsset asset = seleccionarAsset(root.path("assets"), version);
         if (asset == null) {
-            return new ReleaseInfo(version, null, null);
+            return new ReleaseInfo(version, null, null, releaseUrl);
         }
-        return new ReleaseInfo(version, asset.name(), asset.downloadUrl());
+        return new ReleaseInfo(version, asset.name(), asset.downloadUrl(), releaseUrl);
     }
 
     private static String normalizarVersion(String tag) {
@@ -156,25 +150,6 @@ public class UtilidadesGitHubReleases {
             numbers[i] = parseLeadingNumber(parts[i]);
         }
         return numbers;
-    }
-
-    private static void descargarArchivo(String url, Path destino) throws IOException {
-        URI uri = URI.create(url);
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setRequestProperty("User-Agent", USER_AGENT);
-        connection.setInstanceFollowRedirects(true);
-        connection.setConnectTimeout(TIMEOUT_MILLIS);
-        connection.setReadTimeout(TIMEOUT_MILLIS);
-        int status = connection.getResponseCode();
-        if (status < 200 || status >= 300) {
-            String errorBody = leerStream(connection.getErrorStream());
-            throw new IOException("HTTP " + status + ": " + errorBody);
-        }
-        try (InputStream in = connection.getInputStream()) {
-            Files.copy(in, destino, StandardCopyOption.REPLACE_EXISTING);
-        } finally {
-            connection.disconnect();
-        }
     }
 
     private static String leerUrl() throws IOException {
@@ -254,12 +229,25 @@ public class UtilidadesGitHubReleases {
         ReleaseInfo obtener() throws IOException;
     }
 
-    @FunctionalInterface
-    interface Downloader {
-        void descargar(String url, Path destino) throws IOException;
+    interface BrowserOpener {
+        boolean isSupported();
+
+        void open(URI uri) throws IOException;
     }
 
-    record ReleaseInfo(String version, String assetName, String downloadUrl) {
+    private static final class DesktopBrowserOpener implements BrowserOpener {
+        @Override
+        public boolean isSupported() {
+            return Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
+        }
+
+        @Override
+        public void open(URI uri) throws IOException {
+            Desktop.getDesktop().browse(uri);
+        }
+    }
+
+    record ReleaseInfo(String version, String assetName, String downloadUrl, String releaseUrl) {
     }
 
     private record ReleaseAsset(String name, String downloadUrl) {

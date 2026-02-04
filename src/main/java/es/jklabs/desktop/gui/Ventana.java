@@ -3,7 +3,6 @@ package es.jklabs.desktop.gui;
 import es.jklabs.desktop.gui.dialogos.AcercaDe;
 import es.jklabs.desktop.gui.paneles.MenuPrincipal;
 import es.jklabs.desktop.gui.paneles.PanelInferior;
-import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.Mensajes;
@@ -95,19 +94,10 @@ public class Ventana extends JFrame implements ActionListener {
         barraMenu.add(Box.createHorizontalGlue());
         itemActualizacion = new JMenuItem(Mensajes.getMensaje("menu.nueva.version"), new ImageIcon(Objects.requireNonNull
                 (getClass().getClassLoader().getResource("img/icons/update.png"))));
-        itemActualizacion.addActionListener(al -> descargarNuevaVersion());
+        itemActualizacion.addActionListener(al -> UtilidadesGitHubReleases.abrirNuevaVersionEnNavegador());
         barraMenu.add(itemActualizacion);
         barraMenu.revalidate();
         barraMenu.repaint();
-    }
-
-    private void descargarNuevaVersion() {
-        try {
-            UtilidadesGitHubReleases.descargaNuevaVersion(this);
-        } catch (InterruptedException e) {
-            Growls.mostrarError("descargar.nueva.version", e);
-            Thread.currentThread().interrupt();
-        }
     }
 
     private void crearPanel() {
