@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  test:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,31 +28,114 @@ jobs:
           cache: maven
 
       - name: Run unit tests
-        run: mvn test
-
-      - name: Build package
-        run: mvn -DskipTests package
+        run: mvn -B test
 
       - name: Read project version
         id: version
         run: echo "version=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)" >> "$GITHUB_OUTPUT"
 
-      - name: Check for existing tag
-        id: tag_check
+  build-linux:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Install Linux packaging dependencies
         run: |
-          if git rev-parse "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+          sudo apt-get update
+          sudo apt-get install -y fakeroot
+
+      - name: Build Linux distribution package
+        run: mvn -B -DskipTests package -Pdist-linux
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-linux
+          path: |
+            target/dist/*.deb
+            target/LoteriaDeNavidad-${{ needs.test.outputs.version }}.zip
+            target/LoteriaDeNavidad.jar
+
+  build-windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build Windows distribution package
+        run: mvn -B -DskipTests package -Pdist-windows
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-windows
+          path: target/dist/*.msi
+
+  build-macos:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build macOS distribution package
+        run: mvn -B -DskipTests package -Pdist-mac
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-macos
+          path: target/dist/*.dmg
+
+  release:
+    needs:
+      - test
+      - build-linux
+      - build-windows
+      - build-macos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all distribution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
 
       - name: Create GitHub release
-        if: steps.tag_check.outputs.exists != 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: LoteriaDeNavidad ${{ steps.version.outputs.version }}
+          tag_name: v${{ needs.test.outputs.version }}
+          name: LoteriaDeNavidad ${{ needs.test.outputs.version }}
           generate_release_notes: true
+          make_latest: true
+          fail_on_unmatched_files: true
           files: |
-            target/LoteriaDeNavidad.jar
-            target/LoteriaDeNavidad-${{ steps.version.outputs.version }}.zip
+            release-assets/*.deb
+            release-assets/*.msi
+            release-assets/*.dmg
+            release-assets/*.zip
+            release-assets/*.jar
