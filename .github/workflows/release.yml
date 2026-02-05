@@ -86,7 +86,14 @@ jobs:
         run: mvn -B -DskipTests package -Pdist-windows
 
       - name: Verify Windows package was generated
-        run: ls -la target/dist/*.msi
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem -Path "target/dist/*.msi" -File -ErrorAction SilentlyContinue
+          if (-not $files) {
+            Write-Error "No .msi file was generated in target/dist."
+            exit 1
+          }
+          $files | Select-Object FullName, Length
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
