@@ -45,6 +45,13 @@ URL y notas de versión.
 
 ### Changelog ###
 
+* 2.6.0
+  * Añade distribución nativa con `jpackage` para Linux (`.deb`), Windows (`.msi`) y macOS (`.dmg`) mediante perfiles
+    Maven.
+  * Sustituye la descarga directa de nuevas versiones por apertura en navegador de la release de GitHub.
+  * Actualiza el diálogo "Acerca de" para mostrar licencia GPL v3 y centraliza carga de iconos con `IconUtils`.
+  * Refuerza la base de tests con utilidades comunes y nuevas pruebas unitarias para los cambios introducidos.
+
 * 2.5.16
   * Extrae servicios de obtención de datos para mejorar testabilidad sin reflexión.
 

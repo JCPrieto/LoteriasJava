@@ -4,7 +4,8 @@
 
 The core application lives in `src/main/java`, organized under the `es.jklabs` package hierarchy (desktop GUI,
 utilities, and Firebase JSON helpers). Runtime assets live in `src/main/resources`, with i18n bundles under
-`src/main/resources/i18n` and icons under `src/main/resources/img`. Build packaging is configured in `pom.xml`, with
+`src/main/resources/i18n` and icons under `src/main/resources/img`. Native packaging assets for `jpackage` live under
+`src/main/jpackage` (currently Linux-specific resources/scripts). Build packaging is configured in `pom.xml`, with
 assembly rules in `src/assembly/cfg.xml`. Top-level launchers (`LoteriaDeNavidad.sh`, `LoteriaDeNavidad.bat`) run the
 packaged JAR.
 
@@ -12,7 +13,10 @@ packaged JAR.
 
 - `mvn clean package`: compiles Java 21 sources, copies dependencies into `target/libs`, builds
   `target/LoteriaDeNavidad-<version>.jar`, and produces a distributable ZIP via the assembly plugin.
-- `mvn test`: runs tests if present (none are configured today).
+- `mvn -Pdist-linux package`: builds Linux native package (`.deb`) using `jpackage`.
+- `mvn -Pdist-windows package`: builds Windows native package (`.msi`) using `jpackage`.
+- `mvn -Pdist-mac package`: builds macOS native package (`.dmg`) using `jpackage`.
+- `mvn test`: runs the unit test suite.
 - `java -jar target/LoteriaDeNavidad-<version>.jar`: runs the app locally after a build.
 - `./LoteriaDeNavidad.sh` or `LoteriaDeNavidad.bat`: runs the packaged JAR placed alongside these scripts.
 
@@ -24,9 +28,8 @@ configured, so match surrounding style in modified files.
 
 ## Testing Guidelines
 
-There is no `src/test/java` or test framework dependency. If you add tests, create `src/test/java`, use `*Test.java`
-naming, and consider adding JUnit 5 to `pom.xml`. Keep tests focused on utility classes and non-GUI logic where
-possible.
+Tests live in `src/test/java` and use JUnit 5 + Mockito. Use `*Test.java` naming and keep tests focused on utility
+classes and non-GUI logic where possible.
 After introducing code changes, review and run the unit tests for the modified classes. If tests fail, fix them before
 proceeding. Whenever a new public class or public method is added, implement its corresponding unit test.
 
