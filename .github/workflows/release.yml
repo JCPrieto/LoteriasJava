@@ -56,6 +56,9 @@ jobs:
       - name: Build Linux distribution package
         run: mvn -B -DskipTests package -Pdist-linux
 
+      - name: Verify Linux package was generated
+        run: ls -la target/dist/*.deb
+
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -82,6 +85,9 @@ jobs:
       - name: Build Windows distribution package
         run: mvn -B -DskipTests package -Pdist-windows
 
+      - name: Verify Windows package was generated
+        run: ls -la target/dist/*.msi
+
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -105,6 +111,9 @@ jobs:
       - name: Build macOS distribution package
         run: mvn -B -DskipTests package -Pdist-mac
 
+      - name: Verify macOS package was generated
+        run: ls -la target/dist/*.dmg
+
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -125,6 +134,11 @@ jobs:
           path: release-assets
           merge-multiple: true
 
+      - name: List downloaded release assets
+        run: |
+          echo "Files available for release:"
+          ls -la release-assets || true
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
@@ -134,8 +148,8 @@ jobs:
           make_latest: true
           fail_on_unmatched_files: true
           files: |
-            release-assets/*.deb
-            release-assets/*.msi
-            release-assets/*.dmg
-            release-assets/*.zip
-            release-assets/*.jar
+            release-assets/**/*.deb
+            release-assets/**/*.msi
+            release-assets/**/*.dmg
+            release-assets/**/*.zip
+            release-assets/**/*.jar
