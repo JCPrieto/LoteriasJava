@@ -250,6 +250,10 @@
                                         <argument>--java-options</argument>
                                         <argument>-Dsun.awt.X11.awtAppClassName=es-jklabs-desktop-LoteriaNavidad
                                         </argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts</argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-Djavax.net.ssl.trustStoreType=JKS</argument>
                                         <argument>--linux-shortcut</argument>
                                         <argument>--linux-menu-group</argument>
                                         <argument>Games</argument>
