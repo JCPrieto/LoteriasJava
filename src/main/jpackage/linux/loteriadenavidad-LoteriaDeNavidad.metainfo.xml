@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>loteriadenavidad-LoteriaDeNavidad.desktop</id>
+    <name>LoteriaDeNavidad</name>
+    <summary>Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño</summary>
+    <description>
+        <p>Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño.</p>
+    </description>
+    <developer_name>JKLabs</developer_name>
+    <project_license>GPL-3.0-or-later</project_license>
+    <metadata_license>CC0-1.0</metadata_license>
+    <launchable type="desktop-id">loteriadenavidad-LoteriaDeNavidad.desktop</launchable>
+    <icon type="stock">loteriadenavidad</icon>
+    <url type="homepage">https://github.com/JCPrieto/LoteriasJava</url>
+    <content_rating type="oars-1.1"/>
+    <releases>
+        <release version="2.5.16" date="2026-02-04">
+            <description>
+                <p>Extrae servicios de obtención de datos para mejorar testabilidad sin reflexión.</p>
+            </description>
+        </release>
+    </releases>
+</component>

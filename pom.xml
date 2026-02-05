@@ -15,6 +15,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <mockito.version>5.21.0</mockito.version>
         <slf4j.version>2.0.17</slf4j.version>
+        <exec.maven.plugin.version>3.5.0</exec.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -147,4 +148,237 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dist-linux</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.6</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-jpackage-input-jar-linux</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/jpackage/input</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.directory}</directory>
+                                            <includes>
+                                                <include>LoteriaDeNavidad.jar</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>prepare-jpackage-input-libs-linux</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/jpackage/input/libs</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.directory}/libs</directory>
+                                            <includes>
+                                                <include>*.jar</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec.maven.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-linux-deb</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jpackage</executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>deb</argument>
+                                        <argument>--dest</argument>
+                                        <argument>${project.build.directory}/dist</argument>
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}/jpackage/input</argument>
+                                        <argument>--main-jar</argument>
+                                        <argument>LoteriaDeNavidad.jar</argument>
+                                        <argument>--main-class</argument>
+                                        <argument>es.jklabs.desktop.LoteriaNavidad</argument>
+                                        <argument>--name</argument>
+                                        <argument>LoteriaDeNavidad</argument>
+                                        <argument>--app-version</argument>
+                                        <argument>${project.version}</argument>
+                                        <argument>--description</argument>
+                                        <argument>Aplicación para la comprobación de los numeros premiados de la lotería
+                                            de Navidad y de El Niño
+                                        </argument>
+                                        <argument>--about-url</argument>
+                                        <argument>https://github.com/JCPrieto/LoteriasJava</argument>
+                                        <argument>--license-file</argument>
+                                        <argument>${project.basedir}/LICENSE</argument>
+                                        <argument>--copyright</argument>
+                                        <argument>Copyright (c) 2026 JKLabs</argument>
+                                        <argument>--icon</argument>
+                                        <argument>${project.basedir}/src/main/jpackage/linux/LoteriaDeNavidad.png
+                                        </argument>
+                                        <argument>--vendor</argument>
+                                        <argument>JKLabs</argument>
+                                        <argument>--linux-deb-maintainer</argument>
+                                        <argument>JuanC.Prieto.Silos@gmail.com</argument>
+                                        <argument>--install-dir</argument>
+                                        <argument>/opt</argument>
+                                        <argument>--app-content</argument>
+                                        <argument>
+                                            ${project.basedir}/src/main/jpackage/linux/loteriadenavidad-LoteriaDeNavidad.metainfo.xml
+                                        </argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-Dsun.awt.X11.awtAppClassName=es-jklabs-desktop-LoteriaNavidad
+                                        </argument>
+                                        <argument>--linux-shortcut</argument>
+                                        <argument>--linux-menu-group</argument>
+                                        <argument>Games</argument>
+                                        <argument>--linux-app-category</argument>
+                                        <argument>Game</argument>
+                                        <argument>--resource-dir</argument>
+                                        <argument>${project.basedir}/src/main/jpackage/linux</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>dist-windows</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec.maven.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-windows-msi</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jpackage</executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>msi</argument>
+                                        <argument>--dest</argument>
+                                        <argument>${project.build.directory}/dist</argument>
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}</argument>
+                                        <argument>--main-jar</argument>
+                                        <argument>LoteriaDeNavidad.jar</argument>
+                                        <argument>--main-class</argument>
+                                        <argument>es.jklabs.desktop.LoteriaNavidad</argument>
+                                        <argument>--name</argument>
+                                        <argument>LoteriaDeNavidad</argument>
+                                        <argument>--app-version</argument>
+                                        <argument>${project.version}</argument>
+                                        <argument>--description</argument>
+                                        <argument>Aplicación para la comprobación de los numeros premiados de la lotería
+                                            de Navidad y de El Niño
+                                        </argument>
+                                        <argument>--about-url</argument>
+                                        <argument>https://github.com/JCPrieto/LoteriasJava</argument>
+                                        <argument>--license-file</argument>
+                                        <argument>${project.basedir}/LICENSE</argument>
+                                        <argument>--copyright</argument>
+                                        <argument>Copyright (c) 2026 JKLabs</argument>
+                                        <argument>--icon</argument>
+                                        <argument>${project.basedir}/src/main/resources/img/icons/app/icon.ico
+                                        </argument>
+                                        <argument>--vendor</argument>
+                                        <argument>JKLabs</argument>
+                                        <argument>--win-menu</argument>
+                                        <argument>--win-shortcut</argument>
+                                        <argument>--win-dir-chooser</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>dist-mac</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec.maven.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-mac-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jpackage</executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>dmg</argument>
+                                        <argument>--dest</argument>
+                                        <argument>${project.build.directory}/dist</argument>
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}</argument>
+                                        <argument>--main-jar</argument>
+                                        <argument>LoteriaDeNavidad.jar</argument>
+                                        <argument>--main-class</argument>
+                                        <argument>es.jklabs.desktop.LoteriaNavidad</argument>
+                                        <argument>--name</argument>
+                                        <argument>LoteriaDeNavidad</argument>
+                                        <argument>--app-version</argument>
+                                        <argument>${project.version}</argument>
+                                        <argument>--description</argument>
+                                        <argument>Aplicación para la comprobación de los numeros premiados de la lotería
+                                            de Navidad y de El Niño
+                                        </argument>
+                                        <argument>--about-url</argument>
+                                        <argument>https://github.com/JCPrieto/LoteriasJava</argument>
+                                        <argument>--license-file</argument>
+                                        <argument>${project.basedir}/LICENSE</argument>
+                                        <argument>--copyright</argument>
+                                        <argument>Copyright (c) 2026 JKLabs</argument>
+                                        <argument>--icon</argument>
+                                        <argument>${project.basedir}/src/main/resources/img/icons/app/icon.icns
+                                        </argument>
+                                        <argument>--vendor</argument>
+                                        <argument>JKLabs</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

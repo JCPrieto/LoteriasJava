@@ -1,0 +1,35 @@
+#!/bin/sh
+set -e
+
+desktop_file="/usr/share/applications/loteriadenavidad-LoteriaDeNavidad.desktop"
+source_desktop="/opt/loteriadenavidad/lib/loteriadenavidad-LoteriaDeNavidad.desktop"
+metainfo_file="/usr/share/metainfo/loteriadenavidad-LoteriaDeNavidad.metainfo.xml"
+source_metainfo="/opt/loteriadenavidad/lib/app/loteriadenavidad-LoteriaDeNavidad.metainfo.xml"
+icon_dir="/usr/share/icons/hicolor/256x256/apps"
+icon_file="$icon_dir/loteriadenavidad.png"
+source_icon="/opt/loteriadenavidad/lib/LoteriaDeNavidad.png"
+
+if [ -f "$source_desktop" ]; then
+  install -m 644 "$source_desktop" "$desktop_file"
+fi
+
+if [ -f "$source_metainfo" ]; then
+  install -m 644 "$source_metainfo" "$metainfo_file"
+fi
+
+if [ -f "$source_icon" ]; then
+  install -d "$icon_dir"
+  install -m 644 "$source_icon" "$icon_file"
+fi
+
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database /usr/share/applications || true
+fi
+
+if command -v update-icon-caches >/dev/null 2>&1; then
+  update-icon-caches /usr/share/icons/hicolor || true
+elif command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+fi
+
+exit 0

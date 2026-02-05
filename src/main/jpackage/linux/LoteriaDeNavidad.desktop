@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=LoteriaDeNavidad
+Comment=Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño
+Exec=/opt/loteriadenavidad/bin/LoteriaDeNavidad
+Icon=loteriadenavidad
+Terminal=false
+Type=Application
+Categories=Game;
+StartupWMClass=es-jklabs-desktop-LoteriaNavidad
+StartupNotify=true

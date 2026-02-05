@@ -7,6 +7,31 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 * Java 21
 * LibNotify (Para las notificaciones en Linux)
+* Para generar paquetes nativos: JDK 21 con `jpackage` y las herramientas del sistema operativo.
+* Linux (Ubuntu): `dpkg-deb` (incluido por defecto) para crear `.deb`.
+* Windows: WiX Toolset para crear `.msi`.
+* macOS: herramientas del sistema (`hdiutil`) para crear `.dmg`.
+
+### Distribución nativa (doble clic) ###
+
+Los paquetes se generan con Maven y `jpackage`. Debes ejecutar el comando en el SO destino.
+
+* Linux (Ubuntu): `mvn -Pdist-linux package`
+  Salida: `target/dist/LoteriaDeNavidad-<version>_amd64.deb` (o similar).
+* Windows: `mvn -Pdist-windows package`
+  Salida: `target/dist/LoteriaDeNavidad-<version>.msi`.
+* macOS: `mvn -Pdist-mac package`
+  Salida: `target/dist/LoteriaDeNavidad-<version>.dmg`.
+
+Al instalar el paquete, la app queda disponible en el menú del sistema y se puede abrir con doble clic.
+
+Iconos: se usan los archivos en `src/main/resources/img/icons/app/` (`icon.png`, `icon.ico`, `icon.icns`). Actualmente
+están generados a partir de un PNG 32x32, por lo que se recomienda sustituirlos por un PNG de mayor resolución si se
+quiere mejor calidad visual.
+
+AppStream (Linux): la ficha que ve GNOME Software se genera desde
+`src/main/jpackage/linux/loteriadenavidad-LoteriaDeNavidad.metainfo.xml`. Ahí se actualizan descripción, licencia,
+URL y notas de versión.
 
 ### Tecnologías utilizadas ###
 
