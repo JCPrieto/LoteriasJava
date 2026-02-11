@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,7 +32,7 @@ public class PanelBusquedaTest extends BaseTest {
         Ventana ventana = Mockito.mock(Ventana.class);
         PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
             Premio premio = new Premio();
-            premio.setCantidad(123.0);
+            premio.setCantidad(BigDecimal.valueOf(123.0));
             return premio;
         };
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, premioService);
@@ -51,7 +52,7 @@ public class PanelBusquedaTest extends BaseTest {
         Ventana ventana = Mockito.mock(Ventana.class);
         PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
             Premio premio = new Premio();
-            premio.setCantidad(0);
+            premio.setCantidad(BigDecimal.ZERO);
             premio.setEstado(EstadoSorteo.NO_INICIADO);
             return premio;
         };
