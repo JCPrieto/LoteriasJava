@@ -1,16 +1,17 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+  workflow_run:
+    workflows: [ "SonarQube" ]
+    types:
+      - completed
 
 permissions:
   contents: write
 
 jobs:
-  test:
+  metadata:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'master' }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -27,15 +28,12 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: Run unit tests
-        run: mvn -B test
-
       - name: Read project version
         id: version
         run: echo "version=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)" >> "$GITHUB_OUTPUT"
 
   build-linux:
-    needs: test
+    needs: metadata
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,11 +63,11 @@ jobs:
           name: dist-linux
           path: |
             target/dist/*.deb
-            target/LoteriaDeNavidad-${{ needs.test.outputs.version }}.zip
+            target/LoteriaDeNavidad-${{ needs.metadata.outputs.version }}.zip
             target/LoteriaDeNavidad.jar
 
   build-windows:
-    needs: test
+    needs: metadata
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -102,7 +100,7 @@ jobs:
           path: target/dist/*.msi
 
   build-macos:
-    needs: test
+    needs: metadata
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -129,7 +127,7 @@ jobs:
 
   release:
     needs:
-      - test
+      - metadata
       - build-linux
       - build-windows
       - build-macos
@@ -149,8 +147,8 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ needs.test.outputs.version }}
-          name: LoteriaDeNavidad ${{ needs.test.outputs.version }}
+          tag_name: v${{ needs.metadata.outputs.version }}
+          name: LoteriaDeNavidad ${{ needs.metadata.outputs.version }}
           generate_release_notes: true
           make_latest: true
           fail_on_unmatched_files: true
