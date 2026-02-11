@@ -1,5 +1,6 @@
 ![LoteriasJava](src/main/resources/img/icons/line-globe.png) LoteriasJava
 ============
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JCPrieto_LoteriasJava&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=JCPrieto_LoteriasJava)
 
 Aplicación para la comprobación de los numeros premiados de la lotería de Navidad y de El Niño
 
@@ -17,7 +18,7 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 Los paquetes se generan con Maven y `jpackage`. Debes ejecutar el comando en el SO destino.
 
 * Linux (Ubuntu): `mvn -Pdist-linux package`
-  Salida: `target/dist/LoteriaDeNavidad-<version>_amd64.deb` (o similar).
+  Salida: `target/dist/loteriadenavidad_<version>_amd64.deb`.
 * Windows: `mvn -Pdist-windows package`
   Salida: `target/dist/LoteriaDeNavidad-<version>.msi`.
 * macOS: `mvn -Pdist-mac package`
@@ -32,6 +33,44 @@ quiere mejor calidad visual.
 AppStream (Linux): la ficha que ve GNOME Software se genera desde
 `src/main/jpackage/linux/loteriadenavidad-LoteriaDeNavidad.metainfo.xml`. Ahí se actualizan descripción, licencia,
 URL y notas de versión.
+
+### Generación de empaquetados por SO ###
+
+La generación de paquetes nativos debe hacerse en el sistema operativo destino.
+
+#### Linux (Ubuntu) `.deb`
+
+1. Verifica Java y `jpackage`:
+  * `java -version`
+  * `jpackage --version`
+2. Genera el paquete:
+  * `mvn clean -Pdist-linux package`
+3. Resultado:
+  * `target/dist/loteriadenavidad_<version>_amd64.deb`
+4. Verificación local (opcional):
+  * `sudo apt install ./target/dist/loteriadenavidad_<version>_amd64.deb`
+  * `apt show loteriadenavidad`
+
+Nota: para evitar incompatibilidades de dependencias entre Ubuntu 22.04 y 24.04+, el paquete define alternativas
+(`libasound2 | libasound2t64`, etc.).
+
+#### Windows `.msi`
+
+1. Instala JDK 21 (con `jpackage`) y WiX Toolset.
+2. Abre terminal en la raíz del proyecto.
+3. Genera el paquete:
+  * `mvn clean -Pdist-windows package`
+4. Resultado:
+  * `target/dist/LoteriaDeNavidad-<version>.msi`
+
+#### macOS `.dmg`
+
+1. Instala JDK 21 (con `jpackage`) en macOS.
+2. Abre terminal en la raíz del proyecto.
+3. Genera el paquete:
+  * `mvn clean -Pdist-mac package`
+4. Resultado:
+  * `target/dist/LoteriaDeNavidad-<version>.dmg`
 
 ### Tecnologías utilizadas ###
 
