@@ -73,7 +73,7 @@ public class Ventana extends JFrame implements ActionListener {
             @Override
             protected void done() {
                 try {
-                    if (get()) {
+                    if (Objects.equals(get(), Boolean.TRUE)) {
                         agregarItemActualizacion();
                     }
                 } catch (InterruptedException e) {
