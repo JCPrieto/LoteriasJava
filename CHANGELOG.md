@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.6.4
+
+- Ajusta el orden de agentes Java en tests (Mockito/JaCoCo) para evitar interferencias en la instrumentación y
+  desbloquear la cobertura en SonarCloud.
+
 ## 2.6.3
 
 - Corrige la integración de cobertura para SonarCloud evitando que el `argLine` de Surefire pise el agente de JaCoCo.
