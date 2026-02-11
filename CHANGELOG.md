@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.3
+
+- Corrige la integración de cobertura para SonarCloud evitando que el `argLine` de Surefire pise el agente de JaCoCo.
+- Define explícitamente la ruta del reporte XML de JaCoCo para el análisis de cobertura.
+- Actualiza `jacoco-maven-plugin` a `0.8.12` para mejorar compatibilidad con Java 21.
+
 ## 2.6.2
 
 - Añade workflow de `SonarQube` en GitHub Actions con análisis en `push` a `master` y en `pull_request`.
