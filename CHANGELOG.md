@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.2
+
+- Añade workflow de `SonarQube` en GitHub Actions con análisis en `push` a `master` y en `pull_request`.
+- Incorpora perfil Maven `coverage` (JaCoCo XML) para enriquecer el análisis de calidad en Sonar.
+- Ajusta el workflow de `Release` para ejecutarse solo tras finalizar con éxito `SonarQube` en `master`.
+- Elimina la duplicación de tests en `Release`, manteniendo la validación en el pipeline de calidad previo.
+
 ## 2.6.1
 
 - Corrige un posible `NullPointerException` en la comprobación asíncrona de actualizaciones (`Ventana`).

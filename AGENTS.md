@@ -17,6 +17,7 @@ packaged JAR.
 - `mvn -Pdist-windows package`: builds Windows native package (`.msi`) using `jpackage`.
 - `mvn -Pdist-mac package`: builds macOS native package (`.dmg`) using `jpackage`.
 - `mvn test`: runs the unit test suite.
+- `mvn -Pcoverage verify`: runs verification with JaCoCo XML coverage report generation.
 - `java -jar target/LoteriaDeNavidad-<version>.jar`: runs the app locally after a build.
 - `./LoteriaDeNavidad.sh` or `LoteriaDeNavidad.bat`: runs the packaged JAR placed alongside these scripts.
 
@@ -45,4 +46,4 @@ Java 21 is required. On Linux, LibNotify is needed for notifications. External A
 any new integrations documented there.
 Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
 and 24.04+.
-Release notes/changelog are maintained in the `README.md` "Changelog" section and should be updated on version bumps.
+Release notes/changelog are maintained in `CHANGELOG.md` and should be updated on version bumps.
