@@ -43,3 +43,6 @@ screenshots when UI changes are involved.
 
 Java 21 is required. On Linux, LibNotify is needed for notifications. External API usage is defined in the README; keep
 any new integrations documented there.
+Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
+and 24.04+.
+Release notes/changelog are maintained in the `README.md` "Changelog" section and should be updated on version bumps.
