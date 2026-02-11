@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class ResumenMouseListener implements MouseListener {
 
     private final JLabel pdf;
-    private static Browser BROWSER = uri -> Desktop.getDesktop().browse(uri);
+    private static Browser browser = uri -> Desktop.getDesktop().browse(uri);
 
     public ResumenMouseListener(JLabel pdf) {
         this.pdf = pdf;
@@ -66,7 +66,7 @@ public class ResumenMouseListener implements MouseListener {
     }
 
     static void setBrowserForTests(Browser browser) {
-        BROWSER = browser == null ? uri -> Desktop.getDesktop().browse(uri) : browser;
+        ResumenMouseListener.browser = browser == null ? uri -> Desktop.getDesktop().browse(uri) : browser;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ResumenMouseListener implements MouseListener {
     }
 
     static void resetTestHooks() {
-        BROWSER = uri -> Desktop.getDesktop().browse(uri);
+        browser = uri -> Desktop.getDesktop().browse(uri);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ResumenMouseListener implements MouseListener {
         if (e.getSource() == pdf) {
             try {
                 URI uri = buildUri(pdf.getText());
-                BROWSER.browse(uri);
+                browser.browse(uri);
                 pdf.setForeground(Color.red);
             } catch (IOException | URISyntaxException e1) {
                 Logger.getLogger("PDF").log(Level.SEVERE, Mensajes.getError("error.critico"), e1);
