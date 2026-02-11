@@ -25,7 +25,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
     private JButton btnBuscarPremioNavidad;
     private JButton btnResumenNino;
     private JButton btnBuscarPremioNino;
-    private final ResumenService resumenService;
+    private transient final ResumenService resumenService;
     private boolean cargando;
 
     public MenuPrincipal(Ventana ventana) {
