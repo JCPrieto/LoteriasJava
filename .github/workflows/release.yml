@@ -144,7 +144,7 @@ jobs:
           ls -la release-assets || true
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
           tag_name: v${{ needs.metadata.outputs.version }}
           name: LoteriaDeNavidad ${{ needs.metadata.outputs.version }}
