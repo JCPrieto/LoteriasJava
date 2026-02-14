@@ -6,9 +6,6 @@ on:
     types:
       - completed
 
-permissions:
-  contents: write
-
 jobs:
   metadata:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'master' }}
@@ -132,6 +129,8 @@ jobs:
       - build-windows
       - build-macos
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download all distribution artifacts
         uses: actions/download-artifact@v4
