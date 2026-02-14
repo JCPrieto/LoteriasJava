@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.5
+
+- Corrige la resolución de `surefireArgLine` en `maven-surefire-plugin` usando `@{surefireArgLine}` para mantener la
+  inyección de JaCoCo y Mockito en tests.
+- Actualiza el workflow de `Release` para ejecutar la build Linux en `ubuntu-22.04`, mejorando consistencia del
+  empaquetado.
+- Refuerza seguridad y reproducibilidad del pipeline moviendo `contents: write` al job `publish` y fijando
+  `softprops/action-gh-release` a un commit específico.
+
 ## 2.6.4
 
 - Ajusta el orden de agentes Java en tests (Mockito/JaCoCo) para evitar interferencias en la instrumentación y
