@@ -46,4 +46,8 @@ Java 21 is required. On Linux, LibNotify is needed for notifications. External A
 any new integrations documented there.
 Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
 and 24.04+.
+The release pipeline also dispatches Linux `.deb` metadata to the external APT repository updater; keep required
+repository secret/variables (`APT_REPO_DISPATCH_TOKEN`, optional `APT_REPO_OWNER`/`APT_REPO_NAME`) aligned with
+`.github/workflows/release.yml`.
+APT publication and dispatch details are documented in `docs/apt-repository-cicd.md`.
 Release notes/changelog are maintained in `CHANGELOG.md` and should be updated on version bumps.

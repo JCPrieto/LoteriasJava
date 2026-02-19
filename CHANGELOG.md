@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.0
+
+- Añade publicación automática del paquete `.deb` al repositorio APT mediante `repository_dispatch` desde el workflow
+  de `Release`, habilitando actualizaciones en Linux vía `apt upgrade`.
+- Documenta la instalación y actualización por APT en `README.md` y añade la guía técnica de CI/CD en
+  `docs/apt-repository-cicd.md`.
+- Actualiza dependencias clave: `io.github.jcprieto:loteria-navidad` a `6.0.3`, `org.junit.jupiter:junit-jupiter` a
+  `6.0.3` y `org.jacoco:jacoco-maven-plugin` a `0.8.14`.
+- Refactoriza el parseo de URL en `ResumenMouseListener` para mejorar legibilidad/reutilización y amplía la cobertura
+  de tests con `AcercaDeTest`.
+
 ## 2.6.5
 
 - Corrige la resolución de `surefireArgLine` en `maven-surefire-plugin` usando `@{surefireArgLine}` para mantener la
