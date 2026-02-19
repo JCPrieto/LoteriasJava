@@ -2,7 +2,7 @@ name: Release
 
 on:
   workflow_run:
-    workflows: [ "SonarQube" ]
+    workflows: [ "CI" ]
     types:
       - completed
 
