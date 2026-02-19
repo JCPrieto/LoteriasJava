@@ -157,3 +157,57 @@ jobs:
             release-assets/**/*.dmg
             release-assets/**/*.zip
             release-assets/**/*.jar
+
+      - name: Resolve Linux .deb metadata
+        id: deb_metadata
+        run: |
+          DEB_PATH=$(find release-assets -type f -name "*.deb" | head -n 1)
+          if [ -z "$DEB_PATH" ]; then
+            echo "No .deb file found in release-assets."
+            exit 1
+          fi
+
+          DEB_FILENAME=$(basename "$DEB_PATH")
+          DEB_URL="https://github.com/${{ github.repository }}/releases/download/v${{ needs.metadata.outputs.version }}/${DEB_FILENAME}"
+
+          echo "deb_filename=${DEB_FILENAME}" >> "$GITHUB_OUTPUT"
+          echo "deb_url=${DEB_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch .deb to APT repo updater
+        uses: actions/github-script@v7
+        env:
+          APP_VERSION: ${{ needs.metadata.outputs.version }}
+          DEB_FILENAME: ${{ steps.deb_metadata.outputs.deb_filename }}
+          DEB_URL: ${{ steps.deb_metadata.outputs.deb_url }}
+          APT_REPO_OWNER: ${{ vars.APT_REPO_OWNER }}
+          APT_REPO_NAME: ${{ vars.APT_REPO_NAME }}
+        with:
+          github-token: ${{ secrets.APT_REPO_DISPATCH_TOKEN }}
+          script: |
+            const owner = process.env.APT_REPO_OWNER || 'JCPrieto';
+            const repo = process.env.APT_REPO_NAME || 'jklabs-apt-repo';
+            const appVersion = process.env.APP_VERSION;
+            const debFilename = process.env.DEB_FILENAME;
+            const debUrl = process.env.DEB_URL;
+
+            if (!debFilename || !debUrl) {
+              core.setFailed('Missing .deb metadata required for APT repository dispatch.');
+              return;
+            }
+
+            await github.rest.repos.createDispatchEvent({
+              owner,
+              repo,
+              event_type: 'deb-published',
+              client_payload: {
+                source_repository: `${context.repo.owner}/${context.repo.repo}`,
+                package_name: 'loteriadenavidad',
+                version: appVersion,
+                distro: 'ubuntu22.04',
+                component: 'main',
+                architecture: 'amd64',
+                release_tag: `v${appVersion}`,
+                deb_filename: debFilename,
+                deb_url: debUrl
+              }
+            });

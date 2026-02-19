@@ -54,6 +54,26 @@ La generación de paquetes nativos debe hacerse en el sistema operativo destino.
 Nota: para evitar incompatibilidades de dependencias entre Ubuntu 22.04 y 24.04+, el paquete define alternativas
 (`libasound2 | libasound2t64`, etc.).
 
+### Actualizaciones en Linux vía APT ###
+
+El proyecto publica paquetes `.deb` en el repositorio APT:
+
+* `https://jcprieto.github.io/jklabs-apt-repo`
+* El paquete publicado en APT se construye en Ubuntu 22.04 para mantener una variante estable por versión.
+
+Configuración en Debian/Ubuntu:
+
+```bash
+curl -fsSL https://jcprieto.github.io/jklabs-apt-repo/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/jklabs-archive-keyring.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/jklabs-archive-keyring.gpg] https://jcprieto.github.io/jklabs-apt-repo stable main" | sudo tee /etc/apt/sources.list.d/jklabs.list
+sudo apt update
+sudo apt install loteriadenavidad
+```
+
+Después, las nuevas versiones se reciben con:
+
+* `sudo apt upgrade`
+
 #### Windows `.msi`
 
 1. Instala JDK 21 (con `jpackage`) y WiX Toolset.
@@ -85,6 +105,12 @@ Nota: para evitar incompatibilidades de dependencias entre Ubuntu 22.04 y 24.04+
 ### Changelog ###
 
 El historial de versiones está disponible en [`CHANGELOG.md`](CHANGELOG.md).
+
+### Notas de CI/CD ###
+
+La documentación de publicación automática de `.deb` hacia el repositorio APT central está en:
+
+* [docs/apt-repository-cicd.md](docs/apt-repository-cicd.md)
 
 ### Licencia ###
 
