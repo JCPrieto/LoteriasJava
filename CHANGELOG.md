@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.1
+
+- Refuerza la seguridad del parseo XML al cargar la versión desde `pom.xml`, deshabilitando entidades externas/DTD y
+  activando procesamiento seguro para mitigar XXE (Sonar `java:S2755`).
+- Amplía la cobertura con tests unitarios de `LoteriaNavidad` para validar el flujo de arranque y el manejo de errores
+  al aplicar el look and feel.
+- Actualiza dependencias: `io.github.jcprieto:loteria-navidad` a `6.0.4`,
+  `com.fasterxml.jackson.core:jackson-databind` a `2.21.1` y `maven-surefire-plugin` a `3.5.5`.
+- Ajusta el orden de modificadores en `MenuPrincipal` (`final transient`) para mantener consistencia de estilo.
+
 ## 2.7.0
 
 - Añade publicación automática del paquete `.deb` al repositorio APT mediante `repository_dispatch` desde el workflow

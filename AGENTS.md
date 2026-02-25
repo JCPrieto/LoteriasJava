@@ -26,6 +26,8 @@ packaged JAR.
 Follow the existing Java style: 4-space indentation, `UpperCamelCase` for classes, `lowerCamelCase` for methods/fields,
 and `UPPER_SNAKE_CASE` for constants. Keep package names lowercase (`es.jklabs...`). No automated formatter is
 configured, so match surrounding style in modified files.
+When adding XML parsing, always harden factories against XXE (disable external entities/DOCTYPE and enable secure
+processing).
 
 ## Testing Guidelines
 
