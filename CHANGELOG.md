@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.7.2
+
+- Mejora la resiliencia de carga del resumen de Navidad en `MenuPrincipal`, gestionando explícitamente
+  `InterruptedException`, notificando al usuario y restaurando el estado de interrupción del hilo.
+- Refactoriza `MenuPrincipal` para centralizar la clave i18n `warning.problema.servidor` en una constante reutilizable.
+- Amplía la cobertura con `PanelInferiorTest`, validando layout, texto del botón "volver" y navegación al menú
+  principal.
+- Actualiza dependencias: `org.mockito:mockito-core` a `5.22.0` e `io.github.jcprieto:loteria-navidad` a `6.0.5`.
+
 ## 2.7.1
 
 - Refuerza la seguridad del parseo XML al cargar la versión desde `pom.xml`, deshabilitando entidades externas/DTD y
