@@ -96,6 +96,11 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                     padre.setPanel(new ResumenNavidad(padre, resumen));
                     padre.setPanelInferior(new PanelInferior(padre));
                     padre.pack();
+                } catch (InterruptedException e) {
+                    Logger.error("Cargar resumen Navidad", e);
+                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
+                            Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
+                    Thread.currentThread().interrupt();
                 } catch (Exception e) {
                     Logger.error("Cargar resumen Navidad", e);
                     JOptionPane.showMessageDialog(padre, Mensajes.getMensaje("warning.problema.servidor"),
