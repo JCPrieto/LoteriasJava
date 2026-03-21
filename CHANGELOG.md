@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.7.3
+
+- Refuerza la resiliencia de `MenuPrincipal` en cargas asíncronas del resumen, restaurando el estado de interrupción
+  también en el flujo del sorteo de El Niño y reutilizando la clave i18n `dialogo.atencion` desde una constante.
+- Amplía la cobertura de tests Swing con `ResumenNavidadTest`, validando inicialización del panel, gestión del `Timer`,
+  actualización interna de premios y protección frente a refrescos concurrentes.
+- Actualiza dependencias de mantenimiento: `org.mockito:mockito-core` a `5.23.0`,
+  `io.github.jcprieto:loteria-navidad` a `6.0.6` y `maven-resources-plugin` a `3.5.0`.
+
 ## 2.7.2
 
 - Mejora la resiliencia de carga del resumen de Navidad en `MenuPrincipal`, gestionando explícitamente

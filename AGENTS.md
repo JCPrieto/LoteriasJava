@@ -35,6 +35,8 @@ Tests live in `src/test/java` and use JUnit 5 + Mockito. Use `*Test.java` naming
 classes and non-GUI logic where possible.
 After introducing code changes, review and run the unit tests for the modified classes. If tests fail, fix them before
 proceeding. Whenever a new public class or public method is added, implement its corresponding unit test.
+For Swing panels, create components on the EDT (`SwingUtilities.invokeAndWait`) and stop any active `Timer` in tests
+to avoid cross-test interference from background refreshes.
 
 ## Commit & Pull Request Guidelines
 
