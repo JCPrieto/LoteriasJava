@@ -141,6 +141,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                     Logger.error("Cargar resumen Niño", e);
                     JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
                             Mensajes.getMensaje("dialogo.atencion"), JOptionPane.WARNING_MESSAGE);
+                    Thread.currentThread().interrupt();
                 } finally {
                     setCargando(false);
                 }
