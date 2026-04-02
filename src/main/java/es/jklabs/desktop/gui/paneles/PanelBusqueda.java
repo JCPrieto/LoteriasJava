@@ -35,7 +35,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     private transient JTextField numero;
     private transient JPanel resultado;
     private final Sorteo sorteo;
-    private final PremioService premioService;
+    private final transient PremioService premioService;
     private JTextField cantidad;
     private GridBagConstraints cns;
     private int contador;
