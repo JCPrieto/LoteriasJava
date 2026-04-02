@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.4
+
+- Corrige un problema de serialización en `PanelBusqueda` marcando `premioService` como `transient`, alineándolo con el
+  resto de dependencias no serializables de la UI.
+- Amplía la cobertura de tests Swing con `ResumenNinoTest`, validando estado inicial, ciclo de vida del `Timer`,
+  refresco asíncrono, actualización de paneles internos y manejo de errores o respuestas nulas.
+- Refactoriza `ResumenNino` con un punto de creación de `Conexion` sobreescribible para mejorar el aislamiento de los
+  tests sin cambiar el comportamiento en producción.
+- Actualiza dependencias de mantenimiento: `io.github.jcprieto:loteria-navidad` a `6.0.7` y
+  `com.fasterxml.jackson.core:jackson-databind` a `2.21.2`.
+
 ## 2.7.3
 
 - Refuerza la resiliencia de `MenuPrincipal` en cargas asíncronas del resumen, restaurando el estado de interrupción

@@ -37,6 +37,8 @@ After introducing code changes, review and run the unit tests for the modified c
 proceeding. Whenever a new public class or public method is added, implement its corresponding unit test.
 For Swing panels, create components on the EDT (`SwingUtilities.invokeAndWait`) and stop any active `Timer` in tests
 to avoid cross-test interference from background refreshes.
+For Swing components that launch asynchronous work and create external collaborators (network/services), prefer adding
+minimal package-private or overridable factory methods so tests can inject mocks without depending on live I/O.
 
 ## Commit & Pull Request Guidelines
 
@@ -55,3 +57,5 @@ repository secret/variables (`APT_REPO_DISPATCH_TOKEN`, optional `APT_REPO_OWNER
 `.github/workflows/release.yml`.
 APT publication and dispatch details are documented in `docs/apt-repository-cicd.md`.
 Release notes/changelog are maintained in `CHANGELOG.md` and should be updated on version bumps.
+Version bumps should follow semantic impact: patch for fixes, dependency maintenance and testability improvements;
+minor for user-visible features or new distribution capabilities; major only for breaking changes.
