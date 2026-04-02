@@ -68,7 +68,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         SwingWorker<io.github.jcprieto.lib.loteria.model.nino.ResumenNino, Void> worker = new SwingWorker<>() {
             @Override
             protected io.github.jcprieto.lib.loteria.model.nino.ResumenNino doInBackground() throws IOException {
-                final Conexion con = new Conexion();
+                final Conexion con = crearConexion();
                 return con.getResumenNino();
             }
 
@@ -100,6 +100,10 @@ public class ResumenNino extends JPanel implements ActionListener {
             }
         };
         worker.execute();
+    }
+
+    Conexion crearConexion() {
+        return new Conexion();
     }
 
     @Override
