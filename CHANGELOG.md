@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.5
+
+- Fija explícitamente la versión de `org.sonarsource.scanner.maven:sonar-maven-plugin` en Maven para evitar fallos de
+  resolución en CI al ejecutar el análisis de SonarQube.
+- Simplifica el workflow `CI` para ejecutar `sonar:sonar` usando la configuración declarada en `pom.xml`.
+
 ## 2.7.4
 
 - Corrige un problema de serialización en `PanelBusqueda` marcando `premioService` como `transient`, alineándolo con el

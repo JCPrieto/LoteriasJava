@@ -56,4 +56,4 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=JCPrieto_LoteriasJava
+        run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=JCPrieto_LoteriasJava

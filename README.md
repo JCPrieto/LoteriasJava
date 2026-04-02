@@ -111,6 +111,8 @@ El historial de versiones está disponible en [`CHANGELOG.md`](CHANGELOG.md).
 La documentación de publicación automática de `.deb` hacia el repositorio APT central está en:
 
 * [docs/apt-repository-cicd.md](docs/apt-repository-cicd.md)
+* El workflow de `CI` ejecuta el análisis de SonarQube con `mvn -Pcoverage verify sonar:sonar`, apoyándose en la
+  versión fijada de `sonar-maven-plugin` en `pom.xml` para evitar roturas por resolución dinámica del plugin.
 
 ### Licencia ###
 
