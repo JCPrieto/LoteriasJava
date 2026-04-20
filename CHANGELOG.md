@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.6
+
+- Amplía la cobertura unitaria de `Ventana`, validando acciones de menú, manejo de eventos y la lógica de
+  comprobación de nuevas versiones.
+- Refactoriza `PanelBusqueda` renombrando el campo `cantidad` a `jtCantidad` para mejorar claridad y consistencia
+  interna sin cambiar el comportamiento.
+- Actualiza la dependencia `io.github.jcprieto:loteria-navidad` a `6.0.8`.
+
 ## 2.7.5
 
 - Fija explícitamente la versión de `org.sonarsource.scanner.maven:sonar-maven-plugin` en Maven para evitar fallos de
