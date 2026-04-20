@@ -36,7 +36,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     private transient JPanel resultado;
     private final Sorteo sorteo;
     private final transient PremioService premioService;
-    private JTextField cantidad;
+    private JTextField jtCantidad;
     private GridBagConstraints cns;
     private int contador;
     private boolean buscando;
@@ -56,13 +56,13 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     public void actionPerformed(final ActionEvent evt) {
         if (evt.getSource() == buscar && !numero.getText().isEmpty()) {
-            buscarPremioAsync(numero.getText(), cantidad.getText());
+            buscarPremioAsync(numero.getText(), jtCantidad.getText());
         }
         if (evt.getSource() == limpiar) {
             resultado.removeAll();
             resultado.repaint();
             numero.setText("");
-            cantidad.setText("");
+            jtCantidad.setText("");
             contador = 0;
             padre.pack();
         }
@@ -170,8 +170,8 @@ public class PanelBusqueda extends JPanel implements ActionListener {
                 }
             }
         });
-        cantidad = new JTextField(3);
-        cantidad.addKeyListener(new KeyListener() {
+        jtCantidad = new JTextField(3);
+        jtCantidad.addKeyListener(new KeyListener() {
 
 
             public void keyTyped(KeyEvent e) {
@@ -196,7 +196,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         entrada.add(new JLabel(Mensajes.getMensaje("panel.numero")));
         entrada.add(numero);
         entrada.add(new JLabel(Mensajes.getMensaje("panel.cantidad.jugada")));
-        entrada.add(cantidad);
+        entrada.add(jtCantidad);
         entrada.add(new JLabel(Mensajes.getMensaje("panel.euros")));
         entrada.add(buscar);
         limpiar = new JButton(Mensajes.getMensaje("panel.limpiar.resultados"));
@@ -224,7 +224,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
     }
 
     JTextField getCantidadFieldForTests() {
-        return cantidad;
+        return jtCantidad;
     }
 
     JPanel getResultadoPanelForTests() {
