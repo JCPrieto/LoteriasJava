@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.7
+
+- Amplía la cobertura con `LoggerTest`, validando la inicialización del directorio de logs, la limpieza de logs
+  antiguos, la configuración idempotente de handlers y la publicación de mensajes de error e información.
+- Refactoriza `PanelBusqueda#buscarPremioAsync` extrayendo la lógica de procesado y gestión de errores para reducir
+  complejidad cognitiva sin cambiar el comportamiento.
+- Sustituye usos de `JLabel.CENTER` por `SwingConstants.CENTER` en `ResumenNino` para mejorar claridad y consistencia
+  del código Swing.
+- Actualiza `org.sonarsource.scanner.maven:sonar-maven-plugin` a `5.6.0.6792`.
+
 ## 2.7.6
 
 - Amplía la cobertura unitaria de `Ventana`, validando acciones de menú, manejo de eventos y la lógica de

@@ -42,6 +42,8 @@ minimal package-private or overridable factory methods so tests can inject mocks
 For Swing windows or dialogs that are hard to instantiate in headless tests, prefer extracting named/package-private
 helpers for asynchronous or external-collaborator logic instead of anonymous private implementations that force tests
 to rely on reflection or `Unsafe`.
+For tests that touch filesystem paths, `user.home`, loggers, or other JVM-global state, isolate them with `@TempDir`
+and restore any modified system properties, static state, or handlers in teardown to keep the suite deterministic.
 
 ## Commit & Pull Request Guidelines
 
