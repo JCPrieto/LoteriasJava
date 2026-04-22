@@ -16,7 +16,7 @@
         <mockito.version>5.23.0</mockito.version>
         <slf4j.version>2.0.17</slf4j.version>
         <exec.maven.plugin.version>3.6.3</exec.maven.plugin.version>
-        <sonar.maven.plugin.version>5.5.0.6356</sonar.maven.plugin.version>
+        <sonar.maven.plugin.version>5.6.0.6792</sonar.maven.plugin.version>
         <linux.package.deps>libasound2 | libasound2t64, libbrotli1, libbsd0, libbz2-1.0, libc6, libfreetype6, libgcc-s1,
             libgif7, libglib2.0-0 | libglib2.0-0t64, libgraphite2-3, libharfbuzz0b, libjpeg-turbo8, liblcms2-2, libmd0,
             libpcre2-8-0, libpcsclite1, libpng16-16 | libpng16-16t64, libstdc++6, libx11-6, libxau6, libxcb1, libxdmcp6,
