@@ -125,7 +125,7 @@ public class ResumenNino extends JPanel implements ActionListener {
     private void setPanelExt4(java.util.List<String> extraccionCuatro) {
         panelExt4.removeAll();
         for (String extraccionDo : extraccionCuatro) {
-            panelExt4.add(new JLabel(extraccionDo, JLabel.CENTER));
+            panelExt4.add(new JLabel(extraccionDo, SwingConstants.CENTER));
         }
     }
 
@@ -138,7 +138,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         final GridBagConstraints cns = new GridBagConstraints();
         JPanel panelPrimero = new JPanel();
         panelPrimero.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.primero")));
-        JLabel primero = new JLabel(res.getPrimero(), JLabel.CENTER);
+        JLabel primero = new JLabel(res.getPrimero(), SwingConstants.CENTER);
         panelPrimero.add(primero);
         cns.fill = GridBagConstraints.HORIZONTAL;
         cns.gridx = 0;
@@ -149,7 +149,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         super.add(panelPrimero, cns);
         JPanel panelSegundo = new JPanel();
         panelSegundo.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.segundo")));
-        segundo = new JLabel(res.getSegundo(), JLabel.CENTER);
+        segundo = new JLabel(res.getSegundo(), SwingConstants.CENTER);
         panelSegundo.add(segundo);
         cns.gridwidth = 1;
         cns.gridx = 0;
@@ -157,7 +157,7 @@ public class ResumenNino extends JPanel implements ActionListener {
         super.add(panelSegundo, cns);
         JPanel panelTercero = new JPanel();
         panelTercero.setBorder(new TitledBorder(Mensajes.getMensaje("resumen.nino.tercero")));
-        tercero = new JLabel(res.getTercero(), JLabel.CENTER);
+        tercero = new JLabel(res.getTercero(), SwingConstants.CENTER);
         panelTercero.add(tercero);
         cns.gridx = 1;
         cns.gridy = 2;
@@ -186,14 +186,14 @@ public class ResumenNino extends JPanel implements ActionListener {
         cns.gridy = 6;
         super.add(panelReintegros, cns);
         estado = new JLabel(Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(res.getEstado()),
-                JLabel.CENTER);
+                SwingConstants.CENTER);
         cns.gridy = 7;
         super.add(estado, cns);
         actualizacion = new JLabel(Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(res
-                .getFechaActualizacion()), JLabel.CENTER);
+                .getFechaActualizacion()), SwingConstants.CENTER);
         cns.gridy = 8;
         super.add(actualizacion, cns);
-        pdf = new JLabel(res.getUrlPDF(), JLabel.CENTER);
+        pdf = new JLabel(res.getUrlPDF(), SwingConstants.CENTER);
         pdf.setForeground(Color.blue);
         ResumenMouseListener resumenMouseListener = new ResumenMouseListener(pdf);
         pdf.addMouseListener(resumenMouseListener);
@@ -209,7 +209,7 @@ public class ResumenNino extends JPanel implements ActionListener {
     private void setPanelExt2(java.util.List<String> extraccionDos) {
         panelExt2.removeAll();
         for (String extraccionDo : extraccionDos) {
-            panelExt2.add(new JLabel(extraccionDo, JLabel.CENTER));
+            panelExt2.add(new JLabel(extraccionDo, SwingConstants.CENTER));
         }
     }
 
@@ -221,7 +221,7 @@ public class ResumenNino extends JPanel implements ActionListener {
     private void setPanelExt3(java.util.List<String> extraccionTres) {
         panelExt3.removeAll();
         for (String extraccionDo : extraccionTres) {
-            panelExt3.add(new JLabel(extraccionDo, JLabel.CENTER));
+            panelExt3.add(new JLabel(extraccionDo, SwingConstants.CENTER));
         }
     }
 
@@ -233,7 +233,7 @@ public class ResumenNino extends JPanel implements ActionListener {
     private void setPanelReintegros(java.util.List<String> reintegros2) {
         panelReintegros.removeAll();
         for (String extraccionDo : reintegros2) {
-            panelReintegros.add(new JLabel(extraccionDo, JLabel.CENTER));
+            panelReintegros.add(new JLabel(extraccionDo, SwingConstants.CENTER));
         }
     }
 
