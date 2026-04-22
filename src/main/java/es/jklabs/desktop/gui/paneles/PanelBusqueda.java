@@ -72,7 +72,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         if (buscando) {
             return;
         }
-        java.math.BigDecimal cantidadValor = parseCantidad(cantidadText);
+        final java.math.BigDecimal cantidadValor = parseCantidad(cantidadText);
         if (cantidadValor == null) {
             showWarning(Mensajes.getMensaje("warning.cantidad.invalida"));
             return;
@@ -87,25 +87,11 @@ public class PanelBusqueda extends JPanel implements ActionListener {
             @Override
             protected void done() {
                 try {
-                    Premio premio = get();
-                    if (premio == null || premio.getEstado() == EstadoSorteo.NO_INICIADO) {
-                        showWarning(Mensajes.getMensaje("warning.no.datos"));
-                    } else {
-                        cns.gridy = contador++;
-                        resultado.add(new Resultado(text, premio.getCantidad(), cantidadValor), cns);
-                        contador++;
-                        padre.pack();
-                    }
+                    procesarPremioBuscado(get(), text, cantidadValor);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    if (cause instanceof PremioDecimoNoDisponibleException) {
-                        showWarning(cause.getMessage());
-                    } else {
-                        Logger.error("Buscar premio", e);
-                        showWarning(Mensajes.getMensaje("warning.problema.servidor"));
-                    }
+                    gestionarErrorBusqueda(e);
                 } catch (Exception e) {
                     Logger.error("Buscar premio", e);
                     showWarning(Mensajes.getMensaje("warning.problema.servidor"));
@@ -115,6 +101,27 @@ public class PanelBusqueda extends JPanel implements ActionListener {
             }
         };
         worker.execute();
+    }
+
+    private void procesarPremioBuscado(Premio premio, String text, java.math.BigDecimal cantidadValor) {
+        if (premio == null || premio.getEstado() == EstadoSorteo.NO_INICIADO) {
+            showWarning(Mensajes.getMensaje("warning.no.datos"));
+            return;
+        }
+        cns.gridy = contador++;
+        resultado.add(new Resultado(text, premio.getCantidad(), cantidadValor), cns);
+        contador++;
+        padre.pack();
+    }
+
+    private void gestionarErrorBusqueda(ExecutionException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof PremioDecimoNoDisponibleException) {
+            showWarning(cause.getMessage());
+            return;
+        }
+        Logger.error("Buscar premio", e);
+        showWarning(Mensajes.getMensaje("warning.problema.servidor"));
     }
 
     protected void showWarning(String message) {
