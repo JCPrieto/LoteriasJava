@@ -22,13 +22,14 @@ public class UtilidadesGitHubReleases {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static ReleaseProvider RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
     private static BrowserOpener BROWSER_OPENER = new DesktopBrowserOpener();
+    private static ConnectionFactory CONNECTION_FACTORY = uri -> (HttpURLConnection) uri.toURL().openConnection();
 
     private UtilidadesGitHubReleases() {
 
     }
 
     public static boolean existeNuevaVersion() throws IOException {
-        ReleaseInfo release = obtenerUltimaRelease();
+        ReleaseInfo release = RELEASE_PROVIDER.obtener();
         if (release == null || release.version() == null) {
             return false;
         }
@@ -67,9 +68,14 @@ public class UtilidadesGitHubReleases {
         BROWSER_OPENER = opener == null ? new DesktopBrowserOpener() : opener;
     }
 
+    static void setConnectionFactoryForTests(ConnectionFactory factory) {
+        CONNECTION_FACTORY = factory == null ? uri -> (HttpURLConnection) uri.toURL().openConnection() : factory;
+    }
+
     static void resetTestHooks() {
         RELEASE_PROVIDER = UtilidadesGitHubReleases::obtenerUltimaRelease;
         BROWSER_OPENER = new DesktopBrowserOpener();
+        CONNECTION_FACTORY = uri -> (HttpURLConnection) uri.toURL().openConnection();
     }
 
     private static ReleaseInfo obtenerUltimaRelease() throws IOException {
@@ -154,7 +160,7 @@ public class UtilidadesGitHubReleases {
 
     private static String leerUrl() throws IOException {
         URI uri = URI.create(UtilidadesGitHubReleases.LATEST_RELEASE_URL);
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+        HttpURLConnection connection = CONNECTION_FACTORY.open(uri);
         connection.setRequestProperty("Accept", "application/vnd.github+json");
         connection.setRequestProperty("User-Agent", USER_AGENT);
         connection.setConnectTimeout(TIMEOUT_MILLIS);
@@ -233,6 +239,11 @@ public class UtilidadesGitHubReleases {
         boolean isSupported();
 
         void open(URI uri) throws IOException;
+    }
+
+    @FunctionalInterface
+    interface ConnectionFactory {
+        HttpURLConnection open(URI uri) throws IOException;
     }
 
     private static final class DesktopBrowserOpener implements BrowserOpener {
