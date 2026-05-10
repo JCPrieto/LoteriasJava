@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.concurrent.ExecutionException;
 
@@ -244,12 +245,12 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     @FunctionalInterface
     interface PremioService {
-        Premio getPremio(Sorteo sorteo, String numero) throws Exception;
+        Premio getPremio(Sorteo sorteo, String numero) throws IOException;
     }
 
     private static class ConexionPremioService implements PremioService {
         @Override
-        public Premio getPremio(Sorteo sorteo, String numero) throws Exception {
+        public Premio getPremio(Sorteo sorteo, String numero) throws IOException {
             Conexion c = new Conexion();
             return c.getPremio(sorteo, numero);
         }
