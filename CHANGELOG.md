@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.8
+
+- Actualiza dependencias de mantenimiento: `io.github.jcprieto:loteria-navidad` a `6.0.9` y
+  `com.fasterxml.jackson.core:jackson-databind` a `2.21.3`.
+- Refina la interfaz interna de consulta de premios para declarar `IOException`, alineándola con el contrato real de
+  `Conexion#getPremio` sin cambiar el comportamiento de la búsqueda.
+- Mejora la testabilidad de `UtilidadesGitHubReleases` inyectando la factoría de conexiones HTTP en tests y haciendo
+  que `existeNuevaVersion()` use el provider de releases existente.
+- Amplía la cobertura de `UtilidadesGitHubReleasesTest` para cubrir comparación de versiones, parsing de releases,
+  selección de assets, respuestas HTTP y errores de apertura en navegador.
+
 ## 2.7.7
 
 - Amplía la cobertura con `LoggerTest`, validando la inicialización del directorio de logs, la limpieza de logs

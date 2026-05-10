@@ -361,7 +361,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
         assertTrue((Boolean) invokePrivate("diferenteVersion", new Class<?>[]{String.class}, "999"));
         assertTrue((Boolean) invokePrivate("diferenteVersion", new Class<?>[]{String.class}, "999.0.0-beta"));
         assertFalse((Boolean) invokePrivate("diferenteVersion", new Class<?>[]{String.class}, "2.7"));
-        assertTrue((Boolean) invokePrivate("diferenteVersion", new Class<?>[]{String.class}, "2.7.7.1"));
+        assertTrue((Boolean) invokePrivate("diferenteVersion", new Class<?>[]{String.class}, "999.0.0.1"));
     }
 
     @Test
