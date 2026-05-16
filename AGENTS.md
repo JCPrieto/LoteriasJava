@@ -41,6 +41,8 @@ For Swing components that launch asynchronous work and create external collabora
 minimal package-private or overridable factory methods so tests can inject mocks without depending on live I/O.
 For utility classes that perform direct HTTP calls, prefer package-private test hooks such as connection factories so
 tests can cover success/error responses without relying on live network access.
+For code that opens desktop integrations such as browser, mail client, or system notifications, prefer package-private
+test hooks so unit tests can cover success/error paths without launching real external applications.
 For Swing windows or dialogs that are hard to instantiate in headless tests, prefer extracting named/package-private
 helpers for asynchronous or external-collaborator logic instead of anonymous private implementations that force tests
 to rely on reflection or `Unsafe`.
