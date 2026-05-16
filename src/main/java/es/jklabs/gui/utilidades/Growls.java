@@ -16,8 +16,8 @@ public class Growls {
 
     private static final String NOTIFY_SEND = "notify-send";
     private static TrayIcon trayIcon;
-    private static BooleanSupplier NOTIFY_SEND_AVAILABLE = Growls::isNotifySendAvailableInternal;
-    private static DialogDisplayer DIALOG_DISPLAYER = Growls::showDialogInternal;
+    private static BooleanSupplier notifySendAvailableInternal = Growls::isNotifySendAvailableInternal;
+    private static DialogDisplayer dialogDisplayer = Growls::showDialogInternal;
 
     private Growls() {
 
@@ -26,7 +26,7 @@ public class Growls {
     public static void mostrarInfo(String titulo, String cuerpo) {
         if (trayIcon != null) {
             trayIcon.displayMessage(titulo != null ? Mensajes.getMensaje(titulo) : null, Mensajes.getMensaje(cuerpo), TrayIcon.MessageType.INFO);
-        } else if (NOTIFY_SEND_AVAILABLE.getAsBoolean()) {
+        } else if (notifySendAvailableInternal.getAsBoolean()) {
             try {
                 Runtime.getRuntime().exec(new String[]{NOTIFY_SEND,
                         titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
@@ -34,11 +34,11 @@ public class Growls {
                         "--icon=dialog-information"});
             } catch (IOException e) {
                 Logger.error(e);
-                DIALOG_DISPLAYER.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
+                dialogDisplayer.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
                         Mensajes.getMensaje(cuerpo), JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            DIALOG_DISPLAYER.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
+            dialogDisplayer.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
                     Mensajes.getMensaje(cuerpo), JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -50,7 +50,7 @@ public class Growls {
     public static void mostrarError(String titulo, String cuerpo, Exception e) {
         if (trayIcon != null) {
             trayIcon.displayMessage(titulo != null ? Mensajes.getMensaje(titulo) : null, Mensajes.getError(cuerpo), TrayIcon.MessageType.ERROR);
-        } else if (NOTIFY_SEND_AVAILABLE.getAsBoolean()) {
+        } else if (notifySendAvailableInternal.getAsBoolean()) {
             try {
                 Runtime.getRuntime().exec(new String[]{NOTIFY_SEND,
                         titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
@@ -58,11 +58,11 @@ public class Growls {
                         "--icon=dialog-error"});
             } catch (IOException e2) {
                 Logger.error(e2);
-                DIALOG_DISPLAYER.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
+                dialogDisplayer.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
                         Mensajes.getError(cuerpo), JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            DIALOG_DISPLAYER.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
+            dialogDisplayer.show(titulo != null ? Mensajes.getMensaje(titulo) : Constantes.NOMBRE_APP,
                     Mensajes.getError(cuerpo), JOptionPane.ERROR_MESSAGE);
         }
         Logger.error(cuerpo, e);
@@ -84,20 +84,16 @@ public class Growls {
     }
 
     static void setNotifySendAvailableForTests(BooleanSupplier supplier) {
-        NOTIFY_SEND_AVAILABLE = supplier == null ? Growls::isNotifySendAvailableInternal : supplier;
+        notifySendAvailableInternal = supplier == null ? Growls::isNotifySendAvailableInternal : supplier;
     }
 
     static void setDialogDisplayerForTests(DialogDisplayer displayer) {
-        DIALOG_DISPLAYER = displayer == null ? Growls::showDialogInternal : displayer;
-    }
-
-    static void setTrayIconForTests(TrayIcon trayIcon) {
-        Growls.trayIcon = trayIcon;
+        dialogDisplayer = displayer == null ? Growls::showDialogInternal : displayer;
     }
 
     static void resetTestHooks() {
-        NOTIFY_SEND_AVAILABLE = Growls::isNotifySendAvailableInternal;
-        DIALOG_DISPLAYER = Growls::showDialogInternal;
+        notifySendAvailableInternal = Growls::isNotifySendAvailableInternal;
+        dialogDisplayer = Growls::showDialogInternal;
         trayIcon = null;
     }
 
