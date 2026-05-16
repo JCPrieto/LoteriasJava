@@ -10,6 +10,9 @@ public class IconUtils {
     private static final String ICONS_DIR = "img/icons/";
     private static final Map<String, ImageIcon> ICON_CACHE = new ConcurrentHashMap<>();
 
+    private IconUtils() {
+    }
+
     public static Icon loadIcon(String name) {
         return ICON_CACHE.computeIfAbsent(name, IconUtils::loadIconInternal);
     }
