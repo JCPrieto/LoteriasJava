@@ -31,6 +31,7 @@ public class AcercaDe extends JDialog implements ActionListener {
      */
     @Serial
     private static final long serialVersionUID = 4L;
+    private static MailBrowser mailBrowser = uri -> Desktop.getDesktop().browse(uri);
     private final transient JButton botonOk;
 
     public AcercaDe(final Ventana ventana) {
@@ -104,8 +105,7 @@ public class AcercaDe extends JDialog implements ActionListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI(
-                            "mailto:JuanC.Prieto.Silos@gmail.com?subject=Loteria_Navidad_Java"));
+                    mailBrowser.browse(new URI("mailto:JuanC.Prieto.Silos@gmail.com?subject=Loteria_Navidad_Java"));
                 } catch (IOException | URISyntaxException e1) {
                     Growls.mostrarError("acerca.de", "app.envio.correo", e1);
                 }
@@ -132,6 +132,15 @@ public class AcercaDe extends JDialog implements ActionListener {
             }
         });
         return jLabelMyMail;
+    }
+
+    static void setMailBrowserForTests(MailBrowser mailBrowser) {
+        AcercaDe.mailBrowser = mailBrowser == null ? uri -> Desktop.getDesktop().browse(uri) : mailBrowser;
+    }
+
+    @FunctionalInterface
+    interface MailBrowser {
+        void browse(URI uri) throws IOException;
     }
 
     private void addPowered(JPanel panel, GridBagConstraints cns, int y, String titulo, String url) {

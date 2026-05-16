@@ -1,9 +1,12 @@
 package es.jklabs.desktop.gui.dialogos;
 
-import es.jklabs.desktop.gui.Ventana;
+import es.jklabs.gui.utilidades.Growls;
 import es.jklabs.gui.utilidades.listener.UrlMouseListener;
 import es.jklabs.utilidades.BaseTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import sun.misc.Unsafe;
 
 import javax.swing.*;
@@ -11,12 +14,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 
 class AcercaDeTest extends BaseTest {
+
+    @AfterEach
+    void resetTestHooks() {
+        AcercaDe.setMailBrowserForTests(null);
+    }
 
     private static JLabel invokeGetInfo() throws Exception {
         Method method = AcercaDe.class.getDeclaredMethod("getInfo");
@@ -72,9 +84,54 @@ class AcercaDeTest extends BaseTest {
     }
 
     @Test
+    void getInfoMousePressedAndReleasedDoNotChangeState() throws Exception {
+        JLabel label = invokeGetInfo();
+        MouseListener listener = label.getMouseListeners()[0];
+        Cursor initialCursor = label.getCursor();
+
+        listener.mousePressed(new MouseEvent(label, MouseEvent.MOUSE_PRESSED,
+                System.currentTimeMillis(), 0, 1, 1, 1, false));
+        listener.mouseReleased(new MouseEvent(label, MouseEvent.MOUSE_RELEASED,
+                System.currentTimeMillis(), 0, 1, 1, 1, false));
+
+        assertSame(initialCursor, label.getCursor());
+    }
+
+    @Test
+    void getInfoMouseClickedOpensMailUri() throws Exception {
+        JLabel label = invokeGetInfo();
+        MouseListener listener = label.getMouseListeners()[0];
+        AtomicReference<URI> openedUri = new AtomicReference<>();
+        AcercaDe.setMailBrowserForTests(openedUri::set);
+
+        listener.mouseClicked(new MouseEvent(label, MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, 1, 1, 1, false));
+
+        assertEquals(URI.create("mailto:JuanC.Prieto.Silos@gmail.com?subject=Loteria_Navidad_Java"), openedUri.get());
+    }
+
+    @Test
+    void getInfoMouseClickedShowsGrowlWhenMailCannotBeOpened() throws Exception {
+        JLabel label = invokeGetInfo();
+        MouseListener listener = label.getMouseListeners()[0];
+        IOException exception = new IOException("mail client unavailable");
+        AcercaDe.setMailBrowserForTests(uri -> {
+            throw exception;
+        });
+
+        try (MockedStatic<Growls> growlsMock = Mockito.mockStatic(Growls.class)) {
+            listener.mouseClicked(new MouseEvent(label, MouseEvent.MOUSE_CLICKED,
+                    System.currentTimeMillis(), 0, 1, 1, 1, false));
+
+            growlsMock.verify(() -> Growls.mostrarError("acerca.de", "app.envio.correo", exception), times(1));
+        }
+    }
+
+    @Test
     void addPoweredAddsTitleAndUrlWhenUrlExists() throws Exception {
         TestAcercaDe acercaDe = createDialogWithoutConstructor();
-        JPanel panel = new JPanel();
+        GridBagLayout layout = new GridBagLayout();
+        JPanel panel = new JPanel(layout);
         GridBagConstraints cns = new GridBagConstraints();
 
         invokeAddPowered(acercaDe, panel, cns, 5, "Jackson", "https://example.com");
@@ -84,15 +141,24 @@ class AcercaDeTest extends BaseTest {
         JLabel urlLabel = (JLabel) panel.getComponent(1);
 
         assertEquals("<html><b>Jackson</b></html>", titleLabel.getText());
-        assertTrue(titleLabel.getMouseListeners()[0] instanceof UrlMouseListener);
+        assertInstanceOf(UrlMouseListener.class, titleLabel.getMouseListeners()[0]);
+        GridBagConstraints titleConstraints = layout.getConstraints(titleLabel);
+        assertEquals(0, titleConstraints.gridx);
+        assertEquals(5, titleConstraints.gridy);
+        assertEquals(1, titleConstraints.gridwidth);
         assertEquals("https://example.com", urlLabel.getText());
-        assertTrue(urlLabel.getMouseListeners()[0] instanceof UrlMouseListener);
+        assertInstanceOf(UrlMouseListener.class, urlLabel.getMouseListeners()[0]);
+        GridBagConstraints urlConstraints = layout.getConstraints(urlLabel);
+        assertEquals(1, urlConstraints.gridx);
+        assertEquals(5, urlConstraints.gridy);
+        assertEquals(2, urlConstraints.gridwidth);
     }
 
     @Test
     void addPoweredAddsOnlyTitleWhenUrlIsNull() throws Exception {
         TestAcercaDe acercaDe = createDialogWithoutConstructor();
-        JPanel panel = new JPanel();
+        GridBagLayout layout = new GridBagLayout();
+        JPanel panel = new JPanel(layout);
         GridBagConstraints cns = new GridBagConstraints();
 
         invokeAddPowered(acercaDe, panel, cns, 6, "Papirus", null);
@@ -101,6 +167,10 @@ class AcercaDeTest extends BaseTest {
         JLabel titleLabel = (JLabel) panel.getComponent(0);
         assertEquals("<html><b>Papirus</b></html>", titleLabel.getText());
         assertEquals(0, titleLabel.getMouseListeners().length);
+        GridBagConstraints titleConstraints = layout.getConstraints(titleLabel);
+        assertEquals(0, titleConstraints.gridx);
+        assertEquals(6, titleConstraints.gridy);
+        assertEquals(1, titleConstraints.gridwidth);
     }
 
     @Test
@@ -130,7 +200,7 @@ class AcercaDeTest extends BaseTest {
         boolean disposed;
 
         TestAcercaDe() {
-            super((Ventana) null);
+            super(null);
         }
 
         @Override
