@@ -45,17 +45,21 @@ public class Logger {
                 .toEpochMilli();
         try (java.nio.file.DirectoryStream<Path> stream = Files.newDirectoryStream(logDir, "log_*.log")) {
             for (Path file : stream) {
-                try {
-                    long lastModified = Files.getLastModifiedTime(file).toMillis();
-                    if (lastModified < cutoff) {
-                        Files.deleteIfExists(file);
-                    }
-                } catch (IOException e) {
-                    LOG.log(Level.WARNING, "Eliminar log antiguo " + file, e);
-                }
+                limpiarLogsAntiguos(file, cutoff);
             }
         } catch (IOException e) {
             LOG.log(Level.WARNING, "Listar logs antiguos", e);
+        }
+    }
+
+    private static void limpiarLogsAntiguos(Path file, long cutoff) {
+        try {
+            long lastModified = Files.getLastModifiedTime(file).toMillis();
+            if (lastModified < cutoff) {
+                Files.deleteIfExists(file);
+            }
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Eliminar log antiguo " + file, e);
         }
     }
 
