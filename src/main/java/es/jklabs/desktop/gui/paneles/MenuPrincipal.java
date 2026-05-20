@@ -91,8 +91,7 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 try {
                     io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resumen = get();
                     if (resumen == null) {
-                        JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
-                                Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
+                        showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
                         return;
                     }
                     padre.setPanel(new ResumenNavidad(padre, resumen));
@@ -100,13 +99,11 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                     padre.pack();
                 } catch (InterruptedException e) {
                     Logger.error("Cargar resumen Navidad", e);
-                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
-                            Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
+                    showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
                     Thread.currentThread().interrupt();
                 } catch (Exception e) {
                     Logger.error("Cargar resumen Navidad", e);
-                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
-                            Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
+                    showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
                 } finally {
                     setCargando(false);
                 }
@@ -131,18 +128,19 @@ public class MenuPrincipal extends JPanel implements ActionListener {
                 try {
                     io.github.jcprieto.lib.loteria.model.nino.ResumenNino resumen = get();
                     if (resumen == null) {
-                        JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
-                                Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
+                        showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
                         return;
                     }
                     padre.setPanel(new ResumenNino(padre, resumen));
                     padre.setPanelInferior(new PanelInferior(padre));
                     padre.pack();
+                } catch (InterruptedException e) {
+                    Logger.error("Cargar resumen Niño", e);
+                    showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
+                    Thread.currentThread().interrupt();
                 } catch (Exception e) {
                     Logger.error("Cargar resumen Niño", e);
-                    JOptionPane.showMessageDialog(padre, Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR),
-                            Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
-                    Thread.currentThread().interrupt();
+                    showWarning(Mensajes.getMensaje(WARNING_PROBLEMA_SERVIDOR));
                 } finally {
                     setCargando(false);
                 }
@@ -158,6 +156,10 @@ public class MenuPrincipal extends JPanel implements ActionListener {
         btnResumenNino.setEnabled(!activo);
         btnBuscarPremioNino.setEnabled(!activo);
         setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+    }
+
+    protected void showWarning(String message) {
+        JOptionPane.showMessageDialog(padre, message, Mensajes.getMensaje(DIALOGO_ATENCION), JOptionPane.WARNING_MESSAGE);
     }
 
     JButton getBtnResumenNavidadForTests() {
