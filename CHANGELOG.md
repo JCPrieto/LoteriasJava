@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.10
+
+- Actualiza dependencias de mantenimiento: `org.junit.jupiter:junit-jupiter` a `6.1.0` e
+  `io.github.jcprieto:loteria-navidad` a `6.0.10`.
+- Mejora la testabilidad de `MenuPrincipal` centralizando el aviso de error en `showWarning`, manteniendo el mismo
+  diálogo en producción.
+- Amplía la cobertura de `MenuPrincipalTest` para navegación, eventos ignorados, cargas concurrentes y respuestas de
+  resumen correctas, nulas o con error.
+- Refactoriza la limpieza de logs antiguos en `Logger` y documenta callbacks vacíos de `UrlMouseListener` sin cambiar
+  el comportamiento público.
+
 ## 2.7.9
 
 - Actualiza `org.slf4j:slf4j-api` y `org.slf4j:slf4j-simple` a `2.0.18`.
