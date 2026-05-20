@@ -28,6 +28,11 @@ public class UrlMouseListener implements MouseListener {
         }
     }
 
+    /**
+     * Invoked when the mouse button has been pressed on a component.
+     *
+     * @param e the MouseEvent object containing details about the mouse press event
+     */
     @Override
     public void mousePressed(MouseEvent e) {
 
