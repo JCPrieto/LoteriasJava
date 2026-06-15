@@ -4,13 +4,13 @@ import es.jklabs.gui.utilidades.Growls;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class UrlMouseListener implements MouseListener {
+public class UrlMouseListener extends MouseAdapter {
     private final JLabel etiqueta;
     private final String url;
 
@@ -26,26 +26,6 @@ public class UrlMouseListener implements MouseListener {
         } catch (IOException | URISyntaxException e1) {
             Growls.mostrarError("abrir.enlace", e1);
         }
-    }
-
-    /**
-     * Invoked when the mouse button has been pressed on a component.
-     *
-     * @param e the MouseEvent object containing details about the mouse press event
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    /**
-     * Invoked when a mouse button is released on a component.
-     *
-     * @param e the MouseEvent object containing details about the mouse release event
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
