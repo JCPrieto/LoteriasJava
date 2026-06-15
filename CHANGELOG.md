@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.7.11
+
+- Actualiza dependencias de mantenimiento: `com.fasterxml.jackson.core:jackson-databind` a `2.22.0`,
+  `maven-surefire-plugin` a `3.5.6`, `jacoco-maven-plugin` a `0.8.15` y `sonar-maven-plugin` a `5.7.0.6970`.
+- Mejora la resiliencia de las notificaciones de escritorio: si Windows no puede registrar el icono de bandeja, la
+  aplicación conserva disponibles los mecanismos de fallback, y las notificaciones sin título usan el nombre de la
+  aplicación de forma consistente.
+- Refactoriza `Growls` mediante colaboradores internos inyectables y amplía sus tests para cubrir todas las rutas de
+  bandeja, `notify-send`, diálogo y detección del sistema operativo, alcanzando cobertura completa de condiciones.
+- Simplifica `UrlMouseListener` extendiendo `MouseAdapter` y elimina callbacks vacíos sin cambiar la interacción de los
+  enlaces.
+
 ## 2.7.10
 
 - Actualiza dependencias de mantenimiento: `org.junit.jupiter:junit-jupiter` a `6.1.0` e
