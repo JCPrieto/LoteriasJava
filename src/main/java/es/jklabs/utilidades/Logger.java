@@ -3,6 +3,7 @@ package es.jklabs.utilidades;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
@@ -16,7 +17,7 @@ public class Logger {
     private static final int LOG_RETENTION_DAYS = 30;
 
     private Logger() {
-        LocalDate hoy = LocalDate.now();
+        LocalDate hoy = LocalDate.now(Clock.systemDefaultZone());
         FileHandler fh;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
         Path logDir = Path.of(System.getProperty("user.home"), ".local", "share", "LoteriaDeNavidad", "logs");
