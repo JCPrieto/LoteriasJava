@@ -136,7 +136,7 @@ public class PanelBusqueda extends JPanel implements ActionListener {
         setCursor(activo ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
     }
 
-    private java.math.BigDecimal parseCantidad(String cantidadText) {
+    java.math.BigDecimal parseCantidad(String cantidadText) {
         if (cantidadText == null) {
             return null;
         }
@@ -225,6 +225,10 @@ public class PanelBusqueda extends JPanel implements ActionListener {
 
     JButton getBuscarButtonForTests() {
         return buscar;
+    }
+
+    JButton getLimpiarButtonForTests() {
+        return limpiar;
     }
 
     JTextField getNumeroFieldForTests() {
