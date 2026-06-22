@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.12
+
+- Sustituye el sistema propio de notificaciones de escritorio basado en `SystemTray` y ejecución directa de
+  `notify-send` por `com.sshtools:two-slices`, manteniendo fallback a diálogo Swing cuando no hay backend de
+  notificaciones disponible.
+- Elimina LibNotify como requisito explícito en Linux y documenta `two-slices` en el README y en el diálogo
+  "Acerca de".
+- Actualiza `io.github.jcprieto:loteria-navidad` a `6.0.11` e incorpora `com.sshtools:two-slices` `0.9.6`.
+- Amplía la cobertura de `PanelBusqueda` para validación de cantidades, búsquedas concurrentes, errores del servicio,
+  limpieza de resultados y filtros de teclado.
+- Ajusta tests de `Logger` para evitar el uso del reloj del sistema y mantiene determinista la limpieza de logs
+  antiguos.
+
 ## 2.7.11
 
 - Actualiza dependencias de mantenimiento: `com.fasterxml.jackson.core:jackson-databind` a `2.22.0`,

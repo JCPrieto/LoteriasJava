@@ -75,7 +75,7 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     private static boolean isConsumedAfterKeyTyped(JTextField field, char keyChar) {
-        KeyEvent event = new KeyEvent(field, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+        KeyEvent event = new KeyEvent(field, KeyEvent.KEY_TYPED, 0L, 0,
                 KeyEvent.VK_UNDEFINED, keyChar);
         for (var listener : field.getKeyListeners()) {
             listener.keyTyped(event);
