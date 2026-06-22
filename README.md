@@ -7,7 +7,6 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 ### Requisitos ###
 
 * Java 21
-* LibNotify (Para las notificaciones en Linux)
 * Para generar paquetes nativos: JDK 21 con `jpackage` y las herramientas del sistema operativo.
 * Linux (Ubuntu): `dpkg-deb` (incluido por defecto) para crear `.deb`.
 * Windows: WiX Toolset para crear `.msi`.
@@ -101,6 +100,7 @@ Después, las nuevas versiones se reciben con:
 * Librerias:
   * Jackson https://github.com/FasterXML/jackson-core/wiki
   * GitHub Releases https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases
+  * two-slices https://github.com/sshtools/two-slices
 
 ### Changelog ###
 

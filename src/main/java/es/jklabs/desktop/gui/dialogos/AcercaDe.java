@@ -80,6 +80,7 @@ public class AcercaDe extends JDialog implements ActionListener {
         addPowered(panel, cns, yPosition++, "Loterías y apuestas del estado", "https://www.loteriasyapuestas.es");
         addPowered(panel, cns, yPosition++, "Jackson", "https://github.com/FasterXML/jackson-core/wiki");
         addPowered(panel, cns, yPosition++, "GitHub Releases", "https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases");
+        addPowered(panel, cns, yPosition++, "two-slices", "https://github.com/sshtools/two-slices");
         JLabel jLabelLicense = new JLabel(
                 Mensajes.getMensaje("licencia.app"),
                 IconUtils.loadIcon("gplv3-with-text-136x68.png"), SwingConstants.CENTER);

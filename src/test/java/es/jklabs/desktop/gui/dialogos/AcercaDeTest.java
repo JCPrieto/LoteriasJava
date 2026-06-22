@@ -155,6 +155,23 @@ class AcercaDeTest extends BaseTest {
     }
 
     @Test
+    void addPoweredIncluyeTwoSlicesComoLibreriaDeNotificaciones() throws Exception {
+        TestAcercaDe acercaDe = createDialogWithoutConstructor();
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints cns = new GridBagConstraints();
+
+        invokeAddPowered(acercaDe, panel, cns, 7, "two-slices", "https://github.com/sshtools/two-slices");
+
+        assertEquals(2, panel.getComponentCount());
+        JLabel titleLabel = (JLabel) panel.getComponent(0);
+        JLabel urlLabel = (JLabel) panel.getComponent(1);
+        assertEquals("<html><b>two-slices</b></html>", titleLabel.getText());
+        assertEquals("https://github.com/sshtools/two-slices", urlLabel.getText());
+        assertInstanceOf(UrlMouseListener.class, titleLabel.getMouseListeners()[0]);
+        assertInstanceOf(UrlMouseListener.class, urlLabel.getMouseListeners()[0]);
+    }
+
+    @Test
     void addPoweredAddsOnlyTitleWhenUrlIsNull() throws Exception {
         TestAcercaDe acercaDe = createDialogWithoutConstructor();
         GridBagLayout layout = new GridBagLayout();
