@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Handler;
@@ -40,8 +39,8 @@ class LoggerTest extends BaseTest {
         Files.createDirectories(logDir);
         Path oldLog = Files.writeString(logDir.resolve("log_old.log"), "old");
         Path recentLog = Files.writeString(logDir.resolve("log_recent.log"), "recent");
-        Files.setLastModifiedTime(oldLog, FileTime.from(Instant.now().minus(Duration.ofDays(31))));
-        Files.setLastModifiedTime(recentLog, FileTime.from(Instant.now().minus(Duration.ofDays(5))));
+        Files.setLastModifiedTime(oldLog, FileTime.from(Instant.parse("2000-01-01T00:00:00Z")));
+        Files.setLastModifiedTime(recentLog, FileTime.from(Instant.parse("9999-12-31T23:59:59Z")));
 
         Logger.init();
         Logger.info("mensaje de prueba");
