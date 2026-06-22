@@ -60,7 +60,7 @@ public class Logger {
                 Files.deleteIfExists(file);
             }
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Eliminar log antiguo " + file, e);
+            LOG.log(Level.WARNING, String.format("Eliminar log antiguo %s", file), e);
         }
     }
 
