@@ -4,6 +4,10 @@ import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 
 public class UtilidadesEstadoSorteo {
 
+    private UtilidadesEstadoSorteo() {
+
+    }
+
     public static String getHumanReadable(EstadoSorteo estado) {
         return switch (estado) {
             case NO_INICIADO -> Mensajes.getMensaje("sorteo.no.iniciado");
