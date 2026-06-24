@@ -12,31 +12,49 @@ public class Constantes {
     }
 
     private static String cargarVersion() {
-        String version = cargarVersionDesdeProperties();
+        return cargarVersion(Constantes::cargarVersionDesdeProperties, Constantes::cargarVersionDesdePom);
+    }
+
+    static String cargarVersion(VersionSupplier propertiesSupplier, VersionSupplier pomSupplier) {
+        String version = propertiesSupplier.get();
         if (version != null) {
             return version;
         }
-        version = cargarVersionDesdePom();
+        version = pomSupplier.get();
         return version != null ? version : "desconocida";
     }
 
     private static String cargarVersionDesdeProperties() {
         String ruta = "/META-INF/maven/es.jklabs.desktop/LoteriaDeNavidad/pom.properties";
-        try (java.io.InputStream in = Constantes.class.getResourceAsStream(ruta)) {
-            if (in == null) {
-                return null;
-            }
+        return cargarVersionDesdeProperties(() -> Constantes.class.getResourceAsStream(ruta));
+    }
+
+    static String cargarVersionDesdeProperties(InputStreamSupplier supplier) {
+        java.io.InputStream in;
+        try {
+            in = supplier.get();
+        } catch (java.io.IOException e) {
+            return null;
+        }
+        if (in == null) {
+            return null;
+        }
+        try {
             java.util.Properties props = new java.util.Properties();
             props.load(in);
-            String version = props.getProperty("version");
-            return version == null || version.isBlank() ? null : version;
+            String version = normalizarVersion(props.getProperty("version"));
+            return cerrar(in) ? version : null;
         } catch (java.io.IOException e) {
+            cerrar(in);
             return null;
         }
     }
 
     private static String cargarVersionDesdePom() {
-        java.nio.file.Path pom = java.nio.file.Paths.get("pom.xml");
+        return cargarVersionDesdePom(java.nio.file.Paths.get("pom.xml"));
+    }
+
+    static String cargarVersionDesdePom(java.nio.file.Path pom) {
         if (!java.nio.file.Files.isRegularFile(pom)) {
             return null;
         }
@@ -51,16 +69,41 @@ public class Constantes {
             factory.setXIncludeAware(false);
             factory.setExpandEntityReferences(false);
             factory.setNamespaceAware(true);
-            org.w3c.dom.Document document = factory.newDocumentBuilder().parse(in);
+            javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(new org.xml.sax.helpers.DefaultHandler());
+            org.w3c.dom.Document document = builder.parse(in);
             javax.xml.xpath.XPath xPath = javax.xml.xpath.XPathFactory.newInstance().newXPath();
             String version = xPath.evaluate("/*[local-name()='project']/*[local-name()='version']", document);
-            if (version == null || version.isBlank()) {
+            if (normalizarVersion(version) == null) {
                 version = xPath.evaluate("/*[local-name()='project']/*[local-name()='parent']/*[local-name()='version']",
                         document);
             }
-            return version == null || version.isBlank() ? null : version.trim();
+            return normalizarVersion(version);
         } catch (Exception e) {
             return null;
         }
+    }
+
+    static String normalizarVersion(String version) {
+        return version == null || version.isBlank() ? null : version.trim();
+    }
+
+    static boolean cerrar(java.io.InputStream in) {
+        try {
+            in.close();
+            return true;
+        } catch (java.io.IOException e) {
+            return false;
+        }
+    }
+
+    interface VersionSupplier {
+
+        String get();
+    }
+
+    interface InputStreamSupplier {
+
+        java.io.InputStream get() throws java.io.IOException;
     }
 }
