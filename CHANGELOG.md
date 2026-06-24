@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.13
+
+- Actualiza `io.github.jcprieto:loteria-navidad` a `6.0.12`.
+- Configura las notificaciones de escritorio con el nombre de la aplicación y un icono real extraído de los recursos,
+  y añade las dependencias D-Bus necesarias para priorizar ese backend cuando está disponible.
+- Mejora la testabilidad de `Constantes` con hooks package-private para aislar la carga de versión desde
+  `pom.properties` y `pom.xml`, manteniendo el mismo comportamiento público.
+- Amplía la cobertura de `ConstantesTest` para fallbacks de versión, valores nulos o en blanco, errores de I/O,
+  versión heredada desde `parent` y XML inválido o con DOCTYPE bloqueado.
+- Refuerza utilidades internas evitando la instanciación de `UtilidadesEstadoSorteo`.
+
 ## 2.7.12
 
 - Sustituye el sistema propio de notificaciones de escritorio basado en `SystemTray` y ejecución directa de

@@ -2,16 +2,30 @@ package es.jklabs.gui.utilidades;
 
 import com.sshtools.twoslices.Toast;
 import com.sshtools.twoslices.ToastType;
+import com.sshtools.twoslices.ToasterFactory;
+import com.sshtools.twoslices.ToasterSettings;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.Mensajes;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Locale;
 
 public class Growls {
 
+    private static final String APP_ICON_NAME = "loteriadenavidad";
+    private static final String DBUS_TOASTER_CLASS = "com.sshtools.twoslices.impl.DBUSNotifyToaster";
     private static DialogDisplayer dialogDisplayer = Growls::showDialogInternal;
     private static ToastSender toastSender = Growls::showToastInternal;
+    private static SettingsConfigurer settingsConfigurer = Growls::configureSettingsInternal;
+    private static boolean settingsConfigured;
+    private static Path appIconPath;
 
     private Growls() {
 
@@ -35,7 +49,7 @@ public class Growls {
     }
 
     public static void init() {
-        // two-slices selecciona el backend disponible de forma perezosa al mostrar cada notificacion.
+        configureSettings();
     }
 
     static void setDialogDisplayerForTests(DialogDisplayer displayer) {
@@ -46,9 +60,16 @@ public class Growls {
         toastSender = sender == null ? Growls::showToastInternal : sender;
     }
 
+    static void setSettingsConfigurerForTests(SettingsConfigurer configurer) {
+        settingsConfigurer = configurer == null ? Growls::configureSettingsInternal : configurer;
+        settingsConfigured = false;
+    }
+
     static void resetTestHooks() {
         dialogDisplayer = Growls::showDialogInternal;
         toastSender = Growls::showToastInternal;
+        settingsConfigurer = Growls::configureSettingsInternal;
+        settingsConfigured = false;
     }
 
     private static void showDialogInternal(String titulo, String mensaje, int tipo) {
@@ -57,15 +78,62 @@ public class Growls {
 
     private static void mostrarToast(String titulo, String mensaje, ToastType toastType, int dialogType) {
         try {
-            toastSender.show(toastType, titulo, mensaje);
+            configureSettings();
+            toastSender.show(toastType, titulo, mensaje, getToastIcon());
         } catch (RuntimeException e) {
             Logger.error(e);
             dialogDisplayer.show(titulo, mensaje, dialogType);
         }
     }
 
-    private static void showToastInternal(ToastType tipo, String titulo, String mensaje) {
-        Toast.toast(tipo, titulo, mensaje);
+    private static void showToastInternal(ToastType tipo, String titulo, String mensaje, String icono) {
+        Toast.toast(tipo, icono, titulo, mensaje);
+    }
+
+    private static synchronized void configureSettings() {
+        if (!settingsConfigured) {
+            settingsConfigurer.configure();
+            settingsConfigured = true;
+        }
+    }
+
+    private static void configureSettingsInternal() {
+        ToasterSettings settings = new ToasterSettings()
+                .setAppName(Constantes.NOMBRE_APP)
+                .setDefaultImage(getAppIconUrl());
+        if (isLinux()) {
+            settings.setPreferredToasterClassName(DBUS_TOASTER_CLASS);
+        }
+        ToasterFactory.setSettings(settings);
+        ToasterFactory.setFactory(null);
+    }
+
+    private static URL getAppIconUrl() {
+        return Growls.class.getClassLoader().getResource("img/icons/app/icon.png");
+    }
+
+    private static synchronized String getToastIcon() {
+        if (appIconPath != null) {
+            return appIconPath.toAbsolutePath().toString();
+        }
+        URL iconUrl = getAppIconUrl();
+        if (iconUrl == null) {
+            return APP_ICON_NAME;
+        }
+        try (InputStream in = iconUrl.openStream()) {
+            Path iconPath = Files.createTempFile(APP_ICON_NAME + "-", ".png");
+            Files.copy(in, iconPath, StandardCopyOption.REPLACE_EXISTING);
+            iconPath.toFile().deleteOnExit();
+            appIconPath = iconPath;
+            return iconPath.toAbsolutePath().toString();
+        } catch (IOException e) {
+            Logger.error(e);
+            return APP_ICON_NAME;
+        }
+    }
+
+    private static boolean isLinux() {
+        return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux");
     }
 
     @FunctionalInterface
@@ -75,6 +143,11 @@ public class Growls {
 
     @FunctionalInterface
     interface ToastSender {
-        void show(ToastType tipo, String titulo, String mensaje);
+        void show(ToastType tipo, String titulo, String mensaje, String icono);
+    }
+
+    @FunctionalInterface
+    interface SettingsConfigurer {
+        void configure();
     }
 }

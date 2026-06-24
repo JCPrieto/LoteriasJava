@@ -6,7 +6,7 @@
 
     <groupId>es.jklabs.desktop</groupId>
     <artifactId>LoteriaDeNavidad</artifactId>
-    <version>2.7.12</version>
+    <version>2.7.13</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -15,6 +15,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <mockito.version>5.23.0</mockito.version>
         <slf4j.version>2.0.18</slf4j.version>
+        <dbus.java.version>4.3.1</dbus.java.version>
         <exec.maven.plugin.version>3.6.3</exec.maven.plugin.version>
         <sonar.maven.plugin.version>5.7.0.6970</sonar.maven.plugin.version>
         <linux.package.deps>libasound2 | libasound2t64, libbrotli1, libbsd0, libbz2-1.0, libc6, libfreetype6, libgcc-s1,
@@ -76,6 +77,16 @@
             <groupId>com.sshtools</groupId>
             <artifactId>two-slices</artifactId>
             <version>0.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-core</artifactId>
+            <version>${dbus.java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-transport-native-unixsocket</artifactId>
+            <version>${dbus.java.version}</version>
         </dependency>
     </dependencies>
 
