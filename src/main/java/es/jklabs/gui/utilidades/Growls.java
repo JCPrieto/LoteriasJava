@@ -14,18 +14,23 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Locale;
+import java.util.Set;
 
 public class Growls {
 
     private static final String APP_ICON_NAME = "loteriadenavidad";
+    private static final String APP_DATA_DIR_NAME = ".loteriadenavidad";
     private static final String DBUS_TOASTER_CLASS = "com.sshtools.twoslices.impl.DBUSNotifyToaster";
     private static DialogDisplayer dialogDisplayer = Growls::showDialogInternal;
     private static ToastSender toastSender = Growls::showToastInternal;
     private static SettingsConfigurer settingsConfigurer = Growls::configureSettingsInternal;
     private static boolean settingsConfigured;
     private static Path appIconPath;
+    private static Path appIconDirectory;
 
     private Growls() {
 
@@ -70,6 +75,13 @@ public class Growls {
         toastSender = Growls::showToastInternal;
         settingsConfigurer = Growls::configureSettingsInternal;
         settingsConfigured = false;
+        appIconPath = null;
+        appIconDirectory = null;
+    }
+
+    static void setAppIconDirectoryForTests(Path directory) {
+        appIconDirectory = directory;
+        appIconPath = null;
     }
 
     private static void showDialogInternal(String titulo, String mensaje, int tipo) {
@@ -121,14 +133,43 @@ public class Growls {
             return APP_ICON_NAME;
         }
         try (InputStream in = iconUrl.openStream()) {
-            Path iconPath = Files.createTempFile(APP_ICON_NAME + "-", ".png");
+            Path iconDirectory = prepareAppIconDirectory();
+            Path iconPath = iconDirectory.resolve(APP_ICON_NAME + ".png");
+            if (Files.isSymbolicLink(iconPath)) {
+                throw new IOException("Toast icon path must not be a symbolic link: " + iconPath);
+            }
             Files.copy(in, iconPath, StandardCopyOption.REPLACE_EXISTING);
-            iconPath.toFile().deleteOnExit();
             appIconPath = iconPath;
             return iconPath.toAbsolutePath().toString();
         } catch (IOException e) {
             Logger.error(e);
             return APP_ICON_NAME;
+        }
+    }
+
+    private static Path getAppIconDirectory() {
+        if (appIconDirectory != null) {
+            return appIconDirectory;
+        }
+        return Paths.get(System.getProperty("user.home", "."), APP_DATA_DIR_NAME);
+    }
+
+    private static Path prepareAppIconDirectory() throws IOException {
+        Path iconDirectory = getAppIconDirectory();
+        if (Files.isSymbolicLink(iconDirectory)) {
+            throw new IOException("Toast icon directory must not be a symbolic link: " + iconDirectory);
+        }
+        Files.createDirectories(iconDirectory);
+        restrictDirectoryPermissions(iconDirectory);
+        return iconDirectory;
+    }
+
+    private static void restrictDirectoryPermissions(Path directory) throws IOException {
+        if (Files.getFileStore(directory).supportsFileAttributeView("posix")) {
+            Files.setPosixFilePermissions(directory, Set.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE));
         }
     }
 

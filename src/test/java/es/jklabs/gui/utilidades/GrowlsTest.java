@@ -7,18 +7,33 @@ import es.jklabs.utilidades.BaseTest;
 import es.jklabs.utilidades.Constantes;
 import es.jklabs.utilidades.Mensajes;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GrowlsTest extends BaseTest {
+
+    @TempDir
+    Path tempDir;
+
+    private Path appIconDirectory;
+
+    @BeforeEach
+    void configureIconDirectory() {
+        appIconDirectory = tempDir.resolve("app-icons");
+        Growls.setAppIconDirectoryForTests(appIconDirectory);
+    }
 
     @AfterEach
     void resetHooks() {
@@ -181,6 +196,35 @@ class GrowlsTest extends BaseTest {
             Growls.setToastSenderForTests(null);
             Growls.setSettingsConfigurerForTests(null);
         });
+    }
+
+    @Test
+    void iconoDeToastSeCopiaEnDirectorioPrivadoDeAplicacion() {
+        AtomicReference<String> icono = new AtomicReference<>();
+        Growls.setToastSenderForTests((ty, t, m, i) -> icono.set(i));
+
+        Growls.mostrarInfo(null, "nueva.version.descargada");
+
+        Path iconPath = Path.of(icono.get());
+        assertEquals(appIconDirectory, iconPath.getParent());
+        assertEquals("loteriadenavidad.png", iconPath.getFileName().toString());
+        assertTrue(Files.isRegularFile(iconPath));
+    }
+
+    @Test
+    void directorioDeIconoUsaPermisosSoloDePropietarioCuandoHayPosix() throws Exception {
+        AtomicReference<String> icono = new AtomicReference<>();
+        Growls.setToastSenderForTests((ty, t, m, i) -> icono.set(i));
+
+        Growls.mostrarInfo(null, "nueva.version.descargada");
+
+        Path iconDirectory = Path.of(icono.get()).getParent();
+        if (Files.getFileStore(iconDirectory).supportsFileAttributeView("posix")) {
+            assertEquals(Set.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE), Files.getPosixFilePermissions(iconDirectory));
+        }
     }
 
     private void assertIconoAplicacion(String icono) {
