@@ -45,9 +45,13 @@ public class Ventana extends JFrame implements ActionListener {
 
     public void actionPerformed(final ActionEvent evt) {
         if (evt.getSource() == acerca) {
-            final AcercaDe dialogo = new AcercaDe(this);
+            final AcercaDe dialogo = crearDialogoAcercaDe();
             dialogo.setVisible(true);
         }
+    }
+
+    AcercaDe crearDialogoAcercaDe() {
+        return new AcercaDe(this);
     }
 
     private void crearMenu() {
@@ -64,27 +68,38 @@ public class Ventana extends JFrame implements ActionListener {
     }
 
     private void consultarNuevaVersionAsync() {
-        SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+        crearWorkerNuevaVersion().execute();
+    }
+
+    SwingWorker<Boolean, Void> crearWorkerNuevaVersion() {
+        return new SwingWorker<>() {
             @Override
             protected Boolean doInBackground() throws Exception {
-                return UtilidadesGitHubReleases.existeNuevaVersion();
+                return existeNuevaVersion();
             }
 
             @Override
             protected void done() {
-                try {
-                    if (Objects.equals(get(), Boolean.TRUE)) {
-                        agregarItemActualizacion();
-                    }
-                } catch (InterruptedException e) {
-                    Logger.error("consultar.nueva.version", e);
-                    Thread.currentThread().interrupt();
-                } catch (Exception e) {
-                    Logger.error("consultar.nueva.version", e);
-                }
+                procesarResultadoNuevaVersion(this::get);
             }
         };
-        worker.execute();
+    }
+
+    boolean existeNuevaVersion() throws Exception {
+        return UtilidadesGitHubReleases.existeNuevaVersion();
+    }
+
+    void procesarResultadoNuevaVersion(NuevaVersionResult result) {
+        try {
+            if (Objects.equals(result.get(), Boolean.TRUE)) {
+                agregarItemActualizacion();
+            }
+        } catch (InterruptedException e) {
+            Logger.error("consultar.nueva.version", e);
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            Logger.error("consultar.nueva.version", e);
+        }
     }
 
     private void agregarItemActualizacion() {
@@ -120,6 +135,11 @@ public class Ventana extends JFrame implements ActionListener {
     public void setPanelInferior(PanelInferior panelInferior) {
         this.panelInferior = panelInferior;
         super.add(panelInferior, BorderLayout.SOUTH);
+    }
+
+    @FunctionalInterface
+    interface NuevaVersionResult {
+        Boolean get() throws Exception;
     }
 
 }

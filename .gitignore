@@ -99,5 +99,5 @@ src/main/resources/json/
 /.idea/modules.xml
 /.idea/
 /.idea/misc.xml
-/.codex
+.codex/*
 null/

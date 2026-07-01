@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.7.14
+
+- Refactoriza las notificaciones de escritorio con `ToastBuilder` y un `DesktopNotifier` inyectable, eliminando la
+  copia del icono a directorios temporales y manteniendo fallback a diálogo Swing si falla el backend.
+- Asegura que las notificaciones inicialicen siempre `two-slices` con el nombre real de la aplicación, el icono de la
+  aplicación y el backend D-Bus en Linux, incluso cuando se muestran antes de una llamada explícita a `Growls.init()`.
+- Actualiza dependencias de mantenimiento: `com.sshtools:two-slices` a `0.9.7`,
+  `com.github.hypfvieh:dbus-java-*` a `5.2.0` y `org.junit.jupiter:junit-jupiter` a `6.1.1`.
+- Documenta `dbus-java` en el README y en el diálogo "Acerca de".
+- Mejora la testabilidad de `Ventana` extrayendo la comprobación asíncrona de nuevas versiones a métodos
+  package-private, y amplía la cobertura de condiciones para resultados positivos, negativos, nulos, errores e
+  interrupciones.
+- Refuerza utilidades internas evitando la instanciación de `UtilidadesFecha`.
+
 ## 2.7.13
 
 - Actualiza `io.github.jcprieto:loteria-navidad` a `6.0.12`.

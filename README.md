@@ -101,6 +101,7 @@ Después, las nuevas versiones se reciben con:
   * Jackson https://github.com/FasterXML/jackson-core/wiki
   * GitHub Releases https://docs.github.com/es/repositories/releasing-projects-on-github/about-releases
   * two-slices https://github.com/sshtools/two-slices
+  * dbus-java https://github.com/hypfvieh/dbus-java
 
 ### Changelog ###
 

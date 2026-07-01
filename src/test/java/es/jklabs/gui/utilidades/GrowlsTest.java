@@ -1,6 +1,5 @@
 package es.jklabs.gui.utilidades;
 
-import com.sshtools.twoslices.ToastType;
 import com.sshtools.twoslices.ToasterFactory;
 import com.sshtools.twoslices.ToasterSettings;
 import es.jklabs.utilidades.BaseTest;
@@ -10,8 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,15 +24,38 @@ class GrowlsTest extends BaseTest {
     }
 
     @Test
+    void initConfiguraTwoSlicesConNombreIconoYBackendLinux() {
+        Growls.init();
+
+        ToasterSettings settings = ToasterFactory.getSettings();
+
+        assertEquals(Constantes.NOMBRE_APP, settings.getAppName());
+        assertNotNull(settings.getDefaultImage());
+        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux")) {
+            assertEquals("com.sshtools.twoslices.impl.DBUSNotifyToaster", settings.getPreferredToasterClassName());
+        }
+    }
+
+    @Test
+    void mostrarInfoConfiguraNombreDeAplicacionAunqueNoSeLlameInitAntes() {
+        AtomicReference<String> appName = new AtomicReference<>();
+        Growls.setNotifierForTests((t, m, ty, i) -> appName.set(ToasterFactory.getSettings().getAppName()));
+
+        Growls.mostrarInfo(null, "nueva.version.descargada");
+
+        assertEquals(Constantes.NOMBRE_APP, appName.get());
+    }
+
+    @Test
     void mostrarInfoUsaTwoSlicesConTituloPredeterminado() {
-        AtomicReference<ToastType> tipo = new AtomicReference<>();
+        AtomicReference<Growls.NotificationType> tipo = new AtomicReference<>();
         AtomicReference<String> titulo = new AtomicReference<>();
         AtomicReference<String> mensaje = new AtomicReference<>();
-        AtomicReference<String> icono = new AtomicReference<>();
-        Growls.setToastSenderForTests((ty, t, m, i) -> {
-            tipo.set(ty);
+        AtomicReference<URL> icono = new AtomicReference<>();
+        Growls.setNotifierForTests((t, m, ty, i) -> {
             titulo.set(t);
             mensaje.set(m);
+            tipo.set(ty);
             icono.set(i);
         });
         Growls.setDialogDisplayerForTests((t, m, ty) -> {
@@ -43,16 +64,16 @@ class GrowlsTest extends BaseTest {
 
         Growls.mostrarInfo(null, "nueva.version.descargada");
 
-        assertEquals(ToastType.INFO, tipo.get());
+        assertEquals(Growls.NotificationType.INFO, tipo.get());
         assertEquals(Constantes.NOMBRE_APP, titulo.get());
         assertEquals(Mensajes.getMensaje("nueva.version.descargada"), mensaje.get());
-        assertIconoAplicacion(icono.get());
+        assertNotNull(icono.get());
     }
 
     @Test
     void mostrarInfoUsaTwoSlicesConTituloTraducido() {
         AtomicReference<String> titulo = new AtomicReference<>();
-        Growls.setToastSenderForTests((ty, t, m, i) -> titulo.set(t));
+        Growls.setNotifierForTests((t, m, ty, i) -> titulo.set(t));
 
         Growls.mostrarInfo("app.titulo", "nueva.version.descargada");
 
@@ -65,7 +86,7 @@ class GrowlsTest extends BaseTest {
         AtomicReference<String> mensaje = new AtomicReference<>();
         AtomicReference<Integer> tipo = new AtomicReference<>();
         AtomicInteger llamadas = new AtomicInteger();
-        Growls.setToastSenderForTests((ty, t, m, i) -> {
+        Growls.setNotifierForTests((t, m, ty, i) -> {
             throw new IllegalStateException("notificaciones no disponibles");
         });
         Growls.setDialogDisplayerForTests((t, m, ty) -> {
@@ -85,29 +106,29 @@ class GrowlsTest extends BaseTest {
 
     @Test
     void mostrarErrorUsaTwoSlicesConTituloPredeterminado() {
-        AtomicReference<ToastType> tipo = new AtomicReference<>();
+        AtomicReference<Growls.NotificationType> tipo = new AtomicReference<>();
         AtomicReference<String> titulo = new AtomicReference<>();
         AtomicReference<String> mensaje = new AtomicReference<>();
-        AtomicReference<String> icono = new AtomicReference<>();
-        Growls.setToastSenderForTests((ty, t, m, i) -> {
-            tipo.set(ty);
+        AtomicReference<URL> icono = new AtomicReference<>();
+        Growls.setNotifierForTests((t, m, ty, i) -> {
             titulo.set(t);
             mensaje.set(m);
+            tipo.set(ty);
             icono.set(i);
         });
 
         Growls.mostrarError("descargar.nueva.version", new RuntimeException("boom"));
 
-        assertEquals(ToastType.ERROR, tipo.get());
+        assertEquals(Growls.NotificationType.ERROR, tipo.get());
         assertEquals(Constantes.NOMBRE_APP, titulo.get());
         assertEquals(Mensajes.getError("descargar.nueva.version"), mensaje.get());
-        assertIconoAplicacion(icono.get());
+        assertNotNull(icono.get());
     }
 
     @Test
     void mostrarErrorUsaTwoSlicesConTituloTraducido() {
         AtomicReference<String> titulo = new AtomicReference<>();
-        Growls.setToastSenderForTests((ty, t, m, i) -> titulo.set(t));
+        Growls.setNotifierForTests((t, m, ty, i) -> titulo.set(t));
 
         Growls.mostrarError("app.titulo", "descargar.nueva.version", new RuntimeException("boom"));
 
@@ -120,7 +141,7 @@ class GrowlsTest extends BaseTest {
         AtomicReference<String> mensaje = new AtomicReference<>();
         AtomicReference<Integer> tipo = new AtomicReference<>();
         AtomicInteger llamadas = new AtomicInteger();
-        Growls.setToastSenderForTests((ty, t, m, i) -> {
+        Growls.setNotifierForTests((t, m, ty, i) -> {
             throw new IllegalStateException("notificaciones no disponibles");
         });
         Growls.setDialogDisplayerForTests((t, m, ty) -> {
@@ -139,53 +160,10 @@ class GrowlsTest extends BaseTest {
     }
 
     @Test
-    void initConfiguraNotificaciones() {
-        AtomicInteger llamadas = new AtomicInteger();
-        Growls.setSettingsConfigurerForTests(llamadas::incrementAndGet);
-
-        Growls.init();
-
-        assertEquals(1, llamadas.get());
-    }
-
-    @Test
-    void mostrarInfoConfiguraNotificacionesAntesDeMostrarToast() {
-        AtomicInteger configuraciones = new AtomicInteger();
-        AtomicInteger notificaciones = new AtomicInteger();
-        Growls.setSettingsConfigurerForTests(configuraciones::incrementAndGet);
-        Growls.setToastSenderForTests((ty, t, m, i) -> notificaciones.incrementAndGet());
-
-        Growls.mostrarInfo(null, "nueva.version.descargada");
-
-        assertEquals(1, configuraciones.get());
-        assertEquals(1, notificaciones.get());
-    }
-
-    @Test
-    void initConfiguraTwoSlicesConNombreIconoYBackendLinux() {
-        Growls.init();
-
-        ToasterSettings settings = ToasterFactory.getSettings();
-
-        assertEquals(Constantes.NOMBRE_APP, settings.getAppName());
-        assertNotNull(settings.getDefaultImage());
-        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux")) {
-            assertEquals("com.sshtools.twoslices.impl.DBUSNotifyToaster", settings.getPreferredToasterClassName());
-        }
-    }
-
-    @Test
     void settersDePruebaRestauranImplementacionesPredeterminadasConNull() {
         assertDoesNotThrow(() -> {
+            Growls.setNotifierForTests(null);
             Growls.setDialogDisplayerForTests(null);
-            Growls.setToastSenderForTests(null);
-            Growls.setSettingsConfigurerForTests(null);
         });
-    }
-
-    private void assertIconoAplicacion(String icono) {
-        assertNotNull(icono);
-        assertTrue(icono.endsWith(".png"));
-        assertTrue(Files.isRegularFile(Path.of(icono)));
     }
 }

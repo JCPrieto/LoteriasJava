@@ -57,8 +57,8 @@ screenshots when UI changes are involved.
 
 ## Configuration & Runtime Notes
 
-Java 21 is required. Desktop notifications are handled through `two-slices`; keep any notification backend changes
-documented in the README and the "Acerca de" dialog.
+Java 21 is required. Desktop notifications are handled through `two-slices`, using `dbus-java` for the Linux D-Bus
+backend; keep any notification backend changes documented in the README and the "Acerca de" dialog.
 Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
 and 24.04+.
 The release pipeline also dispatches Linux `.deb` metadata to the external APT repository updater; keep required
