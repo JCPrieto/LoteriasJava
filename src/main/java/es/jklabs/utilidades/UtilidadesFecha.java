@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 
 public class UtilidadesFecha {
 
+    private UtilidadesFecha() {
+    }
+
     public static String getHumanReadable(LocalDateTime time) {
         return time.format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"));
     }
