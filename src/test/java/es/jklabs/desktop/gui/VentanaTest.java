@@ -2,6 +2,7 @@ package es.jklabs.desktop.gui;
 
 import es.jklabs.desktop.gui.dialogos.AcercaDe;
 import es.jklabs.utilidades.BaseTest;
+import es.jklabs.utilidades.Logger;
 import es.jklabs.utilidades.Mensajes;
 import es.jklabs.utilidades.UtilidadesGitHubReleases;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -33,13 +33,6 @@ class VentanaTest extends BaseTest {
         Method method = target.getClass().getDeclaredMethod(methodName);
         method.setAccessible(true);
         method.invoke(target);
-    }
-
-    private static SwingWorker<?, ?> createNuevaVersionWorker(Ventana ventana) throws Exception {
-        Class<?> workerClass = Class.forName("es.jklabs.desktop.gui.Ventana$1");
-        Constructor<?> constructor = workerClass.getDeclaredConstructor(Ventana.class);
-        constructor.setAccessible(true);
-        return (SwingWorker<?, ?>) constructor.newInstance(ventana);
     }
 
     private static Object getField(Object target, String fieldName) throws Exception {
@@ -148,7 +141,7 @@ class VentanaTest extends BaseTest {
         try (MockedStatic<UtilidadesGitHubReleases> mocked = Mockito.mockStatic(UtilidadesGitHubReleases.class)) {
             mocked.when(UtilidadesGitHubReleases::existeNuevaVersion).thenReturn(true);
 
-            SwingWorker<?, ?> worker = createNuevaVersionWorker(ventana);
+            SwingWorker<?, ?> worker = ventana.crearWorkerNuevaVersion();
             worker.run();
 
             waitForCondition(() -> getFieldUnchecked(ventana, "itemActualizacion") != null);
@@ -164,7 +157,7 @@ class VentanaTest extends BaseTest {
         try (MockedStatic<UtilidadesGitHubReleases> mocked = Mockito.mockStatic(UtilidadesGitHubReleases.class)) {
             mocked.when(UtilidadesGitHubReleases::existeNuevaVersion).thenReturn(false);
 
-            SwingWorker<?, ?> worker = createNuevaVersionWorker(ventana);
+            SwingWorker<?, ?> worker = ventana.crearWorkerNuevaVersion();
             worker.run();
 
             flushEdt();
@@ -180,11 +173,75 @@ class VentanaTest extends BaseTest {
         try (MockedStatic<UtilidadesGitHubReleases> mocked = Mockito.mockStatic(UtilidadesGitHubReleases.class)) {
             mocked.when(UtilidadesGitHubReleases::existeNuevaVersion).thenThrow(new IOException("fallo"));
 
-            SwingWorker<?, ?> worker = createNuevaVersionWorker(ventana);
+            SwingWorker<?, ?> worker = ventana.crearWorkerNuevaVersion();
             worker.run();
 
             flushEdt();
             assertNull(getField(ventana, "itemActualizacion"));
+        }
+    }
+
+    @Test
+    void procesarResultadoNuevaVersionAniadeEntradaCuandoResultadoEsTrue() throws Exception {
+        Ventana ventana = createVentanaWithoutConstructor();
+        setField(ventana, "barraMenu", new JMenuBar());
+
+        ventana.procesarResultadoNuevaVersion(() -> Boolean.TRUE);
+
+        assertNotNull(getField(ventana, "itemActualizacion"));
+    }
+
+    @Test
+    void procesarResultadoNuevaVersionNoAniadeEntradaCuandoResultadoEsFalse() throws Exception {
+        Ventana ventana = createVentanaWithoutConstructor();
+        setField(ventana, "barraMenu", new JMenuBar());
+
+        ventana.procesarResultadoNuevaVersion(() -> Boolean.FALSE);
+
+        assertNull(getField(ventana, "itemActualizacion"));
+    }
+
+    @Test
+    void procesarResultadoNuevaVersionIgnoraResultadoNulo() throws Exception {
+        Ventana ventana = createVentanaWithoutConstructor();
+        setField(ventana, "barraMenu", new JMenuBar());
+
+        ventana.procesarResultadoNuevaVersion(() -> null);
+
+        assertNull(getField(ventana, "itemActualizacion"));
+    }
+
+    @Test
+    void procesarResultadoNuevaVersionRegistraExcepcionSinAniadirEntrada() throws Exception {
+        Ventana ventana = createVentanaWithoutConstructor();
+        setField(ventana, "barraMenu", new JMenuBar());
+        IOException exception = new IOException("fallo");
+
+        try (MockedStatic<Logger> mockedLogger = Mockito.mockStatic(Logger.class)) {
+            ventana.procesarResultadoNuevaVersion(() -> {
+                throw exception;
+            });
+
+            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", exception));
+            assertNull(getField(ventana, "itemActualizacion"));
+        }
+    }
+
+    @Test
+    void procesarResultadoNuevaVersionRestauraInterrupcionSiConsultaSeInterrumpe() throws Exception {
+        Ventana ventana = createVentanaWithoutConstructor();
+        InterruptedException exception = new InterruptedException("interrumpido");
+        Thread.interrupted();
+
+        try (MockedStatic<Logger> mockedLogger = Mockito.mockStatic(Logger.class)) {
+            ventana.procesarResultadoNuevaVersion(() -> {
+                throw exception;
+            });
+
+            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", exception));
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
         }
     }
 
