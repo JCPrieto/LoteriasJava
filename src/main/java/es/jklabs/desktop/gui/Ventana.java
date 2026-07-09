@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.Objects;
 
@@ -85,7 +86,7 @@ public class Ventana extends JFrame implements ActionListener {
         };
     }
 
-    boolean existeNuevaVersion() throws Exception {
+    boolean existeNuevaVersion() throws IOException {
         return UtilidadesGitHubReleases.existeNuevaVersion();
     }
 
