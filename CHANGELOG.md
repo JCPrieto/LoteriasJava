@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.15
+
+- Actualiza `com.fasterxml.jackson.core:jackson-databind` a `2.22.1`.
+- Ajusta la comprobación asíncrona de nuevas versiones en `Ventana` para declarar excepciones más específicas
+  (`IOException`, `ExecutionException` e `InterruptedException`) sin cambiar el comportamiento público.
+- Incorpora `org.awaitility:awaitility` como dependencia de test y reemplaza la espera manual con `Thread.sleep()` en
+  `VentanaTest`, evitando issues de SonarQube y manteniendo la sincronización con el EDT.
+- Simplifica helpers internos de `VentanaTest` centrados en la entrada de actualización y mantiene la cobertura de los
+  flujos de nueva versión, errores e interrupciones.
+
 ## 2.7.14
 
 - Refactoriza las notificaciones de escritorio con `ToastBuilder` y un `DesktopNotifier` inyectable, eliminando la
