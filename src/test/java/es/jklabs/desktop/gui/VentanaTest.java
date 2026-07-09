@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -216,13 +217,14 @@ class VentanaTest extends BaseTest {
         Ventana ventana = createVentanaWithoutConstructor();
         setField(ventana, "barraMenu", new JMenuBar());
         IOException exception = new IOException("fallo");
+        ExecutionException executionException = new ExecutionException(exception);
 
         try (MockedStatic<Logger> mockedLogger = Mockito.mockStatic(Logger.class)) {
             ventana.procesarResultadoNuevaVersion(() -> {
-                throw exception;
+                throw executionException;
             });
 
-            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", exception));
+            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", executionException));
             assertNull(getField(ventana, "itemActualizacion"));
         }
     }
