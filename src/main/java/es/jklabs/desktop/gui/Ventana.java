@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serial;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author juanky
@@ -140,7 +141,7 @@ public class Ventana extends JFrame implements ActionListener {
 
     @FunctionalInterface
     interface NuevaVersionResult {
-        Boolean get() throws Exception;
+        Boolean get() throws ExecutionException, InterruptedException;
     }
 
 }
