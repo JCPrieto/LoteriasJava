@@ -17,7 +17,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VentanaTest extends BaseTest {
@@ -29,21 +33,21 @@ class VentanaTest extends BaseTest {
         return (Ventana) unsafe.allocateInstance(Ventana.class);
     }
 
-    private static void invokePrivate(Object target, String methodName) throws Exception {
-        Method method = target.getClass().getDeclaredMethod(methodName);
+    private static void invokePrivate(Object target) throws Exception {
+        Method method = target.getClass().getDeclaredMethod("agregarItemActualizacion");
         method.setAccessible(true);
         method.invoke(target);
     }
 
-    private static Object getField(Object target, String fieldName) throws Exception {
-        Field field = target.getClass().getDeclaredField(fieldName);
+    private static Object getField(Object target) throws Exception {
+        Field field = target.getClass().getDeclaredField("itemActualizacion");
         field.setAccessible(true);
         return field.get(target);
     }
 
-    private static Object getFieldUnchecked(Object target, String fieldName) {
+    private static Object getFieldUnchecked(Object target) {
         try {
-            return getField(target, fieldName);
+            return getField(target);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -55,16 +59,15 @@ class VentanaTest extends BaseTest {
         field.set(target, value);
     }
 
-    private static void waitForCondition(Condition condition) throws Exception {
-        long deadline = System.currentTimeMillis() + 3000;
-        while (System.currentTimeMillis() < deadline) {
-            flushEdt();
-            if (condition.matches()) {
-                return;
-            }
-            Thread.sleep(25);
-        }
-        fail("Condition was not met before timeout");
+    private static void waitForCondition(Callable<Boolean> condition) {
+        await()
+                .pollInSameThread()
+                .atMost(Duration.ofSeconds(3))
+                .pollInterval(Duration.ofMillis(25))
+                .until(() -> {
+                    flushEdt();
+                    return condition.call();
+                });
     }
 
     private static void flushEdt() throws Exception {
@@ -82,7 +85,7 @@ class VentanaTest extends BaseTest {
             ventana.actionPerformed(new ActionEvent(acerca, ActionEvent.ACTION_PERFORMED, "click"));
 
             assertEquals(1, mocked.constructed().size());
-            Mockito.verify(mocked.constructed().get(0)).setVisible(true);
+            Mockito.verify(mocked.constructed().getFirst()).setVisible(true);
         }
     }
 
@@ -104,9 +107,9 @@ class VentanaTest extends BaseTest {
         JMenuBar barraMenu = new JMenuBar();
         setField(ventana, "barraMenu", barraMenu);
 
-        invokePrivate(ventana, "agregarItemActualizacion");
+        invokePrivate(ventana);
 
-        JMenuItem itemActualizacion = (JMenuItem) getField(ventana, "itemActualizacion");
+        JMenuItem itemActualizacion = (JMenuItem) getField(ventana);
         assertNotNull(itemActualizacion);
         assertEquals(Mensajes.getMensaje("menu.nueva.version"), itemActualizacion.getText());
         assertEquals(2, barraMenu.getComponentCount());
@@ -127,9 +130,9 @@ class VentanaTest extends BaseTest {
         setField(ventana, "barraMenu", barraMenu);
         setField(ventana, "itemActualizacion", existente);
 
-        invokePrivate(ventana, "agregarItemActualizacion");
+        invokePrivate(ventana);
 
-        assertSame(existente, getField(ventana, "itemActualizacion"));
+        assertSame(existente, getField(ventana));
         assertEquals(0, barraMenu.getComponentCount());
     }
 
@@ -144,8 +147,8 @@ class VentanaTest extends BaseTest {
             SwingWorker<?, ?> worker = ventana.crearWorkerNuevaVersion();
             worker.run();
 
-            waitForCondition(() -> getFieldUnchecked(ventana, "itemActualizacion") != null);
-            assertNotNull(getField(ventana, "itemActualizacion"));
+            waitForCondition(() -> getFieldUnchecked(ventana) != null);
+            assertNotNull(getField(ventana));
         }
     }
 
@@ -161,7 +164,7 @@ class VentanaTest extends BaseTest {
             worker.run();
 
             flushEdt();
-            assertNull(getField(ventana, "itemActualizacion"));
+            assertNull(getField(ventana));
         }
     }
 
@@ -177,7 +180,7 @@ class VentanaTest extends BaseTest {
             worker.run();
 
             flushEdt();
-            assertNull(getField(ventana, "itemActualizacion"));
+            assertNull(getField(ventana));
         }
     }
 
@@ -188,7 +191,7 @@ class VentanaTest extends BaseTest {
 
         ventana.procesarResultadoNuevaVersion(() -> Boolean.TRUE);
 
-        assertNotNull(getField(ventana, "itemActualizacion"));
+        assertNotNull(getField(ventana));
     }
 
     @Test
@@ -198,7 +201,7 @@ class VentanaTest extends BaseTest {
 
         ventana.procesarResultadoNuevaVersion(() -> Boolean.FALSE);
 
-        assertNull(getField(ventana, "itemActualizacion"));
+        assertNull(getField(ventana));
     }
 
     @Test
@@ -208,7 +211,7 @@ class VentanaTest extends BaseTest {
 
         ventana.procesarResultadoNuevaVersion(() -> null);
 
-        assertNull(getField(ventana, "itemActualizacion"));
+        assertNull(getField(ventana));
     }
 
     @Test
@@ -216,14 +219,15 @@ class VentanaTest extends BaseTest {
         Ventana ventana = createVentanaWithoutConstructor();
         setField(ventana, "barraMenu", new JMenuBar());
         IOException exception = new IOException("fallo");
+        ExecutionException executionException = new ExecutionException(exception);
 
         try (MockedStatic<Logger> mockedLogger = Mockito.mockStatic(Logger.class)) {
             ventana.procesarResultadoNuevaVersion(() -> {
-                throw exception;
+                throw executionException;
             });
 
-            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", exception));
-            assertNull(getField(ventana, "itemActualizacion"));
+            mockedLogger.verify(() -> Logger.error("consultar.nueva.version", executionException));
+            assertNull(getField(ventana));
         }
     }
 
@@ -245,8 +249,4 @@ class VentanaTest extends BaseTest {
         }
     }
 
-    @FunctionalInterface
-    private interface Condition {
-        boolean matches();
-    }
 }

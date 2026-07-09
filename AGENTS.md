@@ -37,6 +37,8 @@ After introducing code changes, review and run the unit tests for the modified c
 proceeding. Whenever a new public class or public method is added, implement its corresponding unit test.
 For Swing panels, create components on the EDT (`SwingUtilities.invokeAndWait`) and stop any active `Timer` in tests
 to avoid cross-test interference from background refreshes.
+For asynchronous waits in tests, prefer Awaitility over `Thread.sleep()`; keep EDT flushes inside the awaited condition
+when the code under test completes through Swing callbacks.
 For Swing components that launch asynchronous work and create external collaborators (network/services), prefer adding
 minimal package-private or overridable factory methods so tests can inject mocks without depending on live I/O.
 For utility classes that perform direct HTTP calls, prefer package-private test hooks such as connection factories so
