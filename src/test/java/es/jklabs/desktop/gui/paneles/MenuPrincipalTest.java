@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,7 +77,7 @@ class MenuPrincipalTest extends BaseTest {
         resumen.setCuarto(List.of("33333", "44444"));
         resumen.setQuinto(List.of("55555", "66666"));
         resumen.setEstado(EstadoSorteo.TERMINADO);
-        resumen.setFechaActualizacion(LocalDateTime.of(2025, 12, 22, 14, 0));
+        resumen.setFechaActualizacion(LocalDateTime.of(2025, Month.DECEMBER, 22, 14, 0));
         resumen.setUrlPDF("https://example.com/navidad.pdf");
         return resumen;
     }
