@@ -21,8 +21,7 @@ import java.util.Objects;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class MenuPrincipalTest extends BaseTest {
 
@@ -258,7 +257,7 @@ class MenuPrincipalTest extends BaseTest {
         esperarCarga(panel);
 
         assertEquals(Mensajes.getMensaje(MenuPrincipal.WARNING_PROBLEMA_SERVIDOR), panel.getLastWarningForTests());
-        Mockito.verify(resumenService).getResumenNavidad();
+        verify(resumenService).getResumenNavidad();
         Mockito.verifyNoInteractions(ventana);
         assertTrue(panel.getBtnResumenNavidadForTests().isEnabled());
     }
@@ -274,7 +273,7 @@ class MenuPrincipalTest extends BaseTest {
         esperarCarga(panel);
 
         assertEquals(Mensajes.getMensaje(MenuPrincipal.WARNING_PROBLEMA_SERVIDOR), panel.getLastWarningForTests());
-        Mockito.verify(resumenService).getResumenNino();
+        verify(resumenService).getResumenNino();
         Mockito.verifyNoInteractions(ventana);
         assertTrue(panel.getBtnResumenNinoForTests().isEnabled());
     }
@@ -290,7 +289,7 @@ class MenuPrincipalTest extends BaseTest {
         esperarCarga(panel);
 
         assertEquals(Mensajes.getMensaje(MenuPrincipal.WARNING_PROBLEMA_SERVIDOR), panel.getLastWarningForTests());
-        Mockito.verify(resumenService).getResumenNavidad();
+        verify(resumenService).getResumenNavidad();
         Mockito.verifyNoInteractions(ventana);
     }
 
@@ -305,7 +304,7 @@ class MenuPrincipalTest extends BaseTest {
         esperarCarga(panel);
 
         assertEquals(Mensajes.getMensaje(MenuPrincipal.WARNING_PROBLEMA_SERVIDOR), panel.getLastWarningForTests());
-        Mockito.verify(resumenService).getResumenNino();
+        verify(resumenService).getResumenNino();
         Mockito.verifyNoInteractions(ventana);
     }
 
