@@ -153,7 +153,7 @@ class MenuPrincipalTest extends BaseTest {
         clickEnEdt(panel.getBtnBuscarPremioNavidadForTests());
 
         InOrder inOrder = Mockito.inOrder(ventana);
-        inOrder.verify(ventana).setPanel(Mockito.argThat(p -> p instanceof PanelBusqueda));
+        inOrder.verify(ventana).setPanel(Mockito.argThat(PanelBusqueda.class::isInstance));
         inOrder.verify(ventana).setPanelInferior(Mockito.argThat(Objects::nonNull));
         inOrder.verify(ventana).pack();
     }
@@ -166,7 +166,7 @@ class MenuPrincipalTest extends BaseTest {
         clickEnEdt(panel.getBtnBuscarPremioNinoForTests());
 
         InOrder inOrder = Mockito.inOrder(ventana);
-        inOrder.verify(ventana).setPanel(Mockito.argThat(p -> p instanceof PanelBusqueda));
+        inOrder.verify(ventana).setPanel(Mockito.argThat(PanelBusqueda.class::isInstance));
         inOrder.verify(ventana).setPanelInferior(Mockito.argThat(Objects::nonNull));
         inOrder.verify(ventana).pack();
     }
