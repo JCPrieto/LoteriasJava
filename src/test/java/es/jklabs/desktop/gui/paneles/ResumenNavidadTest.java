@@ -8,17 +8,19 @@ import es.jklabs.utilidades.UtilidadesFecha;
 import io.github.jcprieto.lib.loteria.conexion.Conexion;
 import io.github.jcprieto.lib.loteria.enumeradores.EstadoSorteo;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResumenNavidadTest extends BaseTest {
@@ -70,6 +72,17 @@ class ResumenNavidadTest extends BaseTest {
         });
     }
 
+    private static void esperarHastaQueFinaliceActualizacion(ResumenNavidad panel) {
+        await()
+                .pollInSameThread()
+                .atMost(Duration.ofSeconds(3))
+                .pollInterval(Duration.ofMillis(25))
+                .until(() -> {
+                    esperarEdt();
+                    return !getBooleanField(panel);
+                });
+    }
+
     private static JLabel getLabel(ResumenNavidad panel, String fieldName) throws Exception {
         return (JLabel) getField(panel, fieldName);
     }
@@ -84,14 +97,14 @@ class ResumenNavidadTest extends BaseTest {
         return timer;
     }
 
-    private static boolean getBooleanField(ResumenNavidad panel, String fieldName) throws Exception {
-        return (boolean) getField(panel, fieldName);
+    private static boolean getBooleanField(ResumenNavidad panel) throws Exception {
+        return (boolean) getField(panel, "actualizando");
     }
 
-    private static void setBooleanField(ResumenNavidad panel, String fieldName, boolean value) throws Exception {
-        Field field = ResumenNavidad.class.getDeclaredField(fieldName);
+    private static void setBooleanField(ResumenNavidad panel) throws Exception {
+        Field field = ResumenNavidad.class.getDeclaredField("actualizando");
         field.setAccessible(true);
-        field.setBoolean(panel, value);
+        field.setBoolean(panel, true);
     }
 
     private static void detenerTimer(ResumenNavidad panel) throws Exception {
@@ -120,6 +133,12 @@ class ResumenNavidadTest extends BaseTest {
         Field field = ResumenNavidad.class.getDeclaredField(fieldName);
         field.setAccessible(true);
         return field.get(panel);
+    }
+
+    private static ResumenNavidad crearPanel(Ventana ventana,
+                                             io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resumen,
+                                             Conexion conexion) throws Exception {
+        return crearEnEdt(() -> new ResumenNavidadTestable(ventana, resumen, conexion));
     }
 
     @Test
@@ -161,13 +180,15 @@ class ResumenNavidadTest extends BaseTest {
     @Test
     void ignoraEventosQueNoVienenDelTimer() throws Exception {
         Ventana ventana = Mockito.mock(Ventana.class);
-        ResumenNavidad panel = crearEnEdt(() -> new ResumenNavidad(ventana, crearResumenBase()));
+        Conexion conexion = Mockito.mock(Conexion.class);
+        ResumenNavidad panel = crearPanel(ventana, crearResumenBase(), conexion);
         try {
             panel.actionPerformed(new ActionEvent(new JButton("otro"), ActionEvent.ACTION_PERFORMED, "cmd"));
             esperarEdt();
 
             Mockito.verifyNoInteractions(ventana);
-            assertFalse(getBooleanField(panel, "actualizando"));
+            Mockito.verifyNoInteractions(conexion);
+            assertFalse(getBooleanField(panel));
         } finally {
             detenerTimer(panel);
         }
@@ -179,6 +200,12 @@ class ResumenNavidadTest extends BaseTest {
         ResumenNavidad panel = crearEnEdt(() -> new ResumenNavidad(ventana, crearResumenBase()));
         Timer timer = getTimer(panel);
         try {
+            SwingUtilities.invokeAndWait(panel::addNotify);
+            assertTrue(timer.isRunning());
+
+            SwingUtilities.invokeAndWait(panel::removeNotify);
+            assertFalse(timer.isRunning());
+
             SwingUtilities.invokeAndWait(panel::removeNotify);
             assertFalse(timer.isRunning());
 
@@ -214,15 +241,115 @@ class ResumenNavidadTest extends BaseTest {
     @Test
     void ignoraTickDelTimerSiYaHayUnaActualizacionEnCurso() throws Exception {
         Ventana ventana = Mockito.mock(Ventana.class);
-        ResumenNavidad panel = crearEnEdt(() -> new ResumenNavidad(ventana, crearResumenBase()));
-        try (MockedConstruction<Conexion> mocked = Mockito.mockConstruction(Conexion.class)) {
-            setBooleanField(panel, "actualizando", true);
+        Conexion conexion = Mockito.mock(Conexion.class);
+        ResumenNavidad panel = crearPanel(ventana, crearResumenBase(), conexion);
+        try {
+            setBooleanField(panel);
 
             panel.actionPerformed(new ActionEvent(getTimer(panel), ActionEvent.ACTION_PERFORMED, "tick"));
             esperarEdt();
 
-            assertTrue(getBooleanField(panel, "actualizando"));
-            assertEquals(0, mocked.constructed().size());
+            assertTrue(getBooleanField(panel));
+            Mockito.verifyNoInteractions(conexion);
+            Mockito.verifyNoInteractions(ventana);
+        } finally {
+            detenerTimer(panel);
+        }
+    }
+
+    @Test
+    void actualizaResumenCuandoConexionDevuelveDatos() throws Exception {
+        Ventana ventana = Mockito.mock(Ventana.class);
+        Conexion conexion = Mockito.mock(Conexion.class);
+        ResumenNavidad panel = crearPanel(ventana, crearResumenBase(), conexion);
+        io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad actualizado = crearResumen(
+                "99999", "88888", "77777",
+                List.of("12345", "54321"),
+                List.of("11111", "22222", "33333", "44444"),
+                EstadoSorteo.TERMINADO,
+                LocalDateTime.of(2026, 12, 22, 14, 30),
+                "https://example.test/final-navidad.pdf"
+        );
+
+        try {
+            Mockito.when(conexion.getResumenNavidad()).thenReturn(actualizado);
+            panel.actionPerformed(new ActionEvent(getTimer(panel), ActionEvent.ACTION_PERFORMED, "tick"));
+            esperarHastaQueFinaliceActualizacion(panel);
+
+            Mockito.verify(conexion).getResumenNavidad();
+            assertEquals("99999", getLabel(panel, "gordo").getText());
+            assertEquals("88888", getLabel(panel, "segundo").getText());
+            assertEquals("77777", getLabel(panel, "tercero").getText());
+            assertEquals(2, getPanel(panel, "panelCuarto").getComponentCount());
+            assertEquals(4, getPanel(panel, "panelQuinto").getComponentCount());
+            assertEquals(
+                    Mensajes.getMensaje("resumen.estado") + UtilidadesEstadoSorteo.getHumanReadable(EstadoSorteo.TERMINADO),
+                    getLabel(panel, "estado").getText()
+            );
+            assertEquals(
+                    Mensajes.getMensaje("resumen.actualizacion") + UtilidadesFecha.getHumanReadable(actualizado.getFechaActualizacion()),
+                    getLabel(panel, "actualizacion").getText()
+            );
+            assertEquals("https://example.test/final-navidad.pdf", getLabel(panel, "pdf").getText());
+            assertFalse(getBooleanField(panel));
+            Mockito.verify(ventana).pack();
+        } finally {
+            detenerTimer(panel);
+        }
+    }
+
+    @Test
+    void noActualizaPanelesSiConexionDevuelveNull() throws Exception {
+        Ventana ventana = Mockito.mock(Ventana.class);
+        Conexion conexion = Mockito.mock(Conexion.class);
+        ResumenNavidad panel = crearPanel(ventana, crearResumenBase(), conexion);
+        String gordoInicial = getLabel(panel, "gordo").getText();
+        String segundoInicial = getLabel(panel, "segundo").getText();
+        String terceroInicial = getLabel(panel, "tercero").getText();
+        int cuartoInicial = getPanel(panel, "panelCuarto").getComponentCount();
+        int quintoInicial = getPanel(panel, "panelQuinto").getComponentCount();
+        String estadoInicial = getLabel(panel, "estado").getText();
+        String actualizacionInicial = getLabel(panel, "actualizacion").getText();
+        String pdfInicial = getLabel(panel, "pdf").getText();
+
+        try {
+            Mockito.when(conexion.getResumenNavidad()).thenReturn(null);
+            panel.actionPerformed(new ActionEvent(getTimer(panel), ActionEvent.ACTION_PERFORMED, "tick"));
+            esperarHastaQueFinaliceActualizacion(panel);
+
+            Mockito.verify(conexion).getResumenNavidad();
+            assertEquals(gordoInicial, getLabel(panel, "gordo").getText());
+            assertEquals(segundoInicial, getLabel(panel, "segundo").getText());
+            assertEquals(terceroInicial, getLabel(panel, "tercero").getText());
+            assertEquals(cuartoInicial, getPanel(panel, "panelCuarto").getComponentCount());
+            assertEquals(quintoInicial, getPanel(panel, "panelQuinto").getComponentCount());
+            assertEquals(estadoInicial, getLabel(panel, "estado").getText());
+            assertEquals(actualizacionInicial, getLabel(panel, "actualizacion").getText());
+            assertEquals(pdfInicial, getLabel(panel, "pdf").getText());
+            assertFalse(getBooleanField(panel));
+            Mockito.verifyNoInteractions(ventana);
+        } finally {
+            detenerTimer(panel);
+        }
+    }
+
+    @Test
+    void reseteaEstadoDeActualizacionSiConexionFalla() throws Exception {
+        Ventana ventana = Mockito.mock(Ventana.class);
+        Conexion conexion = Mockito.mock(Conexion.class);
+        ResumenNavidad panel = crearPanel(ventana, crearResumenBase(), conexion);
+        String gordoInicial = getLabel(panel, "gordo").getText();
+        String pdfInicial = getLabel(panel, "pdf").getText();
+
+        try {
+            Mockito.when(conexion.getResumenNavidad()).thenThrow(new IOException("boom"));
+            panel.actionPerformed(new ActionEvent(getTimer(panel), ActionEvent.ACTION_PERFORMED, "tick"));
+            esperarHastaQueFinaliceActualizacion(panel);
+
+            Mockito.verify(conexion).getResumenNavidad();
+            assertEquals(gordoInicial, getLabel(panel, "gordo").getText());
+            assertEquals(pdfInicial, getLabel(panel, "pdf").getText());
+            assertFalse(getBooleanField(panel));
             Mockito.verifyNoInteractions(ventana);
         } finally {
             detenerTimer(panel);
@@ -231,5 +358,21 @@ class ResumenNavidadTest extends BaseTest {
 
     private interface EdtSupplier<T> {
         T get();
+    }
+
+    private static final class ResumenNavidadTestable extends ResumenNavidad {
+        private final Conexion conexion;
+
+        private ResumenNavidadTestable(Ventana ventana,
+                                       io.github.jcprieto.lib.loteria.model.navidad.ResumenNavidad resultado,
+                                       Conexion conexion) {
+            super(ventana, resultado);
+            this.conexion = conexion;
+        }
+
+        @Override
+        Conexion crearConexion() {
+            return conexion;
+        }
     }
 }

@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 class VentanaTest extends BaseTest {
 
@@ -85,7 +86,7 @@ class VentanaTest extends BaseTest {
             ventana.actionPerformed(new ActionEvent(acerca, ActionEvent.ACTION_PERFORMED, "click"));
 
             assertEquals(1, mocked.constructed().size());
-            Mockito.verify(mocked.constructed().getFirst()).setVisible(true);
+            verify(mocked.constructed().getFirst()).setVisible(true);
         }
     }
 

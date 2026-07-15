@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.16
+
+- Actualiza `io.github.jcprieto:loteria-navidad` de `6.0.12` a `7.0.0`.
+- Actualiza dependencias de test: `org.junit.jupiter:junit-jupiter` a `6.1.2` y
+  `org.awaitility:awaitility` a `4.3.0`.
+- Mejora la testabilidad de `ResumenNavidad` mediante una factoría de `Conexion` sobreescribible y amplía su cobertura
+  para el refresco correcto, respuestas nulas, errores del servicio, actualizaciones concurrentes y ciclo de vida del
+  `Timer`.
+- Sustituye la espera manual con `Thread.sleep()` en `MenuPrincipalTest` por Awaitility con sincronización del EDT y
+  simplifica varios tests Swing mediante imports estáticos, referencias a métodos y helpers más específicos.
+
 ## 2.7.15
 
 - Actualiza `com.fasterxml.jackson.core:jackson-databind` a `2.22.1`.
