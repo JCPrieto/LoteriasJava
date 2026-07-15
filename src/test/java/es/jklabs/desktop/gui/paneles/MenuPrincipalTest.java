@@ -13,10 +13,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuPrincipalTest extends BaseTest {
@@ -44,14 +46,17 @@ class MenuPrincipalTest extends BaseTest {
                 new ActionEvent(source, ActionEvent.ACTION_PERFORMED, "cmd")));
     }
 
-    private static void esperarCarga(MenuPrincipal panel) throws Exception {
-        long deadline = System.currentTimeMillis() + 3000;
-        while (System.currentTimeMillis() < deadline && !panel.getBtnResumenNavidadForTests().isEnabled()) {
-            Thread.sleep(20);
-        }
-        SwingUtilities.invokeAndWait(() -> {
-            // Drena el EDT para ejecutar el done del SwingWorker.
-        });
+    private static void esperarCarga(MenuPrincipal panel) {
+        await()
+                .pollInSameThread()
+                .atMost(Duration.ofSeconds(3))
+                .pollInterval(Duration.ofMillis(20))
+                .until(() -> {
+                    SwingUtilities.invokeAndWait(() -> {
+                        // Drena el EDT para ejecutar el done del SwingWorker.
+                    });
+                    return panel.getBtnResumenNavidadForTests().isEnabled();
+                });
     }
 
     private static <T> T crearEnEdt(EdtSupplier<T> supplier) throws Exception {
