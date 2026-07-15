@@ -22,6 +22,7 @@ import java.util.Objects;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MenuPrincipalTest extends BaseTest {
 
@@ -210,7 +211,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNavidadMuestraResumenCuandoHayDatos() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNavidad()).thenReturn(crearResumenNavidad());
+        when(resumenService.getResumenNavidad()).thenReturn(crearResumenNavidad());
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNavidadForTests());
@@ -230,7 +231,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNinoMuestraResumenCuandoHayDatos() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNino()).thenReturn(crearResumenNino());
+        when(resumenService.getResumenNino()).thenReturn(crearResumenNino());
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNinoForTests());
@@ -250,7 +251,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNavidadMuestraAvisoCuandoNoHayDatos() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNavidad()).thenReturn(null);
+        when(resumenService.getResumenNavidad()).thenReturn(null);
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNavidadForTests());
@@ -266,7 +267,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNinoMuestraAvisoCuandoNoHayDatos() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNino()).thenReturn(null);
+        when(resumenService.getResumenNino()).thenReturn(null);
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNinoForTests());
@@ -282,7 +283,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNavidadMuestraAvisoCuandoFallaElServicio() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNavidad()).thenThrow(new IOException("boom"));
+        when(resumenService.getResumenNavidad()).thenThrow(new IOException("boom"));
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNavidadForTests());
@@ -297,7 +298,7 @@ class MenuPrincipalTest extends BaseTest {
     void clickEnResumenNinoMuestraAvisoCuandoFallaElServicio() throws Exception {
         Ventana ventana = mock(Ventana.class);
         MenuPrincipal.ResumenService resumenService = mock(MenuPrincipal.ResumenService.class);
-        Mockito.when(resumenService.getResumenNino()).thenThrow(new IOException("boom"));
+        when(resumenService.getResumenNino()).thenThrow(new IOException("boom"));
         TestMenuPrincipal panel = crearEnEdt(() -> new TestMenuPrincipal(ventana, resumenService));
 
         clickEnEdt(panel.getBtnResumenNinoForTests());
