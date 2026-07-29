@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PanelBusquedaTest extends BaseTest {
+class PanelBusquedaTest extends BaseTest {
 
     private static void waitForBusqueda(PanelBusqueda panel) throws Exception {
         long deadline = System.currentTimeMillis() + 2000;
