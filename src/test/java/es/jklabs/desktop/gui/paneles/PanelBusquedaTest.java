@@ -15,27 +15,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-public class PanelBusquedaTest extends BaseTest {
+class PanelBusquedaTest extends BaseTest {
 
-    private static void waitForBusqueda(PanelBusqueda panel) throws Exception {
-        long deadline = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < deadline && panel.isBuscandoForTests()) {
-            Thread.sleep(20);
-        }
-        SwingUtilities.invokeAndWait(() -> {
-            // Drena la cola del EDT para asegurar el done del SwingWorker
-        });
+    private static void waitForBusqueda(PanelBusqueda panel) {
+        await()
+                .pollInSameThread()
+                .atMost(Duration.ofSeconds(2))
+                .pollInterval(Duration.ofMillis(20))
+                .until(() -> {
+                    SwingUtilities.invokeAndWait(() -> {
+                        // Drena la cola del EDT para asegurar el done del SwingWorker
+                    });
+                    return !panel.isBuscandoForTests();
+                });
     }
 
     @Test
-    void buscarPremioAgregaResultadoCuandoExiste() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void buscarPremioAgregaResultadoCuandoExiste() {
+        Ventana ventana = mock(Ventana.class);
         PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
             Premio premio = new Premio();
             premio.setCantidad(BigDecimal.valueOf(123.0));
@@ -54,8 +61,8 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     @Test
-    void buscarPremioMuestraAvisoCuandoNoHayDatos() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void buscarPremioMuestraAvisoCuandoNoHayDatos() {
+        Ventana ventana = mock(Ventana.class);
         PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
             Premio premio = new Premio();
             premio.setCantidad(BigDecimal.ZERO);
@@ -84,8 +91,8 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     @Test
-    void buscarPremioMuestraAvisoCuandoPremioEsNull() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void buscarPremioMuestraAvisoCuandoPremioEsNull() {
+        Ventana ventana = mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> null);
 
         panel.getNumeroFieldForTests().setText("12345");
@@ -99,7 +106,7 @@ public class PanelBusquedaTest extends BaseTest {
 
     @Test
     void buscarPremioMuestraAvisoCuandoCantidadNoEsValida() {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         AtomicInteger llamadas = new AtomicInteger();
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> {
             llamadas.incrementAndGet();
@@ -117,7 +124,7 @@ public class PanelBusquedaTest extends BaseTest {
 
     @Test
     void parseCantidadAceptaSoloNumerosPositivos() {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> new Premio());
 
         assertEquals(new BigDecimal("1.50"), panel.parseCantidad(" 1.50 "));
@@ -129,7 +136,7 @@ public class PanelBusquedaTest extends BaseTest {
 
     @Test
     void buscarPremioConNumeroVacioNoHaceNada() {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         AtomicInteger llamadas = new AtomicInteger();
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> {
             llamadas.incrementAndGet();
@@ -146,7 +153,7 @@ public class PanelBusquedaTest extends BaseTest {
 
     @Test
     void buscarPremioIgnoraNuevaBusquedaMientrasHayUnaActiva() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         CountDownLatch servicioIniciado = new CountDownLatch(1);
         CountDownLatch liberarServicio = new CountDownLatch(1);
         AtomicInteger llamadas = new AtomicInteger();
@@ -178,8 +185,8 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     @Test
-    void buscarPremioMuestraMensajeDeExcepcionDeDecimoNoDisponible() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void buscarPremioMuestraMensajeDeExcepcionDeDecimoNoDisponible() {
+        Ventana ventana = mock(Ventana.class);
         String mensaje = "El premio no esta disponible";
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> {
             throw new PremioDecimoNoDisponibleException(mensaje);
@@ -195,8 +202,8 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     @Test
-    void buscarPremioMuestraAvisoGenericoCuandoServicioFalla() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void buscarPremioMuestraAvisoGenericoCuandoServicioFalla() {
+        Ventana ventana = mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> {
             throw new IOException("Sin conexion");
         });
@@ -211,8 +218,8 @@ public class PanelBusquedaTest extends BaseTest {
     }
 
     @Test
-    void limpiarEliminaResultadosYCampos() throws Exception {
-        Ventana ventana = Mockito.mock(Ventana.class);
+    void limpiarEliminaResultadosYCampos() {
+        Ventana ventana = mock(Ventana.class);
         PanelBusqueda.PremioService premioService = (sorteo, numero) -> {
             Premio premio = new Premio();
             premio.setCantidad(BigDecimal.TEN);
@@ -229,12 +236,12 @@ public class PanelBusquedaTest extends BaseTest {
         assertEquals(0, panel.getResultadoPanelForTests().getComponentCount());
         assertEquals("", panel.getNumeroFieldForTests().getText());
         assertEquals("", panel.getCantidadFieldForTests().getText());
-        Mockito.verify(ventana, Mockito.atLeastOnce()).pack();
+        verify(ventana, Mockito.atLeastOnce()).pack();
     }
 
     @Test
     void filtroNumeroSoloPermiteDigitosBackspaceYMaximoCincoCaracteres() {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> new Premio());
         JTextField numero = panel.getNumeroFieldForTests();
 
@@ -248,7 +255,7 @@ public class PanelBusquedaTest extends BaseTest {
 
     @Test
     void filtroCantidadSoloPermiteDigitosYPunto() {
-        Ventana ventana = Mockito.mock(Ventana.class);
+        Ventana ventana = mock(Ventana.class);
         TestPanelBusqueda panel = new TestPanelBusqueda(ventana, Sorteo.NAVIDAD, (sorteo, numero) -> new Premio());
         JTextField cantidad = panel.getCantidadFieldForTests();
 

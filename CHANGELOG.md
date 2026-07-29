@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.7.17
+
+- Actualiza `org.apache.maven.plugins:maven-jar-plugin` de `3.5.0` a `3.5.1`.
+- Amplía la cobertura de condiciones de `ResumenMouseListenerTest` para URI válidas, URL inválidas sin esquema, enlaces
+  sin ruta y la restauración del navegador usado en tests.
+- Sustituye la espera manual con `Thread.sleep()` en `PanelBusquedaTest` por Awaitility con sincronización del EDT,
+  haciendo que los bloqueos asíncronos fallen de forma determinista al alcanzar el timeout.
+- Resuelve incidencias de mantenibilidad de SonarQube en los tests mediante imports estáticos, visibilidad
+  package-private y el uso de `Month.JANUARY` en fechas de prueba.
+
 ## 2.7.16
 
 - Actualiza `io.github.jcprieto:loteria-navidad` de `6.0.12` a `7.0.0`.

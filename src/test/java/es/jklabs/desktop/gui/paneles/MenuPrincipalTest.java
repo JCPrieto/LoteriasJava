@@ -94,7 +94,7 @@ class MenuPrincipalTest extends BaseTest {
         resumen.setDosCifras(List.of("33", "44"));
         resumen.setReintegros(List.of("3", "4"));
         resumen.setEstado(EstadoSorteo.TERMINADO);
-        resumen.setFechaActualizacion(LocalDateTime.of(2026, 1, 6, 14, 0));
+        resumen.setFechaActualizacion(LocalDateTime.of(2026, Month.JANUARY, 6, 14, 0));
         resumen.setUrlPDF("https://example.com/nino.pdf");
         return resumen;
     }
