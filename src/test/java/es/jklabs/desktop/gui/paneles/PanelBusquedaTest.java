@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class PanelBusquedaTest extends BaseTest {
 
@@ -235,7 +236,7 @@ class PanelBusquedaTest extends BaseTest {
         assertEquals(0, panel.getResultadoPanelForTests().getComponentCount());
         assertEquals("", panel.getNumeroFieldForTests().getText());
         assertEquals("", panel.getCantidadFieldForTests().getText());
-        Mockito.verify(ventana, Mockito.atLeastOnce()).pack();
+        verify(ventana, Mockito.atLeastOnce()).pack();
     }
 
     @Test
