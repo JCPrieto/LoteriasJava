@@ -6,8 +6,8 @@ Aplicación para la comprobación de los numeros premiados de la lotería de Nav
 
 ### Requisitos ###
 
-* Java 21
-* Para generar paquetes nativos: JDK 21 con `jpackage` y las herramientas del sistema operativo.
+* Java 25
+* Para generar paquetes nativos: JDK 25 con `jpackage` y las herramientas del sistema operativo.
 * Linux (Ubuntu): `dpkg-deb` (incluido por defecto) para crear `.deb`.
 * Windows: WiX Toolset para crear `.msi`.
 * macOS: herramientas del sistema (`hdiutil`) para crear `.dmg`.
@@ -23,7 +23,9 @@ Los paquetes se generan con Maven y `jpackage`. Debes ejecutar el comando en el 
 * macOS: `mvn -Pdist-mac package`
   Salida: `target/dist/LoteriaDeNavidad-<version>.dmg`.
 
-Al instalar el paquete, la app queda disponible en el menú del sistema y se puede abrir con doble clic.
+Al instalar el paquete, la app queda disponible en el menú del sistema y se puede abrir con doble clic. Tanto los
+paquetes nativos como los lanzadores del ZIP activan los encabezados compactos de objetos de Java 25
+(`-XX:+UseCompactObjectHeaders`) para reducir la huella de memoria del proceso.
 
 Iconos: se usan los archivos en `src/main/resources/img/icons/app/` (`icon.png`, `icon.ico`, `icon.icns`). Actualmente
 están generados a partir de un PNG 32x32, por lo que se recomienda sustituirlos por un PNG de mayor resolución si se
@@ -75,7 +77,7 @@ Después, las nuevas versiones se reciben con:
 
 #### Windows `.msi`
 
-1. Instala JDK 21 (con `jpackage`) y WiX Toolset.
+1. Instala JDK 25 (con `jpackage`) y WiX Toolset.
 2. Abre terminal en la raíz del proyecto.
 3. Genera el paquete:
   * `mvn clean -Pdist-windows package`
@@ -84,7 +86,7 @@ Después, las nuevas versiones se reciben con:
 
 #### macOS `.dmg`
 
-1. Instala JDK 21 (con `jpackage`) en macOS.
+1. Instala JDK 25 (con `jpackage`) en macOS.
 2. Abre terminal en la raíz del proyecto.
 3. Genera el paquete:
   * `mvn clean -Pdist-mac package`

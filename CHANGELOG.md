@@ -2,6 +2,9 @@
 
 ## 2.7.17
 
+- Migra la compilación, CI y generación de releases a Java 25, incluyendo los runtimes nativos creados con `jpackage`.
+- Activa los encabezados compactos de objetos de Java 25 en los lanzadores y paquetes nativos para reducir el consumo de
+  memoria y mejorar la localidad de datos.
 - Actualiza `org.apache.maven.plugins:maven-jar-plugin` de `3.5.0` a `3.5.1`.
 - Amplía la cobertura de condiciones de `ResumenMouseListenerTest` para URI válidas, URL inválidas sin esquema, enlaces
   sin ruta y la restauración del navegador usado en tests.

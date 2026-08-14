@@ -11,8 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.release>25</maven.compiler.release>
         <mockito.version>5.23.0</mockito.version>
         <slf4j.version>2.0.18</slf4j.version>
         <dbus.java.version>5.2.0</dbus.java.version>
@@ -246,7 +245,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>jpackage</executable>
+                                    <executable>${java.home}/bin/jpackage</executable>
                                     <arguments>
                                         <argument>--type</argument>
                                         <argument>deb</argument>
@@ -292,6 +291,8 @@
                                         <argument>-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts</argument>
                                         <argument>--java-options</argument>
                                         <argument>-Djavax.net.ssl.trustStoreType=JKS</argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-XX:+UseCompactObjectHeaders</argument>
                                         <argument>--linux-shortcut</argument>
                                         <argument>--linux-menu-group</argument>
                                         <argument>Games</argument>
@@ -326,7 +327,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>jpackage</executable>
+                                    <executable>${java.home}/bin/jpackage</executable>
                                     <arguments>
                                         <argument>--type</argument>
                                         <argument>msi</argument>
@@ -352,6 +353,8 @@
                                         <argument>${project.basedir}/LICENSE</argument>
                                         <argument>--copyright</argument>
                                         <argument>Copyright (c) 2026 JKLabs</argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-XX:+UseCompactObjectHeaders</argument>
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}/src/main/resources/img/icons/app/icon.ico
                                         </argument>
@@ -385,7 +388,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>jpackage</executable>
+                                    <executable>${java.home}/bin/jpackage</executable>
                                     <arguments>
                                         <argument>--type</argument>
                                         <argument>dmg</argument>
@@ -411,6 +414,8 @@
                                         <argument>${project.basedir}/LICENSE</argument>
                                         <argument>--copyright</argument>
                                         <argument>Copyright (c) 2026 JKLabs</argument>
+                                        <argument>--java-options</argument>
+                                        <argument>-XX:+UseCompactObjectHeaders</argument>
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}/src/main/resources/img/icons/app/icon.icns
                                         </argument>

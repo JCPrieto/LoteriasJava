@@ -1,1 +1,1 @@
-java -jar LoteriaDeNavidad.jar
+java -XX:+UseCompactObjectHeaders -jar LoteriaDeNavidad.jar

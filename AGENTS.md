@@ -11,7 +11,7 @@ packaged JAR.
 
 ## Build, Test, and Development Commands
 
-- `mvn clean package`: compiles Java 21 sources, copies dependencies into `target/libs`, builds
+- `mvn clean package`: compiles Java 25 sources, copies dependencies into `target/libs`, builds
   `target/LoteriaDeNavidad-<version>.jar`, and produces a distributable ZIP via the assembly plugin.
 - `mvn -Pdist-linux package`: builds Linux native package (`.deb`) using `jpackage`.
 - `mvn -Pdist-windows package`: builds Windows native package (`.msi`) using `jpackage`.
@@ -59,7 +59,7 @@ screenshots when UI changes are involved.
 
 ## Configuration & Runtime Notes
 
-Java 21 is required. Desktop notifications are handled through `two-slices`, using `dbus-java` for the Linux D-Bus
+Java 25 is required. Desktop notifications are handled through `two-slices`, using `dbus-java` for the Linux D-Bus
 backend; keep any notification backend changes documented in the README and the "Acerca de" dialog.
 Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
 and 24.04+.
