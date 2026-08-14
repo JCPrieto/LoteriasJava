@@ -1,10 +1,24 @@
 # Changelog
 
+## 3.0.0
+
+- Eleva la versión mínima de Java de 21 a 25 para la compilación, CI, análisis de SonarQube y generación de releases;
+  los JAR y ZIP requieren ahora Java 25, mientras que los paquetes nativos incluyen el runtime correspondiente.
+- Garantiza que los perfiles nativos de Linux, Windows y macOS ejecuten el `jpackage` del mismo JDK que Maven, evitando
+  mezclar el bytecode Java 25 con un runtime de otra versión.
+- Activa `-XX:+UseCompactObjectHeaders` en los paquetes nativos y en los lanzadores del ZIP para reducir la huella de
+  memoria y mejorar la localidad de datos.
+- Actualiza JUnit Jupiter de `6.1.2` a `6.1.3`.
+- Añade pruebas unitarias de `Resultado` para premios presentes y nulos, completando la cobertura de condiciones y
+  verificando la creación de componentes Swing en el EDT.
+- Mejora la mantenibilidad de `UtilidadesGitHubReleases` y sus tests mediante nombres más concisos, colaboradores de
+  prueba modelados como `record`, construcción moderna de URI y comentarios en operaciones vacías intencionadas.
+- Simplifica las aserciones de tipo y layout de `PanelInferiorTest` usando las utilidades específicas de JUnit.
+- Publica la entrada AppStream de la versión y declara su categoría `Game` para que los gestores de software Linux
+  puedan clasificar correctamente la aplicación.
+
 ## 2.7.17
 
-- Migra la compilación, CI y generación de releases a Java 25, incluyendo los runtimes nativos creados con `jpackage`.
-- Activa los encabezados compactos de objetos de Java 25 en los lanzadores y paquetes nativos para reducir el consumo de
-  memoria y mejorar la localidad de datos.
 - Actualiza `org.apache.maven.plugins:maven-jar-plugin` de `3.5.0` a `3.5.1`.
 - Amplía la cobertura de condiciones de `ResumenMouseListenerTest` para URI válidas, URL inválidas sin esquema, enlaces
   sin ruta y la restauración del navegador usado en tests.

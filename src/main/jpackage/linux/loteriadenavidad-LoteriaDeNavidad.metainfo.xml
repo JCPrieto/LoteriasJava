@@ -11,9 +11,19 @@
     <metadata_license>CC0-1.0</metadata_license>
     <launchable type="desktop-id">loteriadenavidad-LoteriaDeNavidad.desktop</launchable>
     <icon type="stock">loteriadenavidad</icon>
+    <categories>
+        <category>Game</category>
+    </categories>
     <url type="homepage">https://github.com/JCPrieto/LoteriasJava</url>
     <content_rating type="oars-1.1"/>
     <releases>
+        <release version="3.0.0" date="2026-08-14">
+            <description>
+                <p>Migra la aplicación y sus paquetes nativos a Java 25 y reduce su huella de memoria mediante
+                    encabezados compactos de objetos.
+                </p>
+            </description>
+        </release>
         <release version="2.7.13" date="2026-06-24">
             <description>
                 <p>Actualiza dependencias, mejora las notificaciones de escritorio y amplía la cobertura de la carga

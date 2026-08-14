@@ -60,13 +60,19 @@ screenshots when UI changes are involved.
 ## Configuration & Runtime Notes
 
 Java 25 is required. Desktop notifications are handled through `two-slices`, using `dbus-java` for the Linux D-Bus
-backend; keep any notification backend changes documented in the README and the "Acerca de" dialog.
+backend; keep any notification backend changes documented in the README and the "Acerca de" dialog. Native profiles must
+invoke `jpackage` from `${java.home}` so the packaged runtime matches the JDK running Maven. Keep distributed JVM
+options synchronized across all three `jpackage` profiles and the top-level `.sh`/`.bat` launchers; all current
+distributions enable `-XX:+UseCompactObjectHeaders`.
 Linux native packaging uses explicit `--linux-package-deps` alternatives to improve compatibility between Ubuntu 22.04
 and 24.04+.
 The release pipeline also dispatches Linux `.deb` metadata to the external APT repository updater; keep required
 repository secret/variables (`APT_REPO_DISPATCH_TOKEN`, optional `APT_REPO_OWNER`/`APT_REPO_NAME`) aligned with
 `.github/workflows/release.yml`.
 APT publication and dispatch details are documented in `docs/apt-repository-cicd.md`.
-Release notes/changelog are maintained in `CHANGELOG.md` and should be updated on version bumps.
+Release notes/changelog are maintained in `CHANGELOG.md` and should be updated on version bumps. Version bumps must also
+add the corresponding dated release entry to the Linux AppStream metadata in
+`src/main/jpackage/linux/loteriadenavidad-LoteriaDeNavidad.metainfo.xml`. After changing this metadata, run
+`appstreamcli validate` when available and resolve validation errors before release.
 Version bumps should follow semantic impact: patch for fixes, dependency maintenance and testability improvements;
 minor for user-visible features or new distribution capabilities; major only for breaking changes.
