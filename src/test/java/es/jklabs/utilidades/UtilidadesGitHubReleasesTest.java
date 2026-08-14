@@ -454,7 +454,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
         @Override
         public void connect() {
-
+            // No hay recursos de red al que conectar: esta conexión de prueba solo usa datos en memoria
         }
 
         @Override
