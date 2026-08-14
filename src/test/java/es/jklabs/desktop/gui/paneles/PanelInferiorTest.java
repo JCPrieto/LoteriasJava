@@ -11,8 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PanelInferiorTest extends BaseTest {
 
@@ -29,11 +28,11 @@ class PanelInferiorTest extends BaseTest {
         Ventana ventana = Mockito.mock(Ventana.class);
         PanelInferior panel = crearEnEdt(() -> new PanelInferior(ventana));
 
-        assertEquals(new BorderLayout(10, 10).getClass(), panel.getLayout().getClass());
+        assertEquals(BorderLayout.class, panel.getLayout().getClass());
         assertEquals(1, panel.getComponentCount());
 
         Component component = panel.getComponent(0);
-        assertTrue(component instanceof JButton);
+        assertInstanceOf(JButton.class, component);
 
         JButton botonVolver = (JButton) component;
         assertTrue(botonVolver.getActionListeners().length > 0);

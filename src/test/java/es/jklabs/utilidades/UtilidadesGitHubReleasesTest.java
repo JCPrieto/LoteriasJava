@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,8 +27,14 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
         UtilidadesGitHubReleases.resetTestHooks();
     }
 
-    private static void setJsonResponse(int status, String body) {
-        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> new TestHttpURLConnection(status, body, null));
+    private static void setJsonResponse(String body) {
+        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> {
+            try {
+                return new TestHttpURLConnection(200, body, null);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private static JsonNode parseJson(String json) {
@@ -209,7 +215,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
         UtilidadesGitHubReleases.setReleaseProviderForTests(() -> release);
         UtilidadesGitHubReleases.setBrowserOpenerForTests(new UtilidadesGitHubReleases.BrowserOpener() {
             @Override
-            public boolean isSupported() {
+            public boolean supported() {
                 return true;
             }
 
@@ -224,19 +230,19 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
     @Test
     void obtenerUltimaReleaseDevuelveNullConRespuestaVaciaJsonInvalidoOTagAusente() {
-        setJsonResponse(200, "");
+        setJsonResponse("");
         assertNull(invokePrivate("obtenerUltimaRelease", new Class<?>[]{}));
 
-        setJsonResponse(200, "{");
+        setJsonResponse("{");
         assertNull(invokePrivate("obtenerUltimaRelease", new Class<?>[]{}));
 
-        setJsonResponse(200, "{\"html_url\":\"https://example.com/release\"}");
+        setJsonResponse("{\"html_url\":\"https://example.com/release\"}");
         assertNull(invokePrivate("obtenerUltimaRelease", new Class<?>[]{}));
     }
 
     @Test
     void obtenerUltimaReleaseConstruyeReleaseSinAssetSiNoHayZip() {
-        setJsonResponse(200, """
+        setJsonResponse("""
                 {
                   "tag_name": "v2.0.0",
                   "html_url": "https://example.com/release",
@@ -254,7 +260,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
     @Test
     void obtenerUltimaReleaseSeleccionaAssetPreferido() {
-        setJsonResponse(200, """
+        setJsonResponse("""
                 {
                   "tag_name": "V2.0.0",
                   "html_url": "https://example.com/release",
@@ -275,18 +281,30 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
     @Test
     void leerUrlDevuelveBodyConStatusCorrectoYLanzaConErrorHttp() {
-        setJsonResponse(200, "{\"ok\":true}");
+        setJsonResponse("{\"ok\":true}");
         assertEquals("{\"ok\":true}", invokePrivate("leerUrl", new Class<?>[]{}));
 
-        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> new TestHttpURLConnection(
-                500, null, "{\"message\":\"error\"}"));
+        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> {
+            try {
+                return new TestHttpURLConnection(
+                        500, null, "{\"message\":\"error\"}");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         IOException exception = assertThrows(IOException.class,
                 () -> invokePrivate("leerUrl", new Class<?>[]{}));
         assertEquals("HTTP 500: {\"message\":\"error\"}", exception.getMessage());
 
-        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> new TestHttpURLConnection(
-                100, null, null));
+        UtilidadesGitHubReleases.setConnectionFactoryForTests(uri -> {
+            try {
+                return new TestHttpURLConnection(
+                        100, null, null);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        });
         exception = assertThrows(IOException.class, () -> invokePrivate("leerUrl", new Class<?>[]{}));
         assertEquals("HTTP 100: ", exception.getMessage());
     }
@@ -373,7 +391,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
     }
 
     @Test
-    void leerStreamDevuelveVacioConNullYConcatenaLineas() throws IOException {
+    void leerStreamDevuelveVacioConNullYConcatenaLineas() {
         assertEquals("", invokePrivate("leerStream", new Class<?>[]{java.io.InputStream.class}, new Object[]{null}));
 
         ByteArrayInputStream in = new ByteArrayInputStream("linea1\nlinea2".getBytes(StandardCharsets.UTF_8));
@@ -417,8 +435,8 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
         private final String inputBody;
         private final String errorBody;
 
-        private TestHttpURLConnection(int status, String inputBody, String errorBody) throws IOException {
-            super(new URL("https://example.com"));
+        private TestHttpURLConnection(int status, String inputBody, String errorBody) throws IOException, URISyntaxException {
+            super(new URI("https://example.com").toURL());
             this.responseCode = status;
             this.inputBody = inputBody;
             this.errorBody = errorBody;
@@ -426,7 +444,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
         @Override
         public void disconnect() {
-
+            // No hay recursos de red que liberar: esta conexión de prueba solo usa datos en memoria.
         }
 
         @Override
@@ -436,7 +454,7 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
 
         @Override
         public void connect() {
-
+            // No hay recursos de red al que conectar: esta conexión de prueba solo usa datos en memoria
         }
 
         @Override
@@ -457,26 +475,14 @@ class UtilidadesGitHubReleasesTest extends BaseTest {
         }
     }
 
-    private static final class TestBrowserOpener implements UtilidadesGitHubReleases.BrowserOpener {
-        private final AtomicReference<URI> opened;
-        private final AtomicBoolean openedFlag;
-        private final boolean supported;
-
+    private record TestBrowserOpener(AtomicReference<URI> opened, AtomicBoolean openedFlag,
+                                     boolean supported) implements UtilidadesGitHubReleases.BrowserOpener {
         private TestBrowserOpener(AtomicReference<URI> opened, boolean supported) {
-            this.opened = opened;
-            this.openedFlag = null;
-            this.supported = supported;
+            this(opened, null, supported);
         }
 
         private TestBrowserOpener(AtomicBoolean openedFlag, boolean supported) {
-            this.opened = null;
-            this.openedFlag = openedFlag;
-            this.supported = supported;
-        }
-
-        @Override
-        public boolean isSupported() {
-            return supported;
+            this(null, openedFlag, supported);
         }
 
         @Override
