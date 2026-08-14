@@ -48,7 +48,7 @@ public class UtilidadesGitHubReleases {
                 Logger.info("Error de lectura de la release");
                 return;
             }
-            if (!BROWSER_OPENER.isSupported()) {
+            if (!BROWSER_OPENER.supported()) {
                 Growls.mostrarError("abrir.nueva.version", new UnsupportedOperationException("Desktop browse not supported"));
                 return;
             }
@@ -236,7 +236,7 @@ public class UtilidadesGitHubReleases {
     }
 
     interface BrowserOpener {
-        boolean isSupported();
+        boolean supported();
 
         void open(URI uri) throws IOException;
     }
@@ -248,7 +248,7 @@ public class UtilidadesGitHubReleases {
 
     private static final class DesktopBrowserOpener implements BrowserOpener {
         @Override
-        public boolean isSupported() {
+        public boolean supported() {
             return Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
         }
 
