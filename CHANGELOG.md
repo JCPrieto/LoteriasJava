@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.1
+
+- Actualiza `io.github.jcprieto:loteria-navidad` de `7.0.0` a `8.0.0`, alineando la dependencia con Java 25.
+- Actualiza dependencias de mantenimiento: `jackson-databind` de `2.22.1` a `2.22.2` y SLF4J de `2.0.18` a
+  `2.0.19`.
+- Actualiza los plugins Maven Compiler de `3.15.0` a `3.16.0` y Surefire de `3.5.6` a `3.6.0`.
+
 ## 3.0.0
 
 - Eleva la versión mínima de Java de 21 a 25 para la compilación, CI, análisis de SonarQube y generación de releases;
